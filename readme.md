@@ -1,4 +1,30 @@
-Authentication
+# Online Game Store
+
+## Team
+
+**Kalaiarasan Saminathan**
+**Rajagopalan Ranganathan**
+**Sunil Kumar Mohanty**
+
+## Description
+
+Online Game Store is a project developed for the Web Software Development (CS-C3170) course for the year 2016-17. 
+The project is based on Django framework.
+
+Game developers have an inventory of game which they upload to the game store (just the urls). 
+
+Players can 
+- register in the application and purchase the game from the store and play on their mobile or desktop. The application maintains a leaderboard for each application.
+- share their score in social media
+- Register/Login using facebook
+- Resume game from previous saved state
+
+Administrator
+### Development Tools/Languages
+IDE - JetBrains PyCharm
+Languages - Python 3.5, HTML5, CSS (bootstrap), jquery, django
+
+### Authentication
 
 - User Registration
 - Login
@@ -7,7 +33,7 @@ Authentication
 - Use Token
 - Login using Facebook
 
-Basic player functionalities
+### Basic player functionalities
 
 - Buy games
 - payment service
@@ -23,20 +49,20 @@ Basic player functionalities
     - Game types (like arcade, simulation)
     - cost – price
 
-Basic developer functionalities
+### Basic developer functionalities
 
 - Add Game URL to game store
 - Set price and remove/modify the posted game
 - Statistics about the game (ex-purchases)
 - Security restrictions (Only developers allowed to add/remove game)
 
-Game/service interaction
+### Game/service interaction
 
 - Save player Score
 - Save in High Score
 - Display High scores for the game (top 10)
 
-Quality of Work
+### Quality of Work
 
 - Coding style to be followed as mentioned in - [https://docs.djangoproject.com/en/dev/internals/contributing/writing-code/coding-style/](https://docs.djangoproject.com/en/dev/internals/contributing/writing-code/coding-style/)
 - MTV (Model Template View) pattern to be followed
@@ -46,29 +72,29 @@ Quality of Work
 - Should be accessible by mobile touch devices
 - Validate the website against W3C validator
 
-Save/load and resolution feature
+### Save/load and resolution feature
 
 - Save the state of the game (Score)
 - Allow the user to resume the game
 - Save the user preferred Resolution (Height, Width)
 
-RESTful API
+### RESTful API
 
 - Implement Restful API for all services even for internal templates and views
 - Versioning support to be provided in the API
 
-Own game
+### Own game
 
 - It should communicate the score to game store application
 - Save/load the game
 - Can be hosted as a static file in service, It should be available in the store
 
-Mobile Friendly
+### Mobile Friendly
 
 - Use bootstrap CSS framework to make a responsive design
 - Use only div based layout in html
 
-Social media sharing
+### Social media sharing
 
 - Sharing the games in Facebook - Facebook share
 - Sharing the games in Twitter - Twitter share
