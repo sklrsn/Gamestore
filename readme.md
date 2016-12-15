@@ -19,7 +19,6 @@ Players can
 - Register/Login using facebook
 - Resume game from previous saved state
 
-Administrator
 ### Development Tools/Languages
 IDE - JetBrains PyCharm
 Languages - Python 3.5, HTML5, CSS (bootstrap), jquery, django
