@@ -2,8 +2,8 @@
 
 ## Team
 
-**Kalaiarasan Saminathan**
-**Rajagopalan Ranganathan**
+**Kalaiarasan Saminathan** <br/>
+**Rajagopalan Ranganathan**<br/>
 **Sunil Kumar Mohanty**
 
 ## Description
@@ -46,7 +46,7 @@ Languages - Python 3.5, HTML5, CSS (bootstrap), jquery, django
   - Search based on
     - name
     - Game types (like arcade, simulation)
-    - cost – price
+    - cost ? price
 
 ### Basic developer functionalities
 
