@@ -11,7 +11,7 @@ Game Store says: <strong>thank you for registering!</strong>
 {% else %}
 Game Store says: <strong>register here!</strong><br/>
 
-<form id="user_form" method="post" action="/profile/register/"
+<form id="user_form" method="post" action="/profile/register_user/"
       enctype="multipart/form-data">
     {% csrf_token %}
     {{ user_form.as_p }}
