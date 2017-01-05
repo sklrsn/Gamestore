@@ -3,6 +3,10 @@ from django.conf.urls import url
 from . import views
 
 urlpatterns = [
-    url(r'^changepassword/$', views.change_password, name='update_password'),
-    url(r'^update/$', views.update_profile, name='update_profile'),
+    url(r'^change_password/$', views.change_password, name='update_password'),
+    url(r'^update_profile/$', views.update_profile, name='update_profile'),
+    url(r'^register_user/$', views.register_user, name='register'),
+    url(r'^login/$', views.user_login, name='login'),
+    url(r'^logout/$', views.user_logout, name='logout'),
+
 ]

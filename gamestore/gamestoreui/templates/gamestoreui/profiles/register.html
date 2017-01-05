@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+
+<body>
+<h1>Register with Game Store</h1>
+
+{% if registered %}
+Game Store says: <strong>thank you for registering!</strong>
+{% else %}
+Game Store says: <strong>register here!</strong><br/>
+
+<form id="user_form" method="post" action="/profile/register/"
+      enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ user_form.as_p }}
+    {{ profile_form.as_p }}
+    <input type="submit" name="submit" value="Register"/>
+</form>
+{% endif %}
+</body>
+</html>

@@ -1,17 +1,17 @@
 from django.contrib.auth.models import User
-from gamestoredata.models import Profile
-from django.forms import ModelForm
+from gamestoredata.models import UserProfile
+from django import forms
 
 
-class UserForm(ModelForm):
+class UserForm(forms.ModelForm):
+    password = forms.CharField(widget=forms.PasswordInput())
+
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'email')
+        fields = ('username', 'email', 'password')
 
 
-class ProfileForm(ModelForm):
+class UserProfileForm(forms.ModelForm):
     class Meta:
-        model = Profile
-        fields = ('bio', 'location', 'birth_date')
-
-
+        model = UserProfile
+        fields = ('website', 'picture')
