@@ -7,7 +7,10 @@ from django.shortcuts import render
 from django.template import RequestContext
 from django.http import HttpResponse
 from .forms import UserForm, UserProfileForm
+import cloudinary
 
+
+# Handle profile updates
 
 @login_required
 @transaction.atomic
@@ -16,6 +19,9 @@ def update_profile(request):
         if request.method == 'POST':
             profile_form = UserProfileForm(request.POST, instance=request.user.userprofile)
             if profile_form.is_valid():
+                profile_form = profile_form.save(commit=False)
+                if 'picture' in request.FILES:
+                    profile_form.picture = request.FILES['picture']
                 profile_form.save()
                 messages.success(request, 'Your profile was successfully updated!')
                 return render(request, 'profiles/success.html')
@@ -30,6 +36,8 @@ def update_profile(request):
         print(e)
         return render(request, 'profiles/system_failure.html')
 
+
+# Handle Password Reset
 
 @login_required
 def change_password(request):
@@ -53,6 +61,8 @@ def change_password(request):
         return render(request, 'profiles/system_failure.html')
 
 
+# Handle Dynamic User Registration
+
 def register_user(request):
     try:
         context = RequestContext(request)
@@ -68,6 +78,8 @@ def register_user(request):
                 profile.user = user
                 if 'picture' in request.FILES:
                     profile.picture = request.FILES['picture']
+                else:
+                    profile.picture = cloudinary.CloudinaryImage("sample", format="png")
                 profile.save()
                 registered = True
             else:
@@ -82,6 +94,8 @@ def register_user(request):
         print(e)
         return render(request, 'profiles/system_failure.html')
 
+
+# Handle User Authentication
 
 def user_login(request):
     try:
@@ -105,6 +119,8 @@ def user_login(request):
         print(e)
         return render(request, 'profiles/system_failure.html')
 
+
+# Handle Session Invalidation
 
 @login_required
 def user_logout(request):

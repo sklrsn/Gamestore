@@ -35,8 +35,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'cloudinary',
     'gamestoredata',
-    'gamestoreui'
+    'gamestoreui',
 ]
 
 MIDDLEWARE = [
@@ -114,3 +115,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATIC_URL = '/static/'
+
+CLOUDINARY = {
+    'cloud_name' : 'dma8tn6ge',
+    'api_key' : '627378437639745',
+    'api_secret': 'TUeQFTw_hk9i4NIDNz-ZoJAeseo',
+    'secure': True,
+}

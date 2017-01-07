@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
 </head>
 <body>
-<form method="post">
+<form id="profile_update_form" method="post" action="/profile/update_profile/"
+      enctype="multipart/form-data">
     {% csrf_token %}
     {{ profile_form.as_p }}
     <button type="submit">Save changes</button>
