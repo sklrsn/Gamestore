@@ -6,7 +6,7 @@ from django.db import transaction
 from django.shortcuts import render
 from django.template import RequestContext
 from django.http import HttpResponse
-from .forms import UserForm, UserProfileForm
+from .forms import UserForm, UserProfileForm, UserProfileUpdateForm
 import cloudinary
 
 
@@ -17,7 +17,7 @@ import cloudinary
 def update_profile(request):
     try:
         if request.method == 'POST':
-            profile_form = UserProfileForm(request.POST, instance=request.user.userprofile)
+            profile_form = UserProfileUpdateForm(request.POST, instance=request.user.userprofile)
             if profile_form.is_valid():
                 profile_form = profile_form.save(commit=False)
                 if 'picture' in request.FILES:
@@ -28,7 +28,7 @@ def update_profile(request):
             else:
                 messages.error(request, 'Please correct the error below.')
         else:
-            profile_form = UserProfileForm()
+            profile_form = UserProfileUpdateForm()
         return render(request, 'profiles/update_profile.html', {
             'profile_form': profile_form
         })
