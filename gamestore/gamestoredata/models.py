@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from gamestoreui.usertypes import USER_CHOICES
+from .usertypes import USER_CHOICES
 from cloudinary.models import CloudinaryField
 
 
