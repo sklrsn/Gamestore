@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block title %}Online Game Store{% endblock %}
+
+{% block header %}
+{{ block.super }}
+<link rel="stylesheet" type="text/css" href="{% static 'gamestoreui/style.css' %}">
+{% endblock %}
+
+{% block content %}
+<p><b>Imaginary Awesome Games - Buy and Play Games Online</b>
+    <br>
+    <a href="/profile/register_user/"> Register</a>
+    <a href="/profile/login/"> Login</a>
+</p>
+<div id="tableContainer">
+    <iframe src="https://cloudinary.com" height="500px" width="500px"/>
+</div>
+{% endblock %}

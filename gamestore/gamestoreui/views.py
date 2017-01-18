@@ -130,3 +130,11 @@ def user_logout(request):
     except Exception as e:
         print(e)
         return render(request, 'profiles/system_failure.html')
+
+
+def index(request):
+    try:
+        return render(request, 'index.html')
+    except Exception as e:
+        print(e)
+        return render(request, '400.html')
