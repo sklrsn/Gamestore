@@ -26,7 +26,7 @@ class Game(models.Model):
     resource_info = models.URLField(help_text="Please specify the URL")
     cost = models.DecimalField(default=0.0, decimal_places=2, max_digits=10)
     upload_date = models.DateTimeField(auto_now_add=True)
-    developer = models.ForeignKey(User, related_name='uploaded_games', on_delete=models.CASCADE)
+    developer_info = models.ForeignKey(User, related_name='uploaded_games', on_delete=models.CASCADE)
 
     class Meta:
         db_table = "Game"
