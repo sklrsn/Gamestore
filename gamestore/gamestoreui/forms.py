@@ -13,11 +13,11 @@ class UserForm(forms.ModelForm):
 
 
 class UserProfileForm(forms.ModelForm):
-    usertype = forms.ChoiceField(choices=USER_CHOICES, required=True)
+    user_type = forms.ChoiceField(choices=USER_CHOICES, required=True)
 
     class Meta:
         model = UserProfile
-        fields = ('website', 'picture', 'usertype')
+        fields = ('website', 'picture', 'user_type')
 
 
 class UserProfileUpdateForm(forms.ModelForm):
