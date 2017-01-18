@@ -23,7 +23,7 @@ class Game(models.Model):
     logo = CloudinaryField('logo', blank=True)
     uri = models.URLField(help_text="Please specify the URL")
     cost = models.DecimalField(default=0.0, decimal_places=2, max_digits=10)
-    upload_date = models.DateField(auto_now_add=True)
+    upload_date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         db_table = "Game"
@@ -34,7 +34,7 @@ class Game(models.Model):
 
 class Purchase(models.Model):
     cost = models.DecimalField(default=0.0, decimal_places=2, max_digits=10)
-    purchase_date = models.DateField(auto_now_add=True)
+    purchase_date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         db_table = "Purchase"
@@ -43,8 +43,8 @@ class Purchase(models.Model):
         return self.purchase_date
 
 
-class ScoreBoard(models.Model):
-    last_played = models.DateField(auto_now=True)
+class Score(models.Model):
+    last_played = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table = "Score"
@@ -54,7 +54,7 @@ class ScoreBoard(models.Model):
 
 
 class GameState(models.Model):
-    last_modified = models.DateField(auto_now=True)
+    last_modified = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table = "State"
