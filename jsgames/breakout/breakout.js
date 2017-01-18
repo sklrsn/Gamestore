@@ -29,7 +29,7 @@ $(document).ready(function(){
   var brickOffsetLeft = 30;
   var score = 0;
   var lives = 3;
-  var level = 2;
+  var level = 1;
 
   var bricks = [];
   // Initializing the bricks with status as 1 (not broken)
