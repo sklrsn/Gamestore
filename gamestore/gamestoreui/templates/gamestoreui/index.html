@@ -5,16 +5,61 @@
 
 {% block header %}
 {{ block.super }}
-<link rel="stylesheet" type="text/css" href="{% static 'gamestoreui/style.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'gamestoreui/styles.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'gamestoreui/bootstrap.min.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'gamestoreui/portfolio-item.css' %}">
 {% endblock %}
 
 {% block content %}
-<p><b>Imaginary Awesome Games - Buy and Play Games Online</b>
-    <br>
-    <a href="/profile/register_user/"> Register</a>
-    <a href="/profile/login/"> Login</a>
-</p>
-<div id="tableContainer">
-    <iframe src="https://cloudinary.com" height="500px" width="500px"/>
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">Home</a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li><a href="#">About us</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </div>
+
+    </div>
+</nav>
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header"><b>Please Enter your Credentials to Login</b>
+            </h1>
+            <div class="row">
+                <div class="col-md-8">
+                    <form id="login_form" method="post" role="form" action="/profile/login/">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="form-group col-lg-6">
+                                <label for="usr">Name:</label>
+                                <input type="text" class="form-control" name="username" value=""/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-lg-6">
+                                <label for="pwd">Password:</label>
+                                <input type="password" class="form-control" name="password" value="" size="50"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-lg-6">
+                                <input type="submit" class="btn btn-primary" value="submit"/>
+                            </div>
+                        </div>
+                    </form>
+                    <h3>Don't have an account? No worries, Please <a href="/profile/register_user/"> Register Here</a>
+                    </h3>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
 {% endblock %}

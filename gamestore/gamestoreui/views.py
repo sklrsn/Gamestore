@@ -24,7 +24,7 @@ def update_profile(request):
                     profile_form.picture = request.FILES['picture']
                 profile_form.save()
                 messages.success(request, 'Your profile was successfully updated!')
-                return render(request, 'profiles/success.html')
+                return render(request, 'dashboard.html')
             else:
                 messages.error(request, 'Please correct the error below.')
         else:
@@ -34,7 +34,7 @@ def update_profile(request):
         })
     except Exception as e:
         print(e)
-        return render(request, 'profiles/system_failure.html')
+        return render(request, 'index.html')
 
 
 # Handle Password Reset
@@ -48,7 +48,7 @@ def change_password(request):
                 user = form.save()
                 update_session_auth_hash(request, user)
                 messages.success(request, 'Your password was successfully updated!')
-                return render(request, 'profiles/success.html')
+                return render(request, 'dashboard.html')
             else:
                 messages.error(request, 'Please correct the error below.')
         else:
@@ -58,7 +58,7 @@ def change_password(request):
         })
     except Exception as e:
         print(e)
-        return render(request, 'profiles/system_failure.html')
+        return render(request, 'index.html')
 
 
 # Handle Dynamic User Registration
@@ -66,7 +66,6 @@ def change_password(request):
 def register_user(request):
     try:
         context = RequestContext(request)
-        registered = False
         if request.method == 'POST':
             user_form = UserForm(data=request.POST)
             profile_form = UserProfileForm(data=request.POST)
@@ -81,18 +80,17 @@ def register_user(request):
                 else:
                     profile.picture = cloudinary.CloudinaryImage("sample", format="png")
                 profile.save()
-                registered = True
+                return render(request, 'index.html')
             else:
                 print(user_form.errors, profile_form.errors)
         else:
             user_form = UserForm()
             profile_form = UserProfileForm()
         return render(request, 'profiles/register.html', {
-            'user_form': user_form, 'profile_form': profile_form, 'registered': registered
-        }, context)
+            'user_form': user_form, 'profile_form': profile_form}, context)
     except Exception as e:
         print(e)
-        return render(request, 'profiles/system_failure.html')
+        return render(request, 'index.html')
 
 
 # Handle User Authentication
@@ -106,7 +104,7 @@ def user_login(request):
             if user:
                 if user.is_active:
                     login(request, user)
-                    return render(request, 'profiles/success.html')
+                    return render(request, 'dashboard.html')
                 else:
                     return HttpResponse("Your Game store account is disabled.")
             else:
@@ -114,10 +112,10 @@ def user_login(request):
                     "Invalid login details: {0}, {1}".format(username, password));
                 return HttpResponse("Invalid login details")
         else:
-            return render(request, 'profiles/login.html')
+            return render(request, 'index.html')
     except Exception as e:
         print(e)
-        return render(request, 'profiles/system_failure.html')
+        return render(request, 'index.html')
 
 
 # Handle Session Invalidation
@@ -126,10 +124,10 @@ def user_login(request):
 def user_logout(request):
     try:
         logout(request)
-        return render(request, 'profiles/success.html')
+        return render(request, 'index.html')
     except Exception as e:
         print(e)
-        return render(request, 'profiles/system_failure.html')
+        return render(request, 'index.html')
 
 
 def index(request):
