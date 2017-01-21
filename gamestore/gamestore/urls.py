@@ -5,6 +5,7 @@ from django.contrib import admin
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^data/',include('gamestoredata.urls')),
     url(r'^profile/', include('gamestoreui.urls')),
     url(r'^', include('gamestoreui.urls')),
 ]

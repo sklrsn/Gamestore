@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from gamestoredata.models import UserProfile
-from gamestoredata.usertypes import USER_CHOICES
+from gamestoredata.constants import USER_CHOICES
 
 
 class UserForm(forms.ModelForm):
