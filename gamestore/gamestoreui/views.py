@@ -8,6 +8,7 @@ from django.template import RequestContext
 from django.http import HttpResponse
 from .forms import UserForm, UserProfileForm, UserProfileUpdateForm
 import cloudinary
+from django.core.mail import send_mail
 
 
 # Handle profile updates
@@ -82,6 +83,12 @@ def register_user(request):
                 else:
                     profile.picture = cloudinary.CloudinaryImage("sample", format="png")
                 profile.save()
+
+                # Trigger an email
+                user_email = request.POST.get('email', None)
+                send_mail('Registration Successful', 'Welcome to Online Game store !!!!!!!!!!!!\n Regards,\n Admin',
+                          "onlinegamestore999@gmail.com",
+                          [user_email])
                 return render(request, 'index.html')
             else:
                 print(user_form.errors, profile_form.errors)
