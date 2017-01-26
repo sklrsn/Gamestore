@@ -224,10 +224,29 @@ initializeBricks();
       requestAnimationFrame(draw);
   }
   draw();
-x
-  var msg = {
-       "messageType": "SCORE",
-       "score": parseFloat(score)
-     };
-     window.parent.postMessage(msg, "*");
+  $('#submitscore').click(function(){
+    var msg = {
+         "messageType": "SCORE",
+         "score": parseFloat(score)
+       };
+       //console.log(msg.score);
+       window.parent.postMessage(msg, "*");
+  });
+
+
+
+
+  $('#save').click(function(){
+    var msg = {
+         "messageType": "SAVE",
+         "gameState": {
+           "level":parseFloat(level),
+           "score": parseFloat(score),
+           "bricks":JSON.stringify(bricks)
+         }
+       };
+       //console.log(msg);
+       window.parent.postMessage(msg, "*");
+  });
+
 });
