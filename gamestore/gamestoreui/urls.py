@@ -10,5 +10,6 @@ urlpatterns = [
     url(r'^logout/$', views.user_logout, name='logout'),
     url(r'^home/$', views.home, name='home'),
     url(r'^index/$', views.index, name='index'),
+    url(r'^upload_game/$', views.upload_game, name='upload_game'),
     url(r'^$', views.index, name='index'),
 ]

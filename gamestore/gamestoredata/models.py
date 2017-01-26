@@ -20,10 +20,10 @@ class UserProfile(models.Model):
 
 # model to store game uploads
 class Game(models.Model):
-    name = models.TextField(help_text="Please specify your game name")
-    description = models.TextField(max_length=250)
+    name = models.CharField(max_length=50)
+    description = models.TextField(max_length=100)
     logo = CloudinaryField('logo', blank=True)
-    resource_info = models.URLField(help_text="Please specify the URL")
+    resource_info = models.URLField()
     cost = models.DecimalField(default=0.0, decimal_places=2, max_digits=10)
     upload_date = models.DateTimeField(auto_now_add=True)
     developer_info = models.ForeignKey(User, related_name='uploaded_games', on_delete=models.CASCADE)

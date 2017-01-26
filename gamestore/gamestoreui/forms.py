@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from gamestoredata.models import UserProfile
+from gamestoredata.models import UserProfile, Game
 from gamestoredata.constants import USER_CHOICES
 
 
@@ -24,3 +24,12 @@ class UserProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = UserProfile
         fields = ('website', 'picture')
+
+
+class GameUploadForm(forms.ModelForm):
+    class Meta:
+        model = Game
+        fields = ('name', 'description', 'logo', 'resource_info', 'cost')
+        widgets = {
+            'description': forms.Textarea(attrs={'rows': 4, 'cols': 50}),
+        }
