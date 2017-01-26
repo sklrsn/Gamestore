@@ -9,6 +9,8 @@ from django.http import HttpResponse
 from .forms import UserForm, UserProfileForm, UserProfileUpdateForm
 import cloudinary
 from django.core.mail import send_mail
+from gamestoredata.models import UserProfile
+from django.contrib.auth.models import User
 
 
 # Handle profile updates
@@ -116,7 +118,10 @@ def user_login(request):
                 if user:
                     if user.is_active:
                         login(request, user)
-                        return redirect('/profile/home')
+                        #return redirect('/profile/home')
+                        user = User.objects.get(username=username)
+                        current_user = UserProfile.objects.get(user=user)
+                        return render(request, 'dashboard.html', {'user_type': current_user.user_type})
                     else:
                         return HttpResponse("Your Game store account is disabled.")
                 else:
