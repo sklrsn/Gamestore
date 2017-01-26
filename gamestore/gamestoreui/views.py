@@ -8,6 +8,7 @@ from django.template import RequestContext
 from django.http import HttpResponse
 from .forms import UserForm, UserProfileForm, UserProfileUpdateForm
 import cloudinary
+from django.core.mail import send_mail
 
 
 # Handle profile updates
@@ -39,25 +40,27 @@ def update_profile(request):
 
 # Handle Password Reset
 
-@login_required
 def change_password(request):
-    try:
-        if request.method == 'POST':
-            form = PasswordChangeForm(request.user, request.POST)
-            if form.is_valid():
-                user = form.save()
-                update_session_auth_hash(request, user)
-                messages.success(request, 'Your password was successfully updated!')
-                return render(request, 'dashboard.html')
+    if request.user.is_authenticated():
+        try:
+            if request.method == 'POST':
+                form = PasswordChangeForm(request.user, request.POST)
+                if form.is_valid():
+                    user = form.save()
+                    update_session_auth_hash(request, user)
+                    messages.success(request, 'Your password was successfully updated!')
+                    return render(request, 'dashboard.html')
+                else:
+                    messages.error(request, 'Please correct the error below.')
             else:
-                messages.error(request, 'Please correct the error below.')
-        else:
-            form = PasswordChangeForm(request.user)
-        return render(request, 'profiles/change_password.html', {
-            'form': form
-        })
-    except Exception as e:
-        print(e)
+                form = PasswordChangeForm(request.user)
+            return render(request, 'profiles/change_password.html', {
+                'form': form
+            })
+        except Exception as e:
+            print(e)
+            return render(request, 'index.html')
+    else:
         return render(request, 'index.html')
 
 
@@ -80,6 +83,12 @@ def register_user(request):
                 else:
                     profile.picture = cloudinary.CloudinaryImage("sample", format="png")
                 profile.save()
+
+                # Trigger an email
+                user_email = request.POST.get('email', None)
+                send_mail('Registration Successful', 'Welcome to Online Game store !!!!!!!!!!!!\n Regards,\n Admin',
+                          "onlinegamestore999@gmail.com",
+                          [user_email])
                 return render(request, 'index.html')
             else:
                 print(user_form.errors, profile_form.errors)
@@ -96,34 +105,38 @@ def register_user(request):
 # Handle User Authentication
 
 def user_login(request):
-    try:
-        if request.method == 'POST':
-            username = request.POST['username']
-            password = request.POST['password']
-            user = authenticate(username=username, password=password)
-            if user:
-                if user.is_active:
-                    login(request, user)
-                    return render(request, 'dashboard.html')
+    if request.user.is_authenticated():
+        return render(request, 'dashboard.html')
+    else:
+        try:
+            if request.method == 'POST':
+                username = request.POST['username']
+                password = request.POST['password']
+                user = authenticate(username=username, password=password)
+                if user:
+                    if user.is_active:
+                        login(request, user)
+                        return redirect('/profile/home')
+                    else:
+                        return HttpResponse("Your Game store account is disabled.")
                 else:
-                    return HttpResponse("Your Game store account is disabled.")
+                    print(
+                        "Invalid login details: {0}, {1}".format(username, password));
+                    return HttpResponse("Invalid login details")
             else:
-                print(
-                    "Invalid login details: {0}, {1}".format(username, password));
-                return HttpResponse("Invalid login details")
-        else:
+                return render(request, 'index.html')
+        except Exception as e:
+            print(e)
             return render(request, 'index.html')
-    except Exception as e:
-        print(e)
-        return render(request, 'index.html')
 
 
 # Handle Session Invalidation
 
-@login_required
+
 def user_logout(request):
     try:
-        logout(request)
+        if request.user.is_authenticated():
+            logout(request)
         return render(request, 'index.html')
     except Exception as e:
         print(e)
@@ -136,3 +149,8 @@ def index(request):
     except Exception as e:
         print(e)
         return render(request, '400.html')
+
+
+@login_required
+def home(request):
+    render(request, 'dashboard.html')

@@ -117,8 +117,16 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 CLOUDINARY = {
-    'cloud_name' : 'dma8tn6ge',
-    'api_key' : '627378437639745',
+    'cloud_name': 'dma8tn6ge',
+    'api_key': '627378437639745',
     'api_secret': 'TUeQFTw_hk9i4NIDNz-ZoJAeseo',
     'secure': True,
 }
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'onlinegamestore999@gmail.com'
+EMAIL_HOST_PASSWORD = 'Qwerty@1989'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
