@@ -5,28 +5,11 @@
 
 {% block header %}
     {{ block.super }}
-    <link rel="stylesheet" type="text/css" href="{% static 'gamestoreui/styles.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'gamestoreui/bootstrap.min.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'gamestoreui/portfolio-item.css' %}">
 {% endblock %}
 
 {% block content %}
-    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-        <div class="container">
-            <div class="navbar-header">
-                <a class="navbar-brand" href="/profile/login"><b>OnlineGameStore</b></a>
-            </div>
-
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav">
-                    <li><a href="#">About us</a></li>
-                    <li><a href="#">Contact</a></li>
-                </ul>
-            </div>
-
-        </div>
-    </nav>
-
     <div class="container">
         <div class="row">
             <div class="col-lg-12">

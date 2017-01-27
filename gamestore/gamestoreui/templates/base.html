@@ -11,13 +11,48 @@
         <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"
               integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
               crossorigin="anonymous">
+
+        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="/profile/login"><b>OnlineGameStore</b></a>
+                </div>
+
+                {% if user.is_authenticated %}
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                        <ul class="nav navbar-nav navbar-right">
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ request.user }} <b
+                                        class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="/profile/update_profile/">Update Profile</a></li>
+                                    <li><a href="/profile/change_password/">Change Password</a></li>
+                                    <li><a href="/profile/logout/">Sign Out</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                {% else %}
+                    div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav">
+                        <li><a href="#">About us</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                    </div>
+                {% endif %}
+
+            </div>
+        </nav>
     {% endblock %}
 </head>
 <body>
 {% block content %}
     Rough outline of the service (including interaction with the game). Note that this is just an example. You are free
-    to
-    decide on the style and layout.
+    to decide on the style and layout.
+{% endblock %}
+
+{% block footer %}
+
 {% endblock %}
 </body>
 </html>
