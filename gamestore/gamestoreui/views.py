@@ -157,7 +157,11 @@ def index(request):
 def home(request):
     user = User.objects.get(username=request.user)
     current_user = UserProfile.objects.get(user=user)
-    return render(request, 'dashboard.html', {'user_type': current_user.user_type})
+
+    games_list = Game.objects.filter(developer_info=user)
+    upload_form = GameUploadForm()
+    return render(request, 'dashboard.html',
+                  {'user_type': current_user.user_type, 'games_list': games_list, 'upload_form': upload_form})
 
 
 # Allow the developer to upload a game to to the app store
