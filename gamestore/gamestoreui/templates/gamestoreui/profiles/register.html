@@ -3,7 +3,10 @@
 {% load bootstrap3 %}
 {% bootstrap_css %}
 {% bootstrap_javascript jquery=1 %}
-{% block title %}Online Game Store{% endblock %}
+
+{% block title %}
+    {{ block.super }}
+{% endblock %}
 
 {% block header %}
     {{ block.super }}
