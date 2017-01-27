@@ -118,16 +118,13 @@ def user_login(request):
                 if user:
                     if user.is_active:
                         login(request, user)
-                        # return redirect('/profile/home')
-                        user = User.objects.get(username=username)
-                        current_user = UserProfile.objects.get(user=user)
-                        return render(request, 'dashboard.html', {'user_type': current_user.user_type})
+                        return redirect('/profile/home')
                     else:
                         return HttpResponse("Your Game store account is disabled.")
                 else:
                     print(
                         "Invalid login details: {0}, {1}".format(username, password));
-                    return HttpResponse("Invalid login details")
+                    return render(request, 'index.html')
             else:
                 return render(request, 'index.html')
         except Exception as e:
@@ -158,7 +155,9 @@ def index(request):
 
 @login_required
 def home(request):
-    return render(request, 'dashboard.html')
+    user = User.objects.get(username=request.user)
+    current_user = UserProfile.objects.get(user=user)
+    return render(request, 'dashboard.html', {'user_type': current_user.user_type})
 
 
 # Allow the developer to upload a game to to the app store
