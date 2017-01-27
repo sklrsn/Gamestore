@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'cloudinary',
     'gamestoredata',
     'gamestoreui',
+    'bootstrap3',
 ]
 
 MIDDLEWARE = [

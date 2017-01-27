@@ -1,19 +1,21 @@
 {% extends "base.html" %}
 {% load staticfiles %}
 
-{% block title %}Online Game Store{% endblock %}
+{% block title %}
+    {{ block.super }}
+{% endblock %}
 
 {% block header %}
-{{ block.super }}
-<link rel="stylesheet" type="text/css" href="{% static 'gamestoreui/styles.css' %}">
-<link rel="stylesheet" type="text/css" href="{% static 'gamestoreui/bootstrap.min.css' %}">
-<link rel="stylesheet" type="text/css" href="{% static 'gamestoreui/portfolio-item.css' %}">
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'gamestoreui/style.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'gamestoreui/bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'gamestoreui/portfolio-item.css' %}">
 {% endblock %}
 
 {% block content %}
-{% if user_type == "D" %}
-{% include "developer.html" %}
-{% else %}
-{% include "player.html" %}
-{%endif%}
+    {% if user_type == "D" %}
+        {% include "developer.html" %}
+    {% else %}
+        {% include "player.html" %}
+    {% endif %}
 {% endblock %}

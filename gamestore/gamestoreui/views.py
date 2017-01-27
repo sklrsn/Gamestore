@@ -3,13 +3,13 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from django.db import transaction
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.template import RequestContext
 from django.http import HttpResponse
-from .forms import UserForm, UserProfileForm, UserProfileUpdateForm
+from .forms import UserForm, UserProfileForm, UserProfileUpdateForm, GameUploadForm
 import cloudinary
 from django.core.mail import send_mail
-from gamestoredata.models import UserProfile
+from gamestoredata.models import UserProfile, Game
 from django.contrib.auth.models import User
 
 
@@ -118,16 +118,13 @@ def user_login(request):
                 if user:
                     if user.is_active:
                         login(request, user)
-                        #return redirect('/profile/home')
-                        user = User.objects.get(username=username)
-                        current_user = UserProfile.objects.get(user=user)
-                        return render(request, 'dashboard.html', {'user_type': current_user.user_type})
+                        return redirect('/profile/home')
                     else:
                         return HttpResponse("Your Game store account is disabled.")
                 else:
                     print(
                         "Invalid login details: {0}, {1}".format(username, password));
-                    return HttpResponse("Invalid login details")
+                    return render(request, 'index.html')
             else:
                 return render(request, 'index.html')
         except Exception as e:
@@ -158,4 +155,31 @@ def index(request):
 
 @login_required
 def home(request):
-    render(request, 'dashboard.html')
+    user = User.objects.get(username=request.user)
+    current_user = UserProfile.objects.get(user=user)
+    return render(request, 'dashboard.html', {'user_type': current_user.user_type})
+
+
+# Allow the developer to upload a game to to the app store
+@login_required
+def upload_game(request):
+    if request.method == 'GET':
+        upload_form = GameUploadForm()
+        return render(request, 'profiles/game_upload_form.html', {
+            'upload_form': upload_form})
+    else:
+        user = User.objects.get(username=request.user)
+        # check for the for logo attachment, if not available set the default logo
+        if 'logo' in request.FILES:
+            picture = request.FILES['logo']
+        else:
+            picture = cloudinary.CloudinaryImage("sample", format="png")
+        upload_game_form = GameUploadForm(data=request.POST)
+        if upload_game_form.is_valid():
+            game = Game(id=None, name=upload_game_form.cleaned_data['name'],
+                        description=upload_game_form.cleaned_data['description'],
+                        logo=picture,
+                        resource_info=upload_game_form.cleaned_data['resource_info'],
+                        cost=upload_game_form.cleaned_data['cost'], developer_info=user)
+            game.save()
+        return redirect('/profile/home')

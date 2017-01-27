@@ -10,7 +10,7 @@
 
 {% block header %}
     {{ block.super }}
-    <link rel="stylesheet" type="text/css" href="{% static 'gamestoreui/styles.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'gamestoreui/game-upload.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'gamestoreui/bootstrap.min.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'gamestoreui/portfolio-item.css' %}">
 {% endblock %}
@@ -19,13 +19,15 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
-                <h1 class="page-header"><b>Update Password</b></h1>
+                <h1 class="page-header"><b>Please share the game info</b>
+                </h1>
                 <div class="row">
                     <div class="col-md-8">
-                        <form method="post">
+                        <form id="upload_form" class="form" method="post" role="form"
+                              action="/profile/upload_game/">
                             {% csrf_token %}
-                            {% bootstrap_form form %}
-                            <input type="submit" class="btn btn-success" value="Update Password">
+                            {% bootstrap_form upload_form %}
+                            <input type="submit" class="btn btn-success" value="Add to Store">
                         </form>
                     </div>
                 </div>
@@ -34,4 +36,3 @@
     </div>
 
 {% endblock %}
-
