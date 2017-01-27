@@ -108,7 +108,7 @@ def register_user(request):
 
 def user_login(request):
     if request.user.is_authenticated():
-        return render(request, 'dashboard.html')
+        return redirect('/profile/home')
     else:
         try:
             if request.method == 'POST':
