@@ -18,7 +18,7 @@
                     {% for game in games_list %}
                         <tr>
                             <td><img src={{ game.logo }} height="75" width="75" alt="Not available"></td>
-                            <td>{{ game.name }}</td>
+                            <td><a href="{% url 'edit_game' game.id %}">{{ game.name }}</a></td>
                             <td>{{ game.description }}</td>
                             <td>{{ game.cost }}</td>
                         </tr>
@@ -35,7 +35,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                            aria-hidden="true">&times;</span></button>
+                            aria-hidden="true">x</span></button>
                 </div>
                 <div class="modal-body">
                     <form method="POST" action="/profile/upload_game/" class="form-signin">
@@ -49,3 +49,5 @@
             </div>
         </div>
     </div>
+
+</div>

@@ -25,12 +25,12 @@ class Game(models.Model):
     logo = models.URLField()
     resource_info = models.URLField()
     cost = models.DecimalField(default=0.0, decimal_places=2, max_digits=10)
-    upload_date = models.DateTimeField(auto_now_add=True)
+    modified_date = models.DateTimeField(auto_now_add=True)
     developer_info = models.ForeignKey(User, related_name='uploaded_games', on_delete=models.CASCADE)
 
     class Meta:
         db_table = "Game"
-        ordering = ['upload_date']
+        ordering = ['modified_date']
 
     def __str__(self):
         return self.name

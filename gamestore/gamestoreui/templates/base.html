@@ -1,3 +1,4 @@
+{% load cloudinary %}
 <!DOCTYPE html>
 <html>
 <head>
@@ -26,10 +27,7 @@
                                     <b class="caret"></b></a>
                                 <ul class="dropdown-menu">
                                     <li><a href="#"> Welcome {{ request.user }}</a></li>
-                                    <li><img
-                                            src="https://img.clipartfest.com/3a847cb2a0311f637d3066575912ea04_-profile-user-icon-icon-clipart-user-icon_512-512.png"
-                                            height="100" width="100" align="center">
-                                    </li>
+                                    <li>{% cloudinary "profile-picture.png" width=75 height=75 crop="fill" %}</li>
                                     <li><a href="/profile/update_profile/">Update Profile</a></li>
                                     <li><a href="/profile/change_password/">Change Password</a></li>
                                     <li><a href="/profile/logout/">Sign Out</a></li>

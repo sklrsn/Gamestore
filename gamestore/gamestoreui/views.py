@@ -3,14 +3,16 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from django.db import transaction
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.template import RequestContext
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from .forms import UserForm, UserProfileForm, UserProfileUpdateForm, GameUploadForm
 import cloudinary
 from django.core.mail import send_mail
 from gamestoredata.models import UserProfile, Game
 from django.contrib.auth.models import User
+from django.core.urlresolvers import reverse
+import datetime
 
 
 # Handle profile updates
@@ -123,7 +125,7 @@ def user_login(request):
                         return HttpResponse("Your Game store account is disabled.")
                 else:
                     print(
-                        "Invalid login details: {0}, {1}".format(username, password));
+                        "Invalid login details: {0}, {1}".format(username, password))
                     return render(request, 'index.html')
             else:
                 return render(request, 'index.html')
@@ -133,7 +135,6 @@ def user_login(request):
 
 
 # Handle Session Invalidation
-
 
 def user_logout(request):
     try:
@@ -181,6 +182,41 @@ def upload_game(request):
                         description=upload_game_form.cleaned_data['description'],
                         logo=upload_game_form.cleaned_data['logo'],
                         resource_info=upload_game_form.cleaned_data['resource_info'],
-                        cost=upload_game_form.cleaned_data['cost'], developer_info=user)
+                        cost=upload_game_form.cleaned_data['cost'],
+                        modified_date=datetime.datetime.now(), developer_info=user)
             game.save()
-        return redirect('/profile/home')
+            return HttpResponseRedirect(redirect_to=reverse('home'))
+
+
+@login_required
+def edit_game(request, game_id):
+    if request.method == 'GET':
+        game = get_object_or_404(Game, id=game_id, developer_info=request.user)
+        form = GameUploadForm(instance=game)
+        return render(request, 'edit_game.html', {'form': form, 'user': request.user})
+
+    if request.method == 'POST':
+        game_form = GameUploadForm(data=request.POST)
+        user = User.objects.get(username=request.user)
+
+        if game_form.is_valid() and request.POST['action'].lower() == 'save':
+            game = Game(id=game_id, name=game_form.cleaned_data['name'],
+                        description=game_form.cleaned_data['description'],
+                        logo=game_form.cleaned_data['logo'],
+                        resource_info=game_form.cleaned_data['resource_info'],
+                        cost=game_form.cleaned_data['cost'],
+                        modified_date=datetime.datetime.now(), developer_info=user)
+            game.save()
+            messages.success(request=request, message='Game updated successfully.')
+            return HttpResponseRedirect(redirect_to=reverse('home'))
+
+        elif game_form.is_valid() and request.POST['action'].lower() == 'delete':
+            Game.objects.filter(id=game_id, developer_info=user).delete()
+            messages.success(request=request, message='Game removed successfully.')
+            return HttpResponseRedirect(redirect_to=reverse('home'))
+
+        else:
+            print('Invalid Request')
+            return HttpResponseRedirect(redirect_to=reverse('home'))
+    else:
+        return HttpResponseRedirect(redirect_to=reverse('home'))
