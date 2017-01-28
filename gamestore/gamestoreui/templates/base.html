@@ -22,9 +22,14 @@
                     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                         <ul class="nav navbar-nav navbar-right">
                             <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ request.user }} <b
-                                        class="caret"></b></a>
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">My Account
+                                    <b class="caret"></b></a>
                                 <ul class="dropdown-menu">
+                                    <li><a href="#"> Welcome {{ request.user }}</a></li>
+                                    <li><img
+                                            src="https://img.clipartfest.com/3a847cb2a0311f637d3066575912ea04_-profile-user-icon-icon-clipart-user-icon_512-512.png"
+                                            height="100" width="100" align="center">
+                                    </li>
                                     <li><a href="/profile/update_profile/">Update Profile</a></li>
                                     <li><a href="/profile/change_password/">Change Password</a></li>
                                     <li><a href="/profile/logout/">Sign Out</a></li>

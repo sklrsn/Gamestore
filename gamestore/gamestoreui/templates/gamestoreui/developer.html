@@ -1,14 +1,6 @@
-{% load cloudinary %}
 {% load bootstrap3 %}
 {% bootstrap_css %}
-{% bootstrap_javascript jquery=1 %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Developer</title>
-</head>
-<body>
+
 <div class="container">
     <div class="row">
         <div class="col-md-8">
@@ -25,9 +17,9 @@
                     <tbody>
                     {% for game in games_list %}
                         <tr>
-                            <td>{% cloudinary "sample.jpg" width=50 height=50 crop="fill" %}</td>
-                            <td><p>{{ game.name }}</p></td>
-                            <td>{{ game.description }}
+                            <td><img src={{ game.logo }} height="75" width="75" alt="Not available"></td>
+                            <td>{{ game.name }}</td>
+                            <td>{{ game.description }}</td>
                             <td>{{ game.cost }}</td>
                         </tr>
                     {% endfor %}
@@ -57,5 +49,3 @@
             </div>
         </div>
     </div>
-</body>
-</html>

@@ -159,6 +159,7 @@ def home(request):
     current_user = UserProfile.objects.get(user=user)
 
     games_list = Game.objects.filter(developer_info=user)
+
     upload_form = GameUploadForm()
     return render(request, 'dashboard.html',
                   {'user_type': current_user.user_type, 'games_list': games_list, 'upload_form': upload_form})
@@ -173,16 +174,12 @@ def upload_game(request):
             'upload_form': upload_form})
     else:
         user = User.objects.get(username=request.user)
-        # check for the for logo attachment, if not available set the default logo
-        if 'logo' in request.FILES:
-            picture = request.FILES['logo']
-        else:
-            picture = cloudinary.CloudinaryImage("sample", format="png")
+
         upload_game_form = GameUploadForm(data=request.POST)
         if upload_game_form.is_valid():
             game = Game(id=None, name=upload_game_form.cleaned_data['name'],
                         description=upload_game_form.cleaned_data['description'],
-                        logo=picture,
+                        logo=upload_game_form.cleaned_data['logo'],
                         resource_info=upload_game_form.cleaned_data['resource_info'],
                         cost=upload_game_form.cleaned_data['cost'], developer_info=user)
             game.save()
