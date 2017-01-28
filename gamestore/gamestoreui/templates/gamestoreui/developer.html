@@ -1,14 +1,6 @@
-{% load cloudinary %}
 {% load bootstrap3 %}
 {% bootstrap_css %}
-{% bootstrap_javascript jquery=1 %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Developer</title>
-</head>
-<body>
+
 <div class="container">
     <div class="row">
         <div class="col-md-8">
@@ -25,9 +17,9 @@
                     <tbody>
                     {% for game in games_list %}
                         <tr>
-                            <td>{% cloudinary "sample.jpg" width=50 height=50 crop="fill" %}</td>
-                            <td><p>{{ game.name }}</p></td>
-                            <td>{{ game.description }}
+                            <td><img src={{ game.logo }} height="75" width="75" alt="Not available"></td>
+                            <td><a href="{% url 'edit_game' game.id %}">{{ game.name }}</a></td>
+                            <td>{{ game.description }}</td>
                             <td>{{ game.cost }}</td>
                         </tr>
                     {% endfor %}
@@ -43,7 +35,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                            aria-hidden="true">&times;</span></button>
+                            aria-hidden="true">x</span></button>
                 </div>
                 <div class="modal-body">
                     <form method="POST" action="/profile/upload_game/" class="form-signin">
@@ -57,5 +49,5 @@
             </div>
         </div>
     </div>
-</body>
-</html>
+
+</div>

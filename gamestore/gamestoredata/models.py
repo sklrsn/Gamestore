@@ -23,15 +23,15 @@ class UserProfile(models.Model):
 class Game(models.Model):
     name = models.CharField(max_length=50)
     description = models.TextField(max_length=100)
-    logo = CloudinaryField('logo', blank=True)
+    logo = models.URLField()
     resource_info = models.URLField()
     cost = models.DecimalField(default=0.0, decimal_places=2, max_digits=10)
-    upload_date = models.DateTimeField(auto_now_add=True)
+    modified_date = models.DateTimeField(auto_now_add=True)
     developer_info = models.ForeignKey(User, related_name='uploaded_games', on_delete=models.CASCADE)
 
     class Meta:
         db_table = "Game"
-        ordering = ['upload_date']
+        ordering = ['modified_date']
 
     def to_json_dict(self):
         res = {

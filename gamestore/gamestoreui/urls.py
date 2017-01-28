@@ -11,6 +11,7 @@ urlpatterns = [
     url(r'^home/$', views.home, name='home'),
     url(r'^index/$', views.index, name='index'),
     url(r'^upload_game/$', views.upload_game, name='upload_game'),
+    url(r'^edit_game/(?P<game_id>[0-9]+)/$', views.edit_game, name='edit_game'),
     url(r'^$', views.index, name='index'),
     url(r'^player/(?P<game_id>[0-9]+)/$', views.play_game, name='play_game'),
 ]
