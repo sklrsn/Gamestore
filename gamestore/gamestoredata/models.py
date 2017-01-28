@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from .constants import USER_CHOICES
 from cloudinary.models import CloudinaryField
+from django.core.urlresolvers import reverse
 
 
 # Model to Store the user details
@@ -32,6 +33,18 @@ class Game(models.Model):
         db_table = "Game"
         ordering = ['upload_date']
 
+    def to_json_dict(self):
+        res = {
+            'id': self.id,
+            'name': self.name,
+            'description': self.description,
+            'url': reverse("play_game", kwargs={'game_id': self.id}),
+            'cost': self.cost,
+            'upload_date': str(self.upload_date),
+            'logo': self.logo
+            }
+        return res
+
     def __str__(self):
         return self.name
 
@@ -52,12 +65,16 @@ class Purchase(models.Model):
 
 
 # store scores history
+# TODO : rename player_info to player and game_info to game
 class Score(models.Model):
     game_info = models.ForeignKey(Game, related_name='game_info', on_delete=models.CASCADE)
     player_info = models.ForeignKey(User, related_name='player_info', on_delete=models.CASCADE)
     last_played = models.DateTimeField(auto_now=True)
     score = models.BigIntegerField(default=0)
-
+    def as_json_leader(self):
+        return dict(
+            player=self.player_info.username,
+            score=self.score)
     class Meta:
         db_table = "Score"
         ordering = ['last_played']
@@ -67,6 +84,7 @@ class Score(models.Model):
 
 
 # store state of the previous action
+# TODO change app_state to game_state
 class GameState(models.Model):
     game = models.ForeignKey(Game, related_name='game_state', on_delete=models.CASCADE)
     player = models.ForeignKey(User, related_name='player_state', on_delete=models.CASCADE)

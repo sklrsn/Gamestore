@@ -12,4 +12,5 @@ urlpatterns = [
     url(r'^index/$', views.index, name='index'),
     url(r'^upload_game/$', views.upload_game, name='upload_game'),
     url(r'^$', views.index, name='index'),
+    url(r'^player/(?P<game_id>[0-9]+)/$', views.play_game, name='play_game'),
 ]

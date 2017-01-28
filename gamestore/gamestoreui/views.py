@@ -4,12 +4,13 @@ from django.contrib.auth import authenticate, login, logout, update_session_auth
 from django.contrib.auth.forms import PasswordChangeForm
 from django.db import transaction
 from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404
 from django.template import RequestContext
-from django.http import HttpResponse
+from django.http.response import HttpResponseRedirect, HttpResponse, JsonResponse
 from .forms import UserForm, UserProfileForm, UserProfileUpdateForm, GameUploadForm
 import cloudinary
 from django.core.mail import send_mail
-from gamestoredata.models import UserProfile, Game
+from gamestoredata.models import UserProfile, Game, Score, GameState
 from django.contrib.auth.models import User
 
 
@@ -187,3 +188,46 @@ def upload_game(request):
                         cost=upload_game_form.cleaned_data['cost'], developer_info=user)
             game.save()
         return redirect('/profile/home')
+@login_required
+def play_game(request,game_id):
+    user = User.objects.get(username=request.user)
+    current_user = UserProfile.objects.get(user=user)
+    print('gameid = '+game_id)
+    game = get_object_or_404(Game, id=game_id)
+    if request.method == 'GET':
+        leaders = Score.objects.filter(game_info=game).order_by("-score")[:5]
+        leaderjson={}
+        leaderjson=[ob.as_json_leader() for ob in leaders]
+        print(game.to_json_dict())
+        return render(request,"player.html",{'game': game.to_json_dict(),
+                                                           'game_server': game.resource_info,'leaders': leaderjson})
+    elif request.method == 'POST':
+        response = {
+            "error": None,
+            "result": None
+        }
+        messageType = request.POST.get('messageType')
+        #Do validations
+        if messageType == 'SCORE':
+            latestscore = request.POST.get('score');
+            scoreobj = Score(id=None,score=latestscore,player_info=user,game_info=game);
+            scoreobj.save()
+            response['result'] = "Score saved successfully"
+            return JsonResponse(status=201, data=response)
+        elif messageType == 'SAVE':
+            gamestate = request.POST.get('gameState');
+            gameStateObj, created = GameState.objects.update_or_create(game = game, player = user, defaults={'app_state': gamestate},)
+            #gameStateObj = GameState(id=None, game = game, player = user, app_state = gamestate)
+            gameStateObj.save()
+            response['result'] = None
+            return JsonResponse(status=201, data=response)
+        elif messageType == "LOAD_REQUEST":
+            savedGame = GameState.objects.filter(player=user,game=game).order_by("last_modified")
+            if savedGame.exists():
+                response['result'] = savedGame[0].app_state
+                return JsonResponse(status=200, data=response)
+            else:
+                response['result'] = None
+                response['error'] = "There are no saved games."
+                return JsonResponse(status=200, data=response)
+        return HttpResponse(status=405, content="Invalid method specified.")
