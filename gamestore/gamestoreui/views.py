@@ -6,7 +6,7 @@ from django.db import transaction
 from django.shortcuts import render, redirect, get_object_or_404
 from django.shortcuts import get_object_or_404
 from django.template import RequestContext
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from .forms import UserForm, UserProfileForm, UserProfileUpdateForm, GameUploadForm
 import cloudinary
 from django.core.mail import send_mail
@@ -187,6 +187,7 @@ def upload_game(request):
                         modified_date=datetime.datetime.now(), developer_info=user)
             game.save()
             return HttpResponseRedirect(redirect_to=reverse('home'))
+
 @login_required
 def play_game(request,game_id):
     user = User.objects.get(username=request.user)
@@ -221,7 +222,15 @@ def play_game(request,game_id):
             response['result'] = None
             return JsonResponse(status=201, data=response)
         elif messageType == "LOAD_REQUEST":
-
+            savedGame = GameState.objects.filter(player=user,game=game).order_by("last_modified")
+            if savedGame.exists():
+                response['result'] = savedGame[0].app_state
+                return JsonResponse(status=200, data=response)
+            else:
+                response['result'] = None
+                response['error'] = "There are no saved games."
+                return JsonResponse(status=200, data=response)
+        return HttpResponse(status=405, content="Invalid method specified.")
 
 @login_required
 def edit_game(request, game_id):
@@ -255,12 +264,3 @@ def edit_game(request, game_id):
             return HttpResponseRedirect(redirect_to=reverse('home'))
     else:
         return HttpResponseRedirect(redirect_to=reverse('home'))
-            savedGame = GameState.objects.filter(player=user,game=game).order_by("last_modified")
-            if savedGame.exists():
-                response['result'] = savedGame[0].app_state
-                return JsonResponse(status=200, data=response)
-            else:
-                response['result'] = None
-                response['error'] = "There are no saved games."
-                return JsonResponse(status=200, data=response)
-        return HttpResponse(status=405, content="Invalid method specified.")

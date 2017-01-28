@@ -196,7 +196,6 @@ $(document).ready(function() {
         drawLives();
         drawLevel();
         collisionDetection();
-        console.log('dx:'+dx+ '  dy:'+dy)
         if (x + dx > mCanvas.width - ballRadius || x + dx < ballRadius) {
             dx = -dx;
         }
@@ -250,6 +249,7 @@ $(document).ready(function() {
             "gameState": {
                 "level": parseFloat(level),
                 "score": parseFloat(score),
+                "lives": parseFloat(lives),
                 "bricks": JSON.stringify(bricks)
             }
         };
@@ -277,6 +277,7 @@ $(document).ready(function() {
       console.log('Level:'+data.level);
       level = parseFloat(data.level);
       score = parseFloat(data.score);
+      lives = parseFloat(data.lives);
       bricks = $.parseJSON(data.bricks);
     }
 });

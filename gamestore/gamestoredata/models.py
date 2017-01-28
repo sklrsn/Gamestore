@@ -40,7 +40,7 @@ class Game(models.Model):
             'description': self.description,
             'url': reverse("play_game", kwargs={'game_id': self.id}),
             'cost': self.cost,
-            'upload_date': str(self.upload_date),
+            'modified_date': str(self.modified_date),
             'logo': self.logo
             }
         return res
