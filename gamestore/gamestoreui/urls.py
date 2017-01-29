@@ -12,5 +12,7 @@ urlpatterns = [
     url(r'^upload_game/$', views.upload_game, name='upload_game'),
     url(r'^edit_game/(?P<game_id>[0-9]+)/$', views.edit_game, name='edit_game'),
     url(r'^$', views.index, name='index'),
+    url(r'^about_us/$', views.about_us, name='about_us'),
+    url(r'^contact_us/$', views.contact_us, name='contact_us'),
     url(r'^player/(?P<game_id>[0-9]+)/$', views.play_game, name='play_game'),
 ]

@@ -241,3 +241,11 @@ def manage_profile(request):
         return HttpResponseRedirect(redirect_to=reverse('home'))
 
     return HttpResponseRedirect(redirect_to=reverse('home'))
+
+
+def about_us(request):
+    return render(request, 'about_us.html')
+
+
+def contact_us(request):
+    return render(request, 'contact_us.html')

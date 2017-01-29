@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load bootstrap3 %}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery=1 %}
+
+{% block title %}
+    {{ block.super }}
+{% endblock %}
+
+{% block header %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'gamestoreui/bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'gamestoreui/portfolio-item.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'gamestoreui/app-styles.css' %}">
+    <style type="text/css">
+        .modal-backdrop {
+            z-index: 0;
+        !important;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <p><b>The topic for the course project for CSE-C3210 2016-2017 is an online game store for JavaScript games. The
+            service has two types of users: players and developers. Developers can add their games to the service and
+            set a price for it. Players can buy games on the platform and then play purchased games online.</b></p>
+    </div>
+
+    <div class="container">
+        <h3><b>Contributors</b></h3>
+        <div class="contributors">
+
+            <div style="float: right">
+                <img class="img-circle"
+                     src="http://res.cloudinary.com/dma8tn6ge/image/upload/v1485607639/profile-picture.png"
+                     height="100px"
+                     width="100px"/>
+                <h3>Rajagopalan Ranganathan</h3>
+                <h4>Master's Programme in Computer Science.</h4>
+                <p></p>
+            </div>
+
+            <div>
+                <img class="img-circle"
+                     src="http://res.cloudinary.com/dma8tn6ge/image/upload/v1485607639/profile-picture.png"
+                     height="100px" width="100px"/>
+                <h3>SunilKumar Mohanthy</h3>
+                <h4>Master's Programme in Computer Science.</h4>
+            </div>
+
+            <div>
+                <img class="img-circle"
+                     src="http://res.cloudinary.com/dma8tn6ge/image/upload/v1485706543/kalaiarasan.jpg"
+                     height="100px" width="100px"/>
+                <h3>Kalaiarasan Saminathan</h3>
+                <h4>Master's Programme in Computer Science.</h4>
+            </div>
+        </div>
+
+    </div>
+
+{% endblock %}

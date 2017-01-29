@@ -40,4 +40,5 @@ class GameUploadForm(forms.ModelForm):
         labels = {
             'logo': ('Game Logo'),
             'resource_info': ('Resource URL'),
+            'cost': ('Cost'),
         }
