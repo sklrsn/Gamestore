@@ -37,3 +37,7 @@ class GameUploadForm(forms.ModelForm):
         widgets = {
             'description': forms.Textarea(attrs={'rows': 4, 'cols': 50}),
         }
+        labels = {
+            'logo': ('Game Logo'),
+            'resource_info': ('Resource URL'),
+        }
