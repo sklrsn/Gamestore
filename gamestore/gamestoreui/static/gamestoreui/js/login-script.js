@@ -40,7 +40,7 @@ $(function () {
         $(this).parent().addClass('active');
         $(this).parent().siblings().removeClass('active');
 
-        target = $(this).attr('href');
+        var target = $(this).attr('href');
 
         $('.tab-content > div').not(target).hide();
 

@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load staticfiles %}
+{% load bootstrap3 %}
 
 {% block title %}
     {{ block.super }}
@@ -7,9 +8,15 @@
 
 {% block header %}
     {{ block.super }}
-    <link rel="stylesheet" type="text/css" href="{% static 'gamestoreui/style.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'gamestoreui/bootstrap.min.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'gamestoreui/portfolio-item.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'gamestoreui/app-styles.css' %}">
+    <style type="text/css">
+        .modal-backdrop {
+            z-index: 0;
+        !important;
+        }
+    </style>
 {% endblock %}
 
 {% block content %}

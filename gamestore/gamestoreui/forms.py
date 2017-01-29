@@ -24,6 +24,10 @@ class UserProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = UserProfile
         fields = ('website', 'picture')
+        labels = {
+            'website': ('Personal website (optional)'),
+            'picture': ('Upload Profile Picture (optional)'),
+        }
 
 
 class GameUploadForm(forms.ModelForm):

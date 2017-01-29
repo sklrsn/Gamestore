@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load bootstrap3 %}
+
+{% block title %}
+    {{ block.super }}
+{% endblock %}
+
+{% block header %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'gamestoreui/portfolio-item.css' %}">
+    <style type="text/css">
+        .modal-backdrop {
+            z-index: 0;
+        !important;
+        }
+
+        body {
+            padding-left: 20%;
+            background: #c1bdba;
+            font-family: 'Titillium Web', sans-serif;
+            align-items: center;
+        }
+    </style>
+
+{% endblock %}
+{% block content %}
+    <table>
+        <tr>
+            <td>
+                <form id="manage_profile_form" method="POST" action="/profile/manage_profile/"
+                      enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {% bootstrap_form password_reset_form %}
+                    {% bootstrap_form update_profile_form %}
+                    <br><br>
+                    <div class="form-submit">
+                        <input type="submit" class="btn btn-success" value="Save Changes">
+                    </div>
+                </form>
+            </td>
+        </tr>
+    </table>
+{% endblock %}
