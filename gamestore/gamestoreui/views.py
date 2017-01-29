@@ -188,7 +188,7 @@ def edit_game(request, game_id):
         game_form = GameUploadForm(data=request.POST)
         user = User.objects.get(username=request.user)
 
-        if game_form.is_valid() and request.POST['action'].lower() == 'save':
+        if game_form.is_valid() and request.POST['action'].lower() == 'update':
             game = Game(id=game_id, name=game_form.cleaned_data['name'],
                         description=game_form.cleaned_data['description'],
                         logo=game_form.cleaned_data['logo'],
