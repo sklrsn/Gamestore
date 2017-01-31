@@ -107,6 +107,7 @@ $(document).ready(function() {
                         b.status--;
                         score++;
                         if (score / level == brickRowCount * brickColumnCount) {
+                          submitScore();
                             level++;
                             speed += 1;
                             dx = speed;
@@ -236,13 +237,17 @@ $(document).ready(function() {
     initializeBricks();
     draw();
     $('#submitscore').click(function() {
-        var msg = {
-            "messageType": "SCORE",
-            "score": parseFloat(score)
-        };
-        //console.log(msg.score);
-        window.parent.postMessage(msg, "*");
+        submitScore();
     });
+    function submitScore()
+    {
+      var msg = {
+          "messageType": "SCORE",
+          "score": parseFloat(score)
+      };
+      //console.log(msg.score);
+      window.parent.postMessage(msg, "*");
+    }
     $('#save').click(function() {
         var msg = {
             "messageType": "SAVE",
