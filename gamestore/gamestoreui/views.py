@@ -268,7 +268,17 @@ def manage_profile(request):
         return HttpResponseRedirect(redirect_to=reverse('home'))
 
     return HttpResponseRedirect(redirect_to=reverse('home'))
+
+
 def listgames(request):
     games_list = Game.objects.all()
     return render(request, 'listgames.html',
                   {'games_list': games_list})
+
+
+def about_us(request):
+    return render(request, 'about_us.html')
+
+
+def contact_us(request):
+    return render(request, 'contact_us.html')
