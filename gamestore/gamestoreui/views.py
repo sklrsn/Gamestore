@@ -130,10 +130,13 @@ def upload_game(request):
             game.save()
             return HttpResponseRedirect(redirect_to=reverse('home'))
 
+
 '''
     This view is for the player.
     GET request is used for loading the game and all other commmunication between the game and the backend is using POST ajax call
 '''
+
+
 @login_required
 def play_game(request, game_id):
     user = User.objects.get(username=request.user)
@@ -143,8 +146,8 @@ def play_game(request, game_id):
     if request.method == 'GET':
 
         # Check if the user has purchased the game
-        perm = Purchase.objects.filter(game_details=game_id, player_details= user)
-        if not Purchase.objects.filter(game_details=game_id, player_details= user):
+        perm = Purchase.objects.filter(game_details=game_id, player_details=user)
+        if not Purchase.objects.filter(game_details=game_id, player_details=user):
             messages.error(request, "You do not own this game. Why don't you buy it?")
             return HttpResponseRedirect(reverse("listgames"))
         leaders = Score.objects.filter(game_info=game).order_by("-score")[:5]
@@ -204,6 +207,7 @@ def play_game(request, game_id):
                 return JsonResponse(status=200, data=response)
         return HttpResponse(status=405, content="Invalid method specified.")
 
+
 @login_required
 def edit_game(request, game_id):
     if request.method == 'GET':
@@ -215,7 +219,7 @@ def edit_game(request, game_id):
         game_form = GameUploadForm(data=request.POST)
         user = User.objects.get(username=request.user)
 
-        if game_form.is_valid() and request.POST['action'].lower() == 'save':
+        if game_form.is_valid() and request.POST['action'].lower() == 'update':
             game = Game(id=game_id, name=game_form.cleaned_data['name'],
                         description=game_form.cleaned_data['description'],
                         logo=game_form.cleaned_data['logo'],
