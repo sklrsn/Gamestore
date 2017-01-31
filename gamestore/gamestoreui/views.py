@@ -14,8 +14,13 @@ from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 import datetime
 
+'''
+This view allows an user create a profile
 
-# Handle Dynamic User Registration
+The Registration form includes fields like username , password , email, personal website url and profile picture
+
+'''
+
 
 def register_user(request):
     try:
@@ -48,7 +53,11 @@ def register_user(request):
         return render(request, 'index.html')
 
 
-# Handle User Authentication
+'''
+This view performs user authentication and creates a session between user and application
+
+'''
+
 
 def user_login(request):
     if request.user.is_authenticated():
@@ -76,7 +85,11 @@ def user_login(request):
             return render(request, 'index.html')
 
 
-# Handle Session Invalidation
+'''
+This view invalidates the user session
+
+'''
+
 
 def user_logout(request):
     try:
@@ -88,12 +101,24 @@ def user_logout(request):
         return render(request, 'index.html')
 
 
+'''
+This view renders Game store landing page
+
+'''
+
+
 def index(request):
     try:
         return render(request, 'index.html')
     except Exception as e:
         print(e)
         return render(request, '400.html')
+
+
+'''
+This view renders the dashboard depends on the user type
+
+'''
 
 
 @login_required
@@ -108,7 +133,11 @@ def home(request):
                   {'user_type': current_user.user_type, 'games_list': games_list, 'upload_form': upload_form})
 
 
-# Allow the developer to upload a game to to the app store
+'''
+ Allow the developer to upload a game to to the app store
+
+'''
+
 
 @login_required
 def upload_game(request):
@@ -242,7 +271,12 @@ def edit_game(request, game_id):
         return HttpResponseRedirect(redirect_to=reverse('home'))
 
 
-# Handle user profile and password updates
+'''
+This view allows the user change their password, upload a profile picture and share personal website/blog information
+
+'''
+
+
 @login_required
 @transaction.atomic
 def manage_profile(request):
@@ -280,8 +314,20 @@ def listgames(request):
                   {'games_list': games_list})
 
 
+'''
+This method renders the information about the website and contributors
+
+'''
+
+
 def about_us(request):
     return render(request, 'about_us.html')
+
+
+'''
+This method will render the contact us page information to users
+
+'''
 
 
 def contact_us(request):
