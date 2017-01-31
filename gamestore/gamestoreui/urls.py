@@ -15,4 +15,5 @@ urlpatterns = [
     url(r'^about_us/$', views.about_us, name='about_us'),
     url(r'^contact_us/$', views.contact_us, name='contact_us'),
     url(r'^player/(?P<game_id>[0-9]+)/$', views.play_game, name='play_game'),
+    url(r'^listgames/$', views.listgames, name='listgames'),    
 ]

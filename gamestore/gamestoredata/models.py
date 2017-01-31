@@ -80,7 +80,7 @@ class Score(models.Model):
         ordering = ['last_played']
 
     def __str__(self):
-        self.last_played
+        self.player_info.username
 
 
 # store state of the previous action

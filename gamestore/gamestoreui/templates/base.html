@@ -49,7 +49,41 @@
     Rough outline of the service (including interaction with the game). Note that this is just an example. You are free
     to decide on the style and layout.
 {% endblock %}
-
+<div class="container">
+        <div class="row">
+            <div class="col-md-8" id="content">
+                {% comment %}
+                    List of messages used to deliver informations, warnings or errors to the user
+                {% endcomment %}
+                {% if messages %}
+                <div class="messages">
+                    {% for message in messages %}
+                    <div{% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %}>
+                        {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
+                        {{ message }}
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                {% comment %}
+                    List errors generated from the form
+                {% endcomment %}
+                {% if form.errors %}
+                    {% for field in form %}
+                        {% for error in field.errors %}
+                            <div class="alert alert-error">
+                                <strong>{{ error|escape }}</strong>
+                            </div>
+                        {% endfor %}
+                    {% endfor %}
+                    {% for error in form.non_field_errors %}
+                        <div class="alert alert-error">
+                            <strong>{{ error|escape }}</strong>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+              </div>
+</div>
 {% block footer %}
 
 {% endblock %}
