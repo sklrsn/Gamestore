@@ -337,7 +337,7 @@ def contact_us(request):
 
 
 def terms_conditions(request):
-    return render(request, 'terms.html')
+    return render(request, 'terms.html', {'time': datetime.datetime.now()})
 
 
 @transaction.atomic
