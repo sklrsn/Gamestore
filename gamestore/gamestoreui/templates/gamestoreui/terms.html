@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load bootstrap3 %}
+
+{% block title %}
+    {{ block.super }}
+{% endblock %}
+
+{% block header %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'gamestoreui/portfolio-item.css' %}">
+    <style type="text/css">
+        .modal-backdrop {
+            z-index: 0;
+        !important;
+        }
+
+        body {
+            padding-left: 20%;
+            background: #c1bdba;
+            font-family: 'Titillium Web', sans-serif;
+            align-items: center;
+        }
+
+        .terms {
+            font-size: large;
+        }
+    </style>
+
+{% endblock %}
+{% block content %}
+    <h1 align="center"><b>Terms and Conditions ("Terms")</b></h1>
+    <div class="container">
+        <p class="terms">Last updated: 01-Feb-2017</p>
+        <p>
+            Please read these Terms and Conditions carefully before using the http://onlinegamestore.com website
+            operated by us.
+
+            Your access to and use of the Service is conditioned on your acceptance of and compliance with these Terms.
+            These Terms apply to all visitors, users and others who access or use the Service.
+
+            By accessing or using the Service you agree to be bound by these Terms. If you disagree with any part of the
+            terms then you may not access the Service.
+        </p>
+        <br>
+        <h4>Purchases</h4>
+        <p>If you wish to purchase any game made available through the Service ("Purchase"), you may be asked to supply
+            certain information relevant to your purchase including credit card information.</p>
+        <br>
+        <h4>Content</h4>
+        <p>Our Service allows you to upload games, purchase and share the score in social media.
+            You are responsible for the content you share on social media platforms.
+        </p>
+        <br>
+        <h4>Links To Other Web Sites</h4>
+        <p>Our Service may contain links to third-party web sites or services that are not owned or controlled
+            http://onlinegamestore.com.
+
+            We have no control over, and assumes no responsibility for, the content, privacy policies, or practices of
+            any Third party web sites or services. You further acknowledge and agree we shall not be responsible or
+            liable, directly or indirectly, for any damage or loss caused or alleged to be caused by or in connection
+            with use of or reliance on any such content, goods or services available on or through any such web sites or
+            services.
+        </p>
+        <br>
+        <h4>Changes</h4>
+        <p>We reserve the right, at our sole discretion, to modify or replace these Terms at any time. If a revision is
+            material, we will try to provide at least 30 days' notice prior to any new terms taking effect. What
+            constitutes a material change will be determined at our sole discretion.</p>
+        <br>
+        <h4>Contact Us</h4>
+        <p>If you have any questions about these Terms, please contact us <a
+                href="mailto:kalaiarasan.saminathan@aalto.fi" target="_top">here!</a></p>
+    </div>
+
+{% endblock %}

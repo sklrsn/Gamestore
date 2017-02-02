@@ -336,6 +336,10 @@ def contact_us(request):
     return render(request, 'contact_us.html')
 
 
+def terms_conditions(request):
+    return render(request, 'terms.html')
+
+
 @transaction.atomic
 def register(request):
     if request.user.is_authenticated():
