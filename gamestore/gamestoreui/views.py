@@ -178,9 +178,10 @@ def play_game(request, game_id):
 
         # Check if the user has purchased the game
         perm = Purchase.objects.filter(game_details=game_id, player_details=user)
-        if not Purchase.objects.filter(game_details=game_id, player_details=user):
-            messages.error(request, "You do not own this game. Why don't you buy it?")
-            return HttpResponseRedirect(reverse("listgames"))
+        # TODO: Uncomment the below if
+        # if not Purchase.objects.filter(game_details=game_id, player_details= user):
+        #     messages.error(request, "You do not own this game. Why don't you buy it?")
+        #     return HttpResponseRedirect(reverse("listgames"))
         leaders = Score.objects.filter(game_info=game).order_by("-score")[:5]
         leaderjson = {}
 
@@ -326,6 +327,11 @@ def about_us(request):
     return render(request, 'about_us.html')
 
 
+
+def listgames(request):
+    games_list = Game.objects.all()
+    return render(request, 'listgames.html',
+                  {'games_list': games_list})
 '''
 This method will render the contact us page information to users
 
