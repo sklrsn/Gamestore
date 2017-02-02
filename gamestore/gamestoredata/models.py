@@ -11,6 +11,7 @@ class UserProfile(models.Model):
     website = models.URLField(blank=True)
     picture = CloudinaryField('picture', blank=True)
     user_type = models.CharField(max_length=1, choices=USER_CHOICES, default='P')
+    activation_token = models.CharField(max_length=36, blank=True)
 
     class Meta:
         db_table = "UserProfile"
@@ -42,7 +43,7 @@ class Game(models.Model):
             'cost': self.cost,
             'modified_date': str(self.modified_date),
             'logo': self.logo
-            }
+        }
         return res
 
     def __str__(self):
@@ -71,10 +72,12 @@ class Score(models.Model):
     player_info = models.ForeignKey(User, related_name='player_info', on_delete=models.CASCADE)
     last_played = models.DateTimeField(auto_now=True)
     score = models.BigIntegerField(default=0)
+
     def as_json_leader(self):
         return dict(
             player=self.player_info.username,
             score=self.score)
+
     class Meta:
         db_table = "Score"
         ordering = ['last_played']

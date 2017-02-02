@@ -3,6 +3,8 @@ from django.conf.urls import url
 from . import views
 
 urlpatterns = [
+    url(r'^register/$', views.register, name='register'),
+    url(r'^activate/(?P<activation_code>[a-zA-Z0-9\-]{36})/$', views.activate, name='activate'),
     url(r'^manage_profile/$', views.manage_profile, name='manage_profile'),
     url(r'^register_user/$', views.register_user, name='register'),
     url(r'^login/$', views.user_login, name='login'),
@@ -17,5 +19,5 @@ urlpatterns = [
     url(r'^player/(?P<game_id>[0-9]+)/$', views.play_game, name='play_game'),
     url(r'^about_us/$', views.about_us, name='about_us'),
     url(r'^contact_us/$', views.contact_us, name='contact_us'),
-    url(r'^listgames/$', views.listgames, name='listgames'),    
+    url(r'^listgames/$', views.listgames, name='listgames'),
 ]

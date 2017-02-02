@@ -7,12 +7,14 @@ from django.shortcuts import render, redirect
 from django.shortcuts import get_object_or_404
 from django.template import RequestContext
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
-from .forms import UserForm, UserProfileForm, UserProfileUpdateForm, GameUploadForm
+from .forms import UserForm, UserProfileForm, UserProfileUpdateForm, GameUploadForm, RegistrationForm
 import cloudinary
 from gamestoredata.models import UserProfile, Game, Score, GameState, Purchase
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.core.urlresolvers import reverse
 import datetime
+import uuid
+from django.core.exceptions import ObjectDoesNotExist
 
 '''
 This view allows an user create a profile
@@ -332,3 +334,82 @@ This method will render the contact us page information to users
 
 def contact_us(request):
     return render(request, 'contact_us.html')
+
+
+@transaction.atomic
+def register(request):
+    if request.user.is_authenticated():
+        messages.warning(request, "You are already logged in.")
+        return HttpResponseRedirect(reverse('home'))
+
+    if request.method == 'POST':
+        form = RegistrationForm(request.POST)
+
+        if not form.is_valid():
+            return render(request, "register.html", {'form': form})
+        else:
+            form.instance.is_active = False
+            new_user = form.save()
+
+            activation_token = uuid.uuid4()
+            user_category = form.cleaned_data["user_type"]
+            p = UserProfile(id=None, user=new_user,
+                            picture=cloudinary.CloudinaryImage("sample", format="png"), user_type=user_category,
+                            activation_token=activation_token)
+            p.save()
+            print(form.cleaned_data["user_type"])
+            if form.cleaned_data["user_type"] == "D":
+                developers = Group.objects.get(name='developers')
+                developers.user_set.add(p.user)
+            else:
+                players = Group.objects.get(name='players')
+                players.user_set.add(p.user)
+
+        mail_title = 'Confirm your subscription!'
+        message = 'Please visit the following link to complete your subscription: .... %s' % \
+                  request.build_absolute_uri(reverse(viewname='activate', args=(activation_token,)))
+
+        new_user.email_user(mail_title, message)
+
+        messages.success(request=request, message='You have correctly registered to our portal. '
+                                                  'An activation mail has been sent to your email account. '
+                                                  'To log in, you will need to activate yourself by clicking '
+                                                  'the activation link provided into that email.')
+        return HttpResponseRedirect(reverse("index"))
+
+    if request.method == 'GET':
+        form = RegistrationForm()
+        return render(request, "register.html", {
+            'form': form,
+        })
+
+
+def activate(request, activation_code=None):
+    if request.method == 'GET':
+
+        if not is_uuid_valid(activation_code):
+            messages.error(request=request, message='The activation id provided is invalid.')
+        else:
+            p = None
+            try:
+                with transaction.atomic():
+                    p = UserProfile.objects.get(activation_token=activation_code)
+                    if p.user.is_active:
+                        messages.error(request=request, message='Your account has already been activated.')
+                    else:
+                        p.user.is_active = True
+                        p.user.save()
+                        messages.success(request=request, message='You have correctly activated your account!')
+
+            except ObjectDoesNotExist:
+                messages.error(request=request, message='There was a problem during activation. Please try again.')
+
+        return HttpResponseRedirect(redirect_to=reverse("home"))
+
+
+def is_uuid_valid(uuid_str):
+    try:
+        uuid.UUID(uuid_str, version=4)
+        return True
+    except:
+        return False

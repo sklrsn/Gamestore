@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load bootstrap3 %}
+
+{% block title %}
+    {{ block.super }}
+{% endblock %}
+
+{% block header %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'gamestoreui/portfolio-item.css' %}">
+    <style type="text/css">
+        .modal-backdrop {
+            z-index: 0;
+        !important;
+        }
+
+        body {
+            padding-left: 20%;
+            background: #c1bdba;
+            font-family: 'Titillium Web', sans-serif;
+            align-items: center;
+        }
+    </style>
+
+{% endblock %}
+{% block content %}
+    <h1 align="center">Create an account</h1>
+    <div class="container">
+
+        <form method="POST" action="/profile/register/">
+            {% csrf_token %}
+            <table>
+                {% bootstrap_form form %}
+                <tr>
+                    <td colspan="4">
+                        <input type="submit" class="btn btn-lg btn-success btn-block" name="action"
+                               value="Register">
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+
+{% endblock %}
