@@ -8,8 +8,8 @@ from django.shortcuts import get_object_or_404
 from django.template import RequestContext
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from .forms import UserForm, UserProfileForm, UserProfileUpdateForm, GameUploadForm, RegistrationForm
-import cloudinary
 from gamestoredata.models import UserProfile, Game, Score, GameState, Purchase
+import cloudinary
 from django.contrib.auth.models import User, Group
 from django.core.urlresolvers import reverse
 import datetime
@@ -199,16 +199,18 @@ def play_game(request, game_id):
         # Saving score
         if messageType == 'SCORE':
             try:
-                latestscore = request.POST.get('score')
-                if not isinstance(score, float):
+                try:
+                    latestscore = float(request.POST.get('score'))
+                except:
                     response['error'] = "Invalid score. Try again."
                     return JsonResponse(status=200, data=response)
                 scoreobj = Score(id=None, score=latestscore, player_info=user, game_info=game)
                 scoreobj.save()
                 response['result'] = None
                 return JsonResponse(status=201, data=response)
-            except:
+            except Exception as e:
                 response['error'] = "Error saving score. Try again."
+                print(e)
                 return JsonResponse(status=200, data=response)
         # Saving game state
         elif messageType == 'SAVE':
