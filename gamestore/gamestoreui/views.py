@@ -425,3 +425,8 @@ def is_uuid_valid(uuid_str):
         return True
     except:
         return False
+
+def fb_redirect(request):
+    # Simply closes the window
+    return render(request, "fb_redirect.html")
+

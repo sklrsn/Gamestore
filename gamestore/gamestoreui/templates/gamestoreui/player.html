@@ -46,9 +46,11 @@
               </div>
               {% endfor %}
             </div>
-            <div>
-<div class="fb-share-button" data-href="#" data-layout="button_count" data-size="small" data-mobile-iframe="true"><a class="fb-xfbml-parse-ignore" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&amp;src=sdkpreparse">Share</a></div>
-            </div>
+
+  <!-- Your share button code -->
+          <button id="btn-share" class="btn btn-primary">
+              <img src="{% static 'images/fbIcon.png' %}" width="30" alt="Facebook Share"> Share!
+          </button>
         </div>
     </div>
 </div>
@@ -70,20 +72,53 @@
           </div>
       </div>
   </div>
- <div id="fb-root"></div>
-<script>(function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) return;
-  js = d.createElement(s); js.id = id;
-  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.8&appId=1060264910786680";
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));</script>
 
 <script type="text/javascript">
     window.addEventListener("message", receiveMessage, false);
-
+        var current_score = 0;
     $(document).ready(function()
-    {});
+    {
+                $("#btn-share").click(function(){
+                    var width = 800;
+            var height=600;
+            var leftPosition, topPosition;
+            leftPosition = (window.screen.width / 2) - ((width / 2) + 10);
+            topPosition = (window.screen.height / 2) - ((height / 2) + 50);
+            var windowFeatures = "status=no,height=" + height + ",width=" + width + ",resizable=yes,left=" + leftPosition + ",top=" + topPosition + ",screenX=" + leftPosition + ",screenY=" + topPosition + ",toolbar=no,menubar=no,scrollbars=no,location=no,directories=no";
+
+            var caption = "{{request.build_absolute_uri|urlencode}}";
+            {% if request.is_secure %}
+            var redurl = "https://{{ request.get_host|urlencode }}{% url 'fb_redirect' %}";
+            {% else %}
+            var redurl = "http://{{ request.get_host|urlencode }}{% url 'fb_redirect' %}";
+            {% endif %}
+            redurl = "http://localhost:8000/fb_redirect";
+            var original_picture = "{{ game.logo }}";
+            var picture = "";
+            if (original_picture.indexOf("/static") == 0) {
+                // This image is local to our webservice, compose the url manually.
+//                {% if request.is_secure %}
+//                    picture=encodeURIComponent("https://{{ request.get_host }}{% static 'images/no-image-available.jpg' %}");
+//                {% else %}
+//                    picture=encodeURIComponent("http://{{ request.get_host }}{% static 'images/no-image-available.jpg' %}");
+//                {% endif %}
+            } else {
+                // Use the original picture
+                picture = "{{game.logo|urlencode}}";
+            }
+                picture="https://res.cloudinary.com/dma8tn6ge/image/upload/c_fill,h_75,w_75/profile-picture.png";
+
+            var name = "GameStore: come and play!";
+            var description = "";
+            if (current_score>0)
+                description = " Hey !!! I am playing " + encodeURIComponent("{{ game.name }}") + " and my last game score was: " + current_score;
+            else
+                description = "Hey !!! I am playing to " + encodeURIComponent("{{ game.name }}");
+
+            var link = 'https://www.facebook.com/dialog/feed?app_id=750714178420271&display=popup&name='+ name +'&description=' + description + '&picture=' + picture + '&link=' + caption + '&caption=' + caption + '&redirect_uri=' + redurl;
+            window.open(link,"Share", windowFeatures);
+                });
+    });
     function receiveMessage(event) {
         if(event.data.messageType=="SAVE")
         {
@@ -94,6 +129,7 @@
                 sendData(event.data,"#");
             }
             else if(event.data.messageType == "SCORE"){
+                    current_score = event.data.score;
                     sendData(event.data,"#");
                 }
         else if(event.data.messageType == "SETTING"){
@@ -162,7 +198,7 @@
             if(iframe){
                 iframe.contentWindow.postMessage(message, "*");
             }else{
-                $('#modalMessage').text("Ops, game not found!");
+                $('#modalMessage').text("Oops, game not found!");
                 $("#modalInfo").removeClass('info done');
                 $("#modalInfo").addClass('error');
                 $("#modalInfo").modal();

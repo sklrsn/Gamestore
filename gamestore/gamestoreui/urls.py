@@ -20,4 +20,5 @@ urlpatterns = [
     url(r'^about_us/$', views.about_us, name='about_us'),
     url(r'^terms/$', views.terms_conditions, name='terms'),
     url(r'^listgames/$', views.listgames, name='listgames'),
+    url(r'fb_redirect/$', views.fb_redirect, name='fb_redirect'),
 ]
