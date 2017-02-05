@@ -8,11 +8,11 @@
 <!--<script src="{% static 'gamestoreui/js/dashboard.js' %}"></script>-->
 {% endblock %} {% block content %}
 <div class="container">
-    <div>
-        <div class="col-md-6" >
+    <div class="row">
+        <div class="col-md-8" >
             <iframe src="{{ game_server }}" id="gameIframe"></iframe>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-4">
             <h3>{{game.name}}</h3>
             <p>{{game.description}}</p>
             <div class="table-responsive">
@@ -48,11 +48,11 @@
             </div>
 
   <!-- Your share button code -->
-          <button id="btn-share" class="btn btn-primary">
-              <img src="{% static 'images/fbIcon.png' %}" width="30" alt="Facebook Share"> Share!
-          </button>
+          <div id="btn-share" width ="90"  >
+              <img src="{% static 'gamestoreui/images/fb_share.png' %}" width ="90"  alt="Facebook Share">
+          </div>
         </div>
-    </div>
+        </div>
 </div>
 {% comment %}
       Modal used to display messages in the page

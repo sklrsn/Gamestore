@@ -10,3 +10,8 @@ body {
     margin-left: 20px;
     border: solid silver 1px;
 }
+iframe {
+    width: 100%;
+    height: 300px;
+    background-color: #fff;
+}
