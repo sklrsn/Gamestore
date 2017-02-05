@@ -329,11 +329,12 @@ def about_us(request):
     return render(request, 'about_us.html')
 
 
-
 def listgames(request):
     games_list = Game.objects.all()
     return render(request, 'listgames.html',
                   {'games_list': games_list})
+
+
 '''
 This method will render the contact us page information to users
 
@@ -426,7 +427,27 @@ def is_uuid_valid(uuid_str):
     except:
         return False
 
+
 def fb_redirect(request):
     # Simply closes the window
     return render(request, "fb_redirect.html")
 
+
+def forgot_password(request):
+    if request.method == 'POST':
+        try:
+            app_user = User.objects.get(email=request.POST['email_address'])
+            new_password = User.objects.make_random_password(length=12)
+            app_user.set_password(new_password)
+            app_user.save()
+            mail_title = 'OnlineGameStore portal Password Reset'
+            message = 'Your Password has been reset to the following..' + '\n Password:' + new_password
+
+            app_user.email_user(mail_title, message)
+            messages.success(request=request, message='We have sent your credentials to the registered email address '
+                                                      'If you cannot find in your inbox, Please check your spam folder')
+            return HttpResponseRedirect(redirect_to=reverse("index"))
+        except ObjectDoesNotExist:
+            messages.error(request=request, message='Please enter the registered  email address ')
+    else:
+        return render(request, "index.html")
