@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
-from gamestoredata.models import UserProfile, Game
-from gamestoredata.constants import USER_CHOICES
+from common.constants import USER_CHOICES
+from .models import UserProfile
 from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ValidationError
 
@@ -29,20 +29,6 @@ class UserProfileUpdateForm(forms.ModelForm):
         labels = {
             'website': ('Personal website (optional)'),
             'picture': ('Upload Profile Picture (optional)'),
-        }
-
-
-class GameUploadForm(forms.ModelForm):
-    class Meta:
-        model = Game
-        fields = ('name', 'description', 'logo', 'resource_info', 'cost')
-        widgets = {
-            'description': forms.Textarea(attrs={'rows': 4, 'cols': 50}),
-        }
-        labels = {
-            'logo': ('Game Logo'),
-            'resource_info': ('Resource URL'),
-            'cost': ('Cost'),
         }
 
 

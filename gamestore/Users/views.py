@@ -3,57 +3,18 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from django.db import transaction
-from django.shortcuts import render, redirect
-from django.shortcuts import get_object_or_404
-from django.template import RequestContext
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
-from .forms import UserForm, UserProfileForm, UserProfileUpdateForm, GameUploadForm, RegistrationForm
-from gamestoredata.models import UserProfile, Game, Score, GameState, Purchase
+from django.shortcuts import render, redirect, get_object_or_404
+from django.http import HttpResponse, HttpResponseRedirect
 import cloudinary
 from django.contrib.auth.models import User, Group
 from django.core.urlresolvers import reverse
 import datetime
 import uuid
 from django.core.exceptions import ObjectDoesNotExist
-
-'''
-This view allows an user create a profile
-
-The Registration form includes fields like username , password , email, personal website url and profile picture
-
-'''
-
-
-def register_user(request):
-    try:
-        context = RequestContext(request)
-        if request.method == 'POST':
-            user_form = UserForm(data=request.POST)
-            profile_form = UserProfileForm(data=request.POST)
-            if user_form.is_valid() and profile_form.is_valid():
-                user = user_form.save()
-                user.set_password(user.password)
-                user.save()
-                profile = profile_form.save(commit=False)
-                profile.user = user
-                if 'picture' in request.FILES:
-                    profile.picture = request.FILES['picture']
-                else:
-                    profile.picture = cloudinary.CloudinaryImage("sample", format="png")
-                profile.save()
-
-                return render(request, 'index.html')
-            else:
-                print(user_form.errors, profile_form.errors)
-        else:
-            user_form = UserForm()
-            profile_form = UserProfileForm()
-        return render(request, 'profiles/register.html', {
-            'user_form': user_form, 'profile_form': profile_form}, context)
-    except Exception as e:
-        print(e)
-        return render(request, 'index.html')
-
+from .models import UserProfile
+from GameArena.models import Game
+from .forms import UserProfileUpdateForm, RegistrationForm
+from GameArena.forms import GameUploadForm
 
 '''
 This view performs user authentication and creates a session between user and application
@@ -136,147 +97,6 @@ def home(request):
 
 
 '''
- Allow the developer to upload a game to to the app store
-
-'''
-
-
-@login_required
-def upload_game(request):
-    if request.method == 'GET':
-        upload_form = GameUploadForm()
-        return render(request, 'profiles/game_upload_form.html', {
-            'upload_form': upload_form})
-    else:
-        user = User.objects.get(username=request.user)
-
-        upload_game_form = GameUploadForm(data=request.POST)
-        if upload_game_form.is_valid():
-            game = Game(id=None, name=upload_game_form.cleaned_data['name'],
-                        description=upload_game_form.cleaned_data['description'],
-                        logo=upload_game_form.cleaned_data['logo'],
-                        resource_info=upload_game_form.cleaned_data['resource_info'],
-                        cost=upload_game_form.cleaned_data['cost'],
-                        modified_date=datetime.datetime.now(), developer_info=user)
-            game.save()
-            return HttpResponseRedirect(redirect_to=reverse('home'))
-
-
-'''
-    This view is for the player.
-    GET request is used for loading the game and all other commmunication between the game and the backend is using POST ajax call
-'''
-
-
-@login_required
-def play_game(request, game_id):
-    user = User.objects.get(username=request.user)
-    current_user = UserProfile.objects.get(user=user)
-    print('gameid = ' + game_id)
-    game = get_object_or_404(Game, id=game_id)
-    if request.method == 'GET':
-
-        # Check if the user has purchased the game
-        perm = Purchase.objects.filter(game_details=game_id, player_details=user)
-        # TODO: Uncomment the below if
-        # if not Purchase.objects.filter(game_details=game_id, player_details= user):
-        #     messages.error(request, "You do not own this game. Why don't you buy it?")
-        #     return HttpResponseRedirect(reverse("listgames"))
-        leaders = Score.objects.filter(game_info=game).order_by("-score")[:5]
-        leaderjson = {}
-
-        leaderjson = [ob.as_json_leader() for ob in leaders]
-        print(game.to_json_dict())
-        return render(request, "player.html", {'game': game.to_json_dict(),
-                                               'game_server': game.resource_info, 'leaders': leaderjson})
-    # for all ajax calls
-    elif request.method == 'POST' and request.is_ajax():
-        response = {
-            "error": None,
-            "result": None
-        }
-        messageType = request.POST.get('messageType')
-        # Saving score
-        if messageType == 'SCORE':
-            try:
-                try:
-                    latestscore = float(request.POST.get('score'))
-                except:
-                    response['error'] = "Invalid score. Try again."
-                    return JsonResponse(status=200, data=response)
-                scoreobj = Score(id=None, score=latestscore, player_info=user, game_info=game)
-                scoreobj.save()
-                response['result'] = None
-                return JsonResponse(status=201, data=response)
-            except Exception as e:
-                response['error'] = "Error saving score. Try again."
-                print(e)
-                return JsonResponse(status=200, data=response)
-        # Saving game state
-        elif messageType == 'SAVE':
-            gamestate = request.POST.get('gameState');
-            try:
-                gameStateObj, created = GameState.objects.update_or_create(game=game, player=user,
-                                                                           defaults={'app_state': gamestate}, )
-                # gameStateObj = GameState(id=None, game = game, player = user, app_state = gamestate)
-                gameStateObj.save()
-            except:
-                response['error'] = "Error saving state. Try again."
-                return JsonResponse(status=200, data=response)
-            response['result'] = None
-            return JsonResponse(status=201, data=response)
-        # Loading game state
-        elif messageType == "LOAD_REQUEST":
-            try:
-                savedGame = GameState.objects.filter(player=user, game=game).order_by("last_modified")
-            except:
-                response['error'] = "Error fetchin game. Try again."
-                return JsonResponse(status=200, data=response)
-            if savedGame.exists():
-                response['result'] = savedGame[0].app_state
-                return JsonResponse(status=200, data=response)
-            else:
-                response['result'] = None
-                response['error'] = "There are no saved games."
-                return JsonResponse(status=200, data=response)
-        return HttpResponse(status=405, content="Invalid method specified.")
-
-
-@login_required
-def edit_game(request, game_id):
-    if request.method == 'GET':
-        game = get_object_or_404(Game, id=game_id, developer_info=request.user)
-        form = GameUploadForm(instance=game)
-        return render(request, 'edit_game.html', {'form': form, 'user': request.user})
-
-    if request.method == 'POST':
-        game_form = GameUploadForm(data=request.POST)
-        user = User.objects.get(username=request.user)
-
-        if game_form.is_valid() and request.POST['action'].lower() == 'update':
-            game = Game(id=game_id, name=game_form.cleaned_data['name'],
-                        description=game_form.cleaned_data['description'],
-                        logo=game_form.cleaned_data['logo'],
-                        resource_info=game_form.cleaned_data['resource_info'],
-                        cost=game_form.cleaned_data['cost'],
-                        modified_date=datetime.datetime.now(), developer_info=user)
-            game.save()
-            messages.success(request=request, message='Game updated successfully.')
-            return HttpResponseRedirect(redirect_to=reverse('home'))
-
-        elif game_form.is_valid() and request.POST['action'].lower() == 'delete':
-            Game.objects.filter(id=game_id, developer_info=user).delete()
-            messages.success(request=request, message='Game removed successfully.')
-            return HttpResponseRedirect(redirect_to=reverse('home'))
-
-        else:
-            print('Invalid Request')
-            return HttpResponseRedirect(redirect_to=reverse('home'))
-    else:
-        return HttpResponseRedirect(redirect_to=reverse('home'))
-
-
-'''
 This view allows the user change their password, upload a profile picture and share personal website/blog information
 
 '''
@@ -303,7 +123,7 @@ def manage_profile(request):
         else:
             password_reset_form = PasswordChangeForm(request.user)
             update_profile_form = UserProfileUpdateForm()
-        return render(request, 'profiles/manage_profile.html', {
+        return render(request, 'manage_profile.html', {
             'password_reset_form': password_reset_form, 'update_profile_form': update_profile_form
         })
     except Exception as e:
@@ -311,12 +131,6 @@ def manage_profile(request):
         return HttpResponseRedirect(redirect_to=reverse('home'))
 
     return HttpResponseRedirect(redirect_to=reverse('home'))
-
-
-def listgames(request):
-    games_list = Game.objects.all()
-    return render(request, 'listgames.html',
-                  {'games_list': games_list})
 
 
 '''
@@ -327,12 +141,6 @@ This method renders the information about the website and contributors
 
 def about_us(request):
     return render(request, 'about_us.html')
-
-
-def listgames(request):
-    games_list = Game.objects.all()
-    return render(request, 'listgames.html',
-                  {'games_list': games_list})
 
 
 '''
@@ -428,11 +236,6 @@ def is_uuid_valid(uuid_str):
         return False
 
 
-def fb_redirect(request):
-    # Simply closes the window
-    return render(request, "fb_redirect.html")
-
-
 def forgot_password(request):
     if request.method == 'POST':
         try:
@@ -451,3 +254,58 @@ def forgot_password(request):
             messages.error(request=request, message='Please enter the registered  email address ')
     else:
         return render(request, "index.html")
+
+
+@login_required
+def upload_game(request):
+    if request.method == 'GET':
+        upload_form = GameUploadForm()
+        return render(request, 'game_upload_form.html', {
+            'upload_form': upload_form})
+    else:
+        user = User.objects.get(username=request.user)
+
+        upload_game_form = GameUploadForm(data=request.POST)
+        if upload_game_form.is_valid():
+            game = Game(id=None, name=upload_game_form.cleaned_data['name'],
+                        description=upload_game_form.cleaned_data['description'],
+                        logo=upload_game_form.cleaned_data['logo'],
+                        resource_info=upload_game_form.cleaned_data['resource_info'],
+                        cost=upload_game_form.cleaned_data['cost'],
+                        modified_date=datetime.datetime.now(), developer_info=user)
+            game.save()
+            return HttpResponseRedirect(redirect_to=reverse('home'))
+
+
+@login_required
+def edit_game(request, game_id):
+    if request.method == 'GET':
+        game = get_object_or_404(Game, id=game_id, developer_info=request.user)
+        form = GameUploadForm(instance=game)
+        return render(request, 'edit_game.html', {'form': form, 'user': request.user})
+
+    if request.method == 'POST':
+        game_form = GameUploadForm(data=request.POST)
+        user = User.objects.get(username=request.user)
+
+        if game_form.is_valid() and request.POST['action'].lower() == 'update':
+            game = Game(id=game_id, name=game_form.cleaned_data['name'],
+                        description=game_form.cleaned_data['description'],
+                        logo=game_form.cleaned_data['logo'],
+                        resource_info=game_form.cleaned_data['resource_info'],
+                        cost=game_form.cleaned_data['cost'],
+                        modified_date=datetime.datetime.now(), developer_info=user)
+            game.save()
+            messages.success(request=request, message='Game updated successfully.')
+            return HttpResponseRedirect(redirect_to=reverse('home'))
+
+        elif game_form.is_valid() and request.POST['action'].lower() == 'delete':
+            Game.objects.filter(id=game_id, developer_info=user).delete()
+            messages.success(request=request, message='Game removed successfully.')
+            return HttpResponseRedirect(redirect_to=reverse('home'))
+
+        else:
+            print('Invalid Request')
+            return HttpResponseRedirect(redirect_to=reverse('home'))
+    else:
+        return HttpResponseRedirect(redirect_to=reverse('home'))

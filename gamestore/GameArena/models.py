@@ -1,23 +1,6 @@
 from django.db import models
-from django.contrib.auth.models import User
-from .constants import USER_CHOICES
-from cloudinary.models import CloudinaryField
 from django.core.urlresolvers import reverse
-
-
-# Model to Store the user details
-class UserProfile(models.Model):
-    user = models.OneToOneField(User)
-    website = models.URLField(blank=True)
-    picture = CloudinaryField('picture', blank=True)
-    user_type = models.CharField(max_length=1, choices=USER_CHOICES, default='P')
-    activation_token = models.CharField(max_length=36, blank=True)
-
-    class Meta:
-        db_table = "UserProfile"
-
-    def __str__(self):
-        return self.user.username
+from django.contrib.auth.models import User
 
 
 # model to store game uploads
@@ -48,21 +31,6 @@ class Game(models.Model):
 
     def __str__(self):
         return self.name
-
-
-# Purchase information
-class Purchase(models.Model):
-    game_details = models.ForeignKey(Game, related_name='game_details', on_delete=models.CASCADE)
-    player_details = models.ForeignKey(User, related_name='player_details', on_delete=models.CASCADE)
-    cost = models.DecimalField(default=0.0, decimal_places=2, max_digits=10)
-    purchase_date = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        db_table = "Purchase"
-        ordering = ['purchase_date']
-
-    def __str__(self):
-        return self.purchase_date
 
 
 # store scores history
