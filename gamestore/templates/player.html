@@ -1,208 +1,212 @@
- {% extends "base.html" %} {% load staticfiles %} {% block title %}Online Game Store{% endblock %} {% block header %} {{ block.super }}
-<link rel="stylesheet" type="text/css" href="{% static 'gamestoreui/styles.css' %}">
-<link rel="stylesheet" type="text/css" href="{% static 'gamestoreui/bootstrap.min.css' %}">
-<link rel="stylesheet" type="text/css" href="{% static 'gamestoreui/portfolio-item.css' %}">
-<link rel="stylesheet" type="text/css" href="{% static 'gamestoreui/app-styles.css' %}">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-<!--<script src="{% static 'gamestoreui/js/dashboard.js' %}"></script>-->
+{% extends "base.html" %} {% load staticfiles %} {% block title %}Online Game Store{% endblock %} {% block header %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/portfolio-item.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/app-styles.css' %}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous"></script>
+    <!--<script src="{% static 'js/dashboard.js' %}"></script>-->
 {% endblock %} {% block content %}
-<div class="container">
-    <div class="row">
-        <div class="col-md-8" >
-            <iframe src="{{ game_server }}" id="gameIframe"></iframe>
-        </div>
-        <div class="col-md-4">
-            <h3>{{game.name}}</h3>
-            <p>{{game.description}}</p>
-            <div class="table-responsive">
-
-            <table class="table table-hover" border="20">
-                <thead>
-                <tr>
-                    <th data-field="logo">Player</th>
-                    <th data-field="name">Score</th>
-                </tr>
-                </thead>
-                <tbody>
-                  {% for leader in leaders %}
-                    <tr>
-                        <td>{{leader.player}}</td>
-                        <td>{{leader.score}}</td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-          </div>
-            <div id="leaderboard">
-              <div class="row">
-                <div class="col-xs-8">Player</div>
-                <div class="col-xs-4">Score</div>
-              </div>
-              {% for leader in leaders %}
-              <div class="row">
-                <div class="col-xs-8">{{leader.player}}</div>
-                <div class="col-xs-4">{{leader.score}}</div>
-              </div>
-              {% endfor %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8">
+                <iframe src="{{ game_server }}" id="gameIframe"></iframe>
             </div>
+            <div class="col-md-4">
+                <h3>{{ game.name }}</h3>
+                <p>{{ game.description }}</p>
+                <div class="table-responsive">
 
-  <!-- Your share button code -->
-          <div id="btn-share" width ="90"  >
-              <img src="{% static 'gamestoreui/images/fb_share.png' %}" width ="90"  alt="Facebook Share">
-          </div>
-        </div>
-        </div>
-</div>
-{% comment %}
-      Modal used to display messages in the page
-  {% endcomment %}
-  <div id="modalInfo" class="modal fade" role="dialog">
-      <div class="modal-dialog">
-          <!-- Modal content-->
-          <div class="modal-content">
-              <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-              </div>
-              <div class="modal-body">
-                  <form class="form-signin" id="detailInfo">
-                  <h3 class="form-signin-heading" id="modalMessage">Title</h3>
-                  </form>
-              </div>
-          </div>
-      </div>
-  </div>
+                    <table class="table table-hover" border="20">
+                        <thead>
+                        <tr>
+                            <th data-field="logo">Player</th>
+                            <th data-field="name">Score</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for leader in leaders %}
+                            <tr>
+                                <td>{{ leader.player }}</td>
+                                <td>{{ leader.score }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div id="leaderboard">
+                    <div class="row">
+                        <div class="col-xs-8">Player</div>
+                        <div class="col-xs-4">Score</div>
+                    </div>
+                    {% for leader in leaders %}
+                        <div class="row">
+                            <div class="col-xs-8">{{ leader.player }}</div>
+                            <div class="col-xs-4">{{ leader.score }}</div>
+                        </div>
+                    {% endfor %}
+                </div>
 
-<script type="text/javascript">
-    window.addEventListener("message", receiveMessage, false);
+                <!-- Your share button code -->
+                <div id="btn-share" width="90">
+                    <img src="{% static 'gamestoreui/images/fb_share.png' %}" width="90" alt="Facebook Share">
+                </div>
+            </div>
+        </div>
+    </div>
+    {% comment %}
+        Modal used to display messages in the page
+    {% endcomment %}
+    <div id="modalInfo" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <form class="form-signin" id="detailInfo">
+                        <h3 class="form-signin-heading" id="modalMessage">Title</h3>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        window.addEventListener("message", receiveMessage, false);
         var current_score = 0;
-    $(document).ready(function()
-    {
-                $("#btn-share").click(function(){
-                    var width = 800;
-            var height=600;
-            var leftPosition, topPosition;
-            leftPosition = (window.screen.width / 2) - ((width / 2) + 10);
-            topPosition = (window.screen.height / 2) - ((height / 2) + 50);
-            var windowFeatures = "status=no,height=" + height + ",width=" + width + ",resizable=yes,left=" + leftPosition + ",top=" + topPosition + ",screenX=" + leftPosition + ",screenY=" + topPosition + ",toolbar=no,menubar=no,scrollbars=no,location=no,directories=no";
+        $(document).ready(function () {
+            $("#btn-share").click(function () {
+                var width = 800;
+                var height = 600;
+                var leftPosition, topPosition;
+                leftPosition = (window.screen.width / 2) - ((width / 2) + 10);
+                topPosition = (window.screen.height / 2) - ((height / 2) + 50);
+                var windowFeatures = "status=no,height=" + height + ",width=" + width + ",resizable=yes,left=" + leftPosition + ",top=" + topPosition + ",screenX=" + leftPosition + ",screenY=" + topPosition + ",toolbar=no,menubar=no,scrollbars=no,location=no,directories=no";
 
-            var caption = "{{request.build_absolute_uri|urlencode}}";
-            {% if request.is_secure %}
-            var redurl = "https://{{ request.get_host|urlencode }}{% url 'fb_redirect' %}";
-            {% else %}
-            var redurl = "http://{{ request.get_host|urlencode }}{% url 'fb_redirect' %}";
-            {% endif %}
-            redurl = "http://localhost:8000/fb_redirect";
-            var original_picture = "{{ game.logo }}";
-            var picture = "";
-            if (original_picture.indexOf("/static") == 0) {
-                // This image is local to our webservice, compose the url manually.
+                var caption = "{{request.build_absolute_uri|urlencode}}";
+                {% if request.is_secure %}
+                    var redurl = "https://{{ request.get_host|urlencode }}{% url 'fb_redirect' %}";
+                {% else %}
+                    var redurl = "http://{{ request.get_host|urlencode }}{% url 'fb_redirect' %}";
+                {% endif %}
+                redurl = "http://localhost:8000/fb_redirect";
+                var original_picture = "{{ game.logo }}";
+                var picture = "";
+                if (original_picture.indexOf("/static") == 0) {
+                    // This image is local to our webservice, compose the url manually.
 //                {% if request.is_secure %}
-//                    picture=encodeURIComponent("https://{{ request.get_host }}{% static 'images/no-image-available.jpg' %}");
-//                {% else %}
-//                    picture=encodeURIComponent("http://{{ request.get_host }}{% static 'images/no-image-available.jpg' %}");
-//                {% endif %}
-            } else {
-                // Use the original picture
-                picture = "{{game.logo|urlencode}}";
-            }
-                picture="https://res.cloudinary.com/dma8tn6ge/image/upload/c_fill,h_75,w_75/profile-picture.png";
-
-            var name = "GameStore: come and play!";
-            var description = "";
-            if (current_score>0)
-                description = " Hey !!! I am playing " + encodeURIComponent("{{ game.name }}") + " and my last game score was: " + current_score;
-            else
-                description = "Hey !!! I am playing to " + encodeURIComponent("{{ game.name }}");
-
-            var link = 'https://www.facebook.com/dialog/feed?app_id=750714178420271&display=popup&name='+ name +'&description=' + description + '&picture=' + picture + '&link=' + caption + '&caption=' + caption + '&redirect_uri=' + redurl;
-            window.open(link,"Share", windowFeatures);
-                });
-    });
-    function receiveMessage(event) {
-        if(event.data.messageType=="SAVE")
-        {
-          event.data.gameState = JSON.stringify(event.data.gameState)
-          sendData(event.data, '#')
-        }
-        else if(event.data.messageType == "LOAD_REQUEST"){
-                sendData(event.data,"#");
-            }
-            else if(event.data.messageType == "SCORE"){
-                    current_score = event.data.score;
-                    sendData(event.data,"#");
+                        //                    picture=encodeURIComponent("https://
+                        {{ request.get_host }}{% static 'images/no-image-available.jpg' %}");
+                        //                {% else %}
+                        //                    picture=encodeURIComponent("http://
+                        {{ request.get_host }}{% static 'images/no-image-available.jpg' %}");
+                        //                {% endif %}
+                } else {
+                    // Use the original picture
+                    picture = "{{game.logo|urlencode}}";
                 }
-        else if(event.data.messageType == "SETTING"){
+                picture = "https://res.cloudinary.com/dma8tn6ge/image/upload/c_fill,h_75,w_75/profile-picture.png";
+
+                var name = "GameStore: come and play!";
+                var description = "";
+                if (current_score > 0)
+                    description = " Hey !!! I am playing " + encodeURIComponent("{{ game.name }}") + " and my last game score was: " + current_score;
+                else
+                    description = "Hey !!! I am playing to " + encodeURIComponent("{{ game.name }}");
+
+                var link = 'https://www.facebook.com/dialog/feed?app_id=750714178420271&display=popup&name=' + name + '&description=' + description + '&picture=' + picture + '&link=' + caption + '&caption=' + caption + '&redirect_uri=' + redurl;
+                window.open(link, "Share", windowFeatures);
+            });
+        });
+        function receiveMessage(event) {
+            if (event.data.messageType == "SAVE") {
+                event.data.gameState = JSON.stringify(event.data.gameState)
+                sendData(event.data, '#')
+            }
+            else if (event.data.messageType == "LOAD_REQUEST") {
+                sendData(event.data, "#");
+            }
+            else if (event.data.messageType == "SCORE") {
+                current_score = event.data.score;
+                sendData(event.data, "#");
+            }
+            else if (event.data.messageType == "SETTING") {
                 var width = parseInt(event.data.options.width);
                 var height = parseInt(event.data.options.height);
-                if(!isNaN(width)){
-                    if(width>800){
+                if (!isNaN(width)) {
+                    if (width > 800) {
                         width = 800;
-                    }else if(width<20){
+                    } else if (width < 20) {
                         width = 20;
                     }
-                    $('#gameIframe').css('width',width);
+                    $('#gameIframe').css('width', width);
                 }
-                if(!isNaN(height)){
-                    if(height>1000){
+                if (!isNaN(height)) {
+                    if (height > 1000) {
                         height = 1000;
-                    }else if(height<20){
+                    } else if (height < 20) {
                         height = 20;
                     }
-                    $('#gameIframe').css('height',height);
+                    $('#gameIframe').css('height', height);
                 }
             }
-    }
+        }
 
-    function sendData(data, url) {
-        data.csrfmiddlewaretoken = "{{ csrf_token  }}";
-        var message = {};
-        $.ajax({
-            method: 'POST',
-            url: url,
-            data: data,
-            success: function(data) {
-                if (data.error) {
-                    message = {
-                        messageType: "ERROR",
-                        info: data.error
-                    };
-                    sendMessageToGame(message);
-                } else {
-                    if (data.result) {
-                        message.messageType = "LOAD";
-                        message.gameState = jQuery.parseJSON(data.result);
+        function sendData(data, url) {
+            data.csrfmiddlewaretoken = "{{ csrf_token  }}";
+            var message = {};
+            $.ajax({
+                method: 'POST',
+                url: url,
+                data: data,
+                success: function (data) {
+                    if (data.error) {
+                        message = {
+                            messageType: "ERROR",
+                            info: data.error
+                        };
                         sendMessageToGame(message);
-                        $('#score').text(message.score);
+                    } else {
+                        if (data.result) {
+                            message.messageType = "LOAD";
+                            message.gameState = jQuery.parseJSON(data.result);
+                            sendMessageToGame(message);
+                            $('#score').text(message.score);
+                        }
+                    }
+                },
+                error: function (data) {
+                    if (data.error) {
+                        message = {
+                            messageType: "ERROR",
+                            info: data.error
+                        };
+                        sendMessageToGrame(message);
                     }
                 }
-            },
-            error: function(data) {
-                if (data.error) {
-                    message = {
-                        messageType: "ERROR",
-                        info: data.error
-                    };
-                    sendMessageToGrame(message);
-                }
-            }
-        });
-    }
+            });
+        }
 
-    {% comment %}
+        {% comment %}
             Function that locate the iframe and send the messages to the game
             A pop up is shown if no iframe is found
         {% endcomment %}
-        function sendMessageToGame(message){
+        function sendMessageToGame(message) {
             var iframe = document.getElementById('gameIframe');
-            if(iframe){
+            if (iframe) {
                 iframe.contentWindow.postMessage(message, "*");
-            }else{
+            } else {
                 $('#modalMessage').text("Oops, game not found!");
                 $("#modalInfo").removeClass('info done');
                 $("#modalInfo").addClass('error');
                 $("#modalInfo").modal();
             }
         }
-</script>
+    </script>
 {% endblock %}

@@ -118,6 +118,10 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static")
+]
+
 CLOUDINARY = {
     'cloud_name': 'dma8tn6ge',
     'api_key': '627378437639745',

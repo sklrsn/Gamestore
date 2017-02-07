@@ -3,34 +3,36 @@
 
 {% load staticfiles %}
 {% block title %}Online Game Store{% endblock %} {% block header %} {{ block.super }}
-<link rel="stylesheet" type="text/css" href="{% static 'gamestoreui/styles.css' %}">
-<link rel="stylesheet" type="text/css" href="{% static 'gamestoreui/bootstrap.min.css' %}">
-<link rel="stylesheet" type="text/css" href="{% static 'gamestoreui/portfolio-item.css' %}">
-<link rel="stylesheet" type="text/css" href="{% static 'gamestoreui/app-styles.css' %}">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/portfolio-item.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/app-styles.css' %}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous"></script>
 {% endblock %} {% block content %}
 
-<div class="table-responsive">
-    <table class="table table-hover" border="20">
-        <thead>
-        <tr>
-            <th data-field="logo">Logo</th>
-            <th data-field="name">Name</th>
-            <th data-field="description">Description</th>
-            <th data-field="cost">cost</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for game in games_list %}
+    <div class="table-responsive">
+        <table class="table table-hover" border="20">
+            <thead>
             <tr>
-                <td><img src={{ game.logo }} height="75" width="75" alt="Not available"></td>
-                <td>{{ game.name }}</td>
-                <td>{{ game.description }}</td>
-                <td>{{ game.cost }}</td>
+                <th data-field="logo">Logo</th>
+                <th data-field="name">Name</th>
+                <th data-field="description">Description</th>
+                <th data-field="cost">cost</th>
             </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-</div>
+            </thead>
+            <tbody>
+            {% for game in games_list %}
+                <tr>
+                    <td><img src={{ game.logo }} height="75" width="75" alt="Not available"></td>
+                    <td>{{ game.name }}</td>
+                    <td>{{ game.description }}</td>
+                    <td>{{ game.cost }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
 {% endblock %}
