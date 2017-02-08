@@ -12,8 +12,10 @@
         <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"
               integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
               crossorigin="anonymous">
-        <link href='http://fonts.googleapis.com/css?family=Titillium+Web:400,300,600' rel='stylesheet' type='text/css'>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+        <link href='http://fonts.googleapis.com/css?family=Titillium+Web:400,300,600' rel='stylesheet' type='text/css'
+              crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css"
+              crossorigin="anonymous">
 
         <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
             <div class="container">
@@ -49,42 +51,42 @@
     Rough outline of the service (including interaction with the game).
 {% endblock %}
 <div class="container">
-        <div class="row">
-            <div class="col-md-8" id="content">
-                {% comment %}
-                    List of messages used to deliver informations, warnings or errors to the user
-                {% endcomment %}
-                {% if messages %}
+    <div class="row">
+        <div class="col-md-8" id="content">
+            {% comment %}
+                List of messages used to deliver informations, warnings or errors to the user
+            {% endcomment %}
+            {% if messages %}
                 <div class="messages">
                     {% for message in messages %}
-                    <div{% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %}>
-                        {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
-                        {{ message }}
-                    </div>
+                        <div{% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %}>
+                            {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
+                            {{ message }}
+                        </div>
                     {% endfor %}
                 </div>
-                {% endif %}
-                {% comment %}
-                    List errors generated from the form
-                {% endcomment %}
-                {% if form.errors %}
-                    {% for field in form %}
-                        {% for error in field.errors %}
-                            <div class="alert alert-error">
-                                <strong>{{ error|escape }}</strong>
-                            </div>
-                        {% endfor %}
-                    {% endfor %}
-                    {% for error in form.non_field_errors %}
+            {% endif %}
+            {% comment %}
+                List errors generated from the form
+            {% endcomment %}
+            {% if form.errors %}
+                {% for field in form %}
+                    {% for error in field.errors %}
                         <div class="alert alert-error">
                             <strong>{{ error|escape }}</strong>
                         </div>
                     {% endfor %}
-                {% endif %}
-              </div>
-</div>
-{% block footer %}
+                {% endfor %}
+                {% for error in form.non_field_errors %}
+                    <div class="alert alert-error">
+                        <strong>{{ error|escape }}</strong>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+    {% block footer %}
 
-{% endblock %}
+    {% endblock %}
 </body>
 </html>
