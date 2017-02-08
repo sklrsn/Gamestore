@@ -123,8 +123,11 @@ def manage_profile(request):
         else:
             password_reset_form = PasswordChangeForm(request.user)
             update_profile_form = UserProfileUpdateForm()
+            user = User.objects.get(username=request.user)
+            current_user = UserProfile.objects.get(user=user)
         return render(request, 'manage_profile.html', {
-            'password_reset_form': password_reset_form, 'update_profile_form': update_profile_form
+            'password_reset_form': password_reset_form, 'update_profile_form': update_profile_form,
+            'user_type': current_user.user_type
         })
     except Exception as e:
         print(e)
@@ -140,7 +143,9 @@ This method renders the information about the website and contributors
 
 
 def about_us(request):
-    return render(request, 'about_us.html')
+    user = User.objects.get(username=request.user)
+    current_user = UserProfile.objects.get(user=user)
+    return render(request, 'about_us.html', {'user_type': current_user.user_type})
 
 
 '''
@@ -150,7 +155,9 @@ This method will render the contact us page information to users
 
 
 def contact_us(request):
-    return render(request, 'contact_us.html')
+    user = User.objects.get(username=request.user)
+    current_user = UserProfile.objects.get(user=user)
+    return render(request, 'contact_us.html', {'user_type': current_user.user_type})
 
 
 def terms_conditions(request):
@@ -309,3 +316,9 @@ def edit_game(request, game_id):
             return HttpResponseRedirect(redirect_to=reverse('home'))
     else:
         return HttpResponseRedirect(redirect_to=reverse('home'))
+
+
+def download_statistics(request):
+    user = User.objects.get(username=request.user)
+    current_user = UserProfile.objects.get(user=user)
+    return render(request, 'statistics.html', {'user_type': current_user.user_type})
