@@ -143,9 +143,12 @@ This method renders the information about the website and contributors
 
 
 def about_us(request):
-    user = User.objects.get(username=request.user)
-    current_user = UserProfile.objects.get(user=user)
-    return render(request, 'about_us.html', {'user_type': current_user.user_type})
+    if request.user.is_authenticated():
+        user = User.objects.get(username=request.user)
+        current_user = UserProfile.objects.get(user=user)
+        return render(request, 'about_us.html', {'user_type': current_user.user_type})
+
+    return render(request, 'about_us.html')
 
 
 '''
@@ -155,9 +158,11 @@ This method will render the contact us page information to users
 
 
 def contact_us(request):
-    user = User.objects.get(username=request.user)
-    current_user = UserProfile.objects.get(user=user)
-    return render(request, 'contact_us.html', {'user_type': current_user.user_type})
+    if request.user.is_authenticated():
+        user = User.objects.get(username=request.user)
+        current_user = UserProfile.objects.get(user=user)
+        return render(request, 'contact_us.html', {'user_type': current_user.user_type})
+    return render(request, 'contact_us.html')
 
 
 def terms_conditions(request):
