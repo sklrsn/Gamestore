@@ -12,18 +12,64 @@
     {{ block.super }}
     <link rel="stylesheet" type="text/css" href="{% static 'css/portfolio-item.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/app.css' %}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/canvasjs/1.7.0/canvasjs.js"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/canvasjs/1.7.0/canvasjs.min.js"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/canvasjs/1.7.0/excanvas.js"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/canvasjs/1.7.0/jquery.canvasjs.js"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/canvasjs/1.7.0/jquery.canvasjs.min.js"
+            crossorigin="anonymous"></script>
+    <script type="text/javascript">
+        $(function () {
+            var options = {
+                exportEnabled: true,
+                animationEnabled: true,
+                title: {
+                    text: "Game Purchases over the Year"
+                },
+                data: [
+                    {
+                        type: "splineArea",
+                        dataPoints: [
+                            {y: 0},
+                            {y: 10},
+                            {y: 0},
+                            {y: 10},
+                            {y: 0},
+                            {y: 10},
+                            {y: 0},
+                            {y: 10},
+                            {y: 0},
+                            {y: 16},
+                            {y: 0},
+                            {y: 10}
+                        ]
+                    }
+                ]
+            };
+
+            $("#chartContainer").CanvasJSChart(options);
+
+        });
+    </script>
     <style type="text/css">
         .modal-backdrop {
             z-index: 0;
         !important;
         }
     </style>
+
 {% endblock %}
 
 {% block content %}
     <div class="container">
-
-
+        <h4><b>OverAll Statistics</b></h4>
+        <div id="chartContainer" style="height: 300px; width: 100%;">
+        </div>
+        <p><b>X axis - Month, Y axis - No of Downloads</b></p>
     </div>
 
 {% endblock %}
