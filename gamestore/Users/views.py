@@ -88,7 +88,6 @@ This view renders the dashboard depends on the user type
 def home(request):
     user = User.objects.get(username=request.user)
     current_user = UserProfile.objects.get(user=user)
-
     games_list = Game.objects.filter(developer_info=user)
 
     upload_form = GameUploadForm()
@@ -294,7 +293,9 @@ def edit_game(request, game_id):
     if request.method == 'GET':
         game = get_object_or_404(Game, id=game_id, developer_info=request.user)
         form = GameUploadForm(instance=game)
-        return render(request, 'edit_game.html', {'form': form, 'user': request.user})
+        current_user = UserProfile.objects.get(user=request.user)
+        return render(request, 'edit_game.html',
+                      {'form': form, 'user': request.user, 'user_type': current_user.user_type})
 
     if request.method == 'POST':
         game_form = GameUploadForm(data=request.POST)
