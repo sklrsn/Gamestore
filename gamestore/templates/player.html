@@ -100,11 +100,9 @@
                 if (original_picture.indexOf("/static") == 0) {
                     // This image is local to our webservice, compose the url manually.
 //                {% if request.is_secure %}
-                        //                    picture=encodeURIComponent("https://
-                        {{ request.get_host }}{% static 'images/no-image-available.jpg' %}");
+                        //                    picture=encodeURIComponent("https://{{ request.get_host }}{% static 'images/no-image-available.jpg' %}");
                         //                {% else %}
-                        //                    picture=encodeURIComponent("http://
-                        {{ request.get_host }}{% static 'images/no-image-available.jpg' %}");
+                        //                    picture=encodeURIComponent("http://{{ request.get_host }}{% static 'images/no-image-available.jpg' %}");
                         //                {% endif %}
                 } else {
                     // Use the original picture
@@ -193,7 +191,7 @@
         }
 
         {% comment %}
-            Function that locate the iframe and send the messages to the game
+            function that locate the iframe and send the messages to the game
             A pop up is shown if no iframe is found
         {% endcomment %}
         function sendMessageToGame(message) {

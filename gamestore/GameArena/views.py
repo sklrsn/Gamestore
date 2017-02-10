@@ -44,6 +44,8 @@ def play_game(request, game_id):
             "result": None
         }
         messageType = request.POST.get('messageType')
+        print('messageType:',request.POST.get('messageType'))
+
         # Saving score
         if messageType == 'SCORE':
             try:
