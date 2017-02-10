@@ -1,4 +1,7 @@
-{% extends "base.html" %} {% load staticfiles %} {% block title %}Online Game Store{% endblock %} {% block header %}
+{% extends "dashboard.html" %}
+{% load staticfiles %}
+{% block title %}Online Game Store{% endblock %}
+{% block header %}
     {{ block.super }}
     <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/portfolio-item.css' %}">

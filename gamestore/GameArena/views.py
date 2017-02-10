@@ -36,7 +36,7 @@ def play_game(request, game_id):
         leaderjson = [ob.as_json_leader() for ob in leaders]
         print(game.to_json_dict())
         return render(request, "player.html", {'game': game.to_json_dict(),
-                                               'game_server': game.resource_info, 'leaders': leaderjson})
+                                               'game_server': game.resource_info, 'leaders': leaderjson,'user_type': current_user.user_type})
     # for all ajax calls
     elif request.method == 'POST' and request.is_ajax():
         response = {
