@@ -15,6 +15,7 @@ from .models import UserProfile
 from GameArena.models import Game
 from .forms import UserProfileUpdateForm, RegistrationForm
 from GameArena.forms import GameUploadForm
+from Store.models import Purchase
 
 '''
 This view performs user authentication and creates a session between user and application
