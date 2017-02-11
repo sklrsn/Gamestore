@@ -9,6 +9,7 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^profile/', include('Users.urls')),
     url(r'^game/', include('GameArena.urls')),
+    url(r'^store/', include('Store.urls')),
     url(r'^accounts/', views.index, name='index'),
     url(r'^', include('Users.urls')),
 ]

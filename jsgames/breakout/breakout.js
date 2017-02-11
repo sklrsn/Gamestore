@@ -13,17 +13,19 @@ $(document).ready(function() {
         canvas = $("#gameCanvas");
         mCanvas = canvas[0];
         ctx = mCanvas.getContext("2d");
-        mCanvas.height =600- $('.toolbar').height();
-        console.log(window.innerHeight)
+        mCanvas.height =600- $('.toolbar').height()-20;
+        console.log("window.innerHeight : "+window.innerHeight);
+        console.log("window.innerWidth : "+window.innerWidth);
         //Setting the width of the game canvas to maximum of 360
         if (window.innerWidth > 360)
             mCanvas.width = 360;
         else
-            mCanvas.width = $('.main').width();
+            mCanvas.width = window.innerWidth-10;
+        console.log("main.width " +mCanvas.width);
         ballRadius = 10;
         x = mCanvas.width / 2;
         y = mCanvas.height - 30;
-        console.log(y)
+        console.log("mCanvas.height - 30 : "+y)
         // speed of ball
         speed = 3;
         dx = speed;
@@ -106,7 +108,8 @@ $(document).ready(function() {
                         dy = -dy;
                         b.status--;
                         score++;
-                        if (score / level == brickRowCount * brickColumnCount) {
+                        if (getBricksStatus()==0) {
+                          console.log(getBricksStatus());
                           submitScore();
                             level++;
                             speed += 1;
@@ -140,6 +143,17 @@ $(document).ready(function() {
         ctx.closePath();
     }
 
+    function getBricksStatus()
+    {
+      var status = 0;
+      for (var c = 0; c < brickColumnCount; c++) {
+          for (var r = 0; r < brickRowCount; r++) {
+            status= status + bricks[c][r].status;
+          }
+        }
+      console.log(status);
+      return status;
+    }
     function drawBricks() {
         for (c = 0; c < brickColumnCount; c++) {
             for (r = 0; r < brickRowCount; r++) {
