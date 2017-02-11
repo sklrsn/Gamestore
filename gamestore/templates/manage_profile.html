@@ -32,10 +32,9 @@
                       enctype="multipart/form-data">
                     {% csrf_token %}
                     {% bootstrap_form password_reset_form %}
-                    {% bootstrap_form update_profile_form %}
                     <br><br>
                     <div class="form-submit">
-                        <input type="submit" class="btn btn-success" value="Save Changes">
+                        <input type="submit" class="btn btn-primary" value="Save Changes">
                     </div>
                 </form>
             </td>
