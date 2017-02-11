@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 # model to store game uploads
 class Game(models.Model):
     name = models.CharField(max_length=50)
-    description = models.TextField(max_length=100)
+    description = models.TextField(max_length=1000)
     logo = models.URLField()
     resource_info = models.URLField()
     cost = models.DecimalField(default=0.0, decimal_places=2, max_digits=10)

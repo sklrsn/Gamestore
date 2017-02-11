@@ -15,6 +15,7 @@ from .models import UserProfile
 from GameArena.models import Game
 from .forms import UserProfileUpdateForm, RegistrationForm
 from GameArena.forms import GameUploadForm
+from Store.models import Purchase
 
 '''
 This view performs user authentication and creates a session between user and application
@@ -88,8 +89,10 @@ This view renders the dashboard depends on the user type
 def home(request):
     user = User.objects.get(username=request.user)
     current_user = UserProfile.objects.get(user=user)
-    games_list = Game.objects.filter(developer_info=user)
-
+    if(current_user.user_type=='D'):
+        games_list = Game.objects.filter(developer_info=user)
+    else :
+        games_list =Purchase.objects.filter(player_details=user)
     upload_form = GameUploadForm()
     return render(request, 'dashboard.html',
                   {'user_type': current_user.user_type, 'games_list': games_list, 'upload_form': upload_form})
