@@ -16,5 +16,5 @@ urlpatterns = [
     url(r'^about_us/$', views.about_us, name='about_us'),
     url(r'^contact_us/$', views.contact_us, name='contact_us'),
     url(r'^terms/$', views.terms_conditions, name='terms'),
-    url(r'^downloads/$', views.download_statistics, name='download_statistics'),
+    url(r'^statistics/$', views.download_statistics, name='download_statistics'),
 ]

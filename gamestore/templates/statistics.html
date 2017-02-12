@@ -23,37 +23,39 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/canvasjs/1.7.0/jquery.canvasjs.min.js"
             crossorigin="anonymous"></script>
     <script type="text/javascript">
-        $(function () {
-            var options = {
-                exportEnabled: true,
-                animationEnabled: true,
-                title: {
-                    text: "Game Purchases over the Year"
-                },
-                data: [
-                    {
-                        type: "splineArea",
-                        dataPoints: [
-                            {y: 0},
-                            {y: 10},
-                            {y: 0},
-                            {y: 10},
-                            {y: 0},
-                            {y: 10},
-                            {y: 0},
-                            {y: 10},
-                            {y: 0},
-                            {y: 16},
-                            {y: 0},
-                            {y: 10}
-                        ]
-                    }
-                ]
-            };
+        window.onload = function () {
+            var chart = new CanvasJS.Chart("chartContainer",
+                {
+                    title: {
+                        text: "Game Purchases over the Year"
+                    },
+                    data: [
+                        {
+                            type: "column",
+                            dataPoints: []
+                        }
+                    ]
+                });
+            chart.render();
+            $.ajax({
+                url: "/profile/statistics/", success: function (result) {
+                    chart.options.data[0].dataPoints.push({y: result.jan, label: "January"});
+                    chart.options.data[0].dataPoints.push({y: result.feb, label: "February"});
+                    chart.options.data[0].dataPoints.push({y: result.mar, label: "March"});
+                    chart.options.data[0].dataPoints.push({y: result.apr, label: "April"});
+                    chart.options.data[0].dataPoints.push({y: result.may, label: "May"});
+                    chart.options.data[0].dataPoints.push({y: result.jun, label: "June"});
+                    chart.options.data[0].dataPoints.push({y: result.jul, label: "July"});
+                    chart.options.data[0].dataPoints.push({y: result.aug, label: "August"});
+                    chart.options.data[0].dataPoints.push({y: result.sep, label: "September"});
+                    chart.options.data[0].dataPoints.push({y: result.oct, label: "October"});
+                    chart.options.data[0].dataPoints.push({y: result.nov, label: "November"});
+                    chart.options.data[0].dataPoints.push({y: result.dec, label: "December"});
+                    chart.render();
+                }
+            });
+        }
 
-            $("#chartContainer").CanvasJSChart(options);
-
-        });
     </script>
     <style type="text/css">
         .modal-backdrop {
@@ -66,10 +68,8 @@
 
 {% block content %}
     <div class="container">
-        <h4><b>OverAll Statistics</b></h4>
         <div id="chartContainer" style="height: 300px; width: 100%;">
         </div>
-        <p><b>X axis - Month, Y axis - No of Downloads</b></p>
     </div>
 
 {% endblock %}
