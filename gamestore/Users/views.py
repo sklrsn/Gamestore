@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login, logout, update_session_auth
 from django.contrib.auth.forms import PasswordChangeForm
 from django.db import transaction
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 import cloudinary
 from django.contrib.auth.models import User, Group
 from django.core.urlresolvers import reverse
@@ -90,10 +90,10 @@ This view renders the dashboard depends on the user type
 def home(request):
     user = User.objects.get(username=request.user)
     current_user = UserProfile.objects.get(user=user)
-    if(current_user.user_type=='D'):
+    if (current_user.user_type == 'D'):
         games_list = Game.objects.filter(developer_info=user)
-    else :
-        games_list =Purchase.objects.filter(player_details=user)
+    else:
+        games_list = Purchase.objects.filter(player_details=user)
     upload_form = GameUploadForm()
     return render(request, 'dashboard.html',
                   {'user_type': current_user.user_type, 'games_list': games_list, 'upload_form': upload_form})
@@ -329,6 +329,22 @@ def edit_game(request, game_id):
 
 
 def download_statistics(request):
+    if request.is_ajax():
+        data = {
+            'jan': 10,
+            'feb': 20,
+            'mar': 30,
+            'apr': 40,
+            'may': 50,
+            'jun': 60,
+            'jul': 70,
+            'aug': 80,
+            'sep': 90,
+            'oct': 100,
+            'nov': 110,
+            'dec': 120
+        }
+        return JsonResponse(data)
     user = User.objects.get(username=request.user)
     current_user = UserProfile.objects.get(user=user)
     return render(request, 'statistics.html', {'user_type': current_user.user_type})
