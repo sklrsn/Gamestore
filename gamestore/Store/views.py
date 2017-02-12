@@ -52,9 +52,21 @@ def add_to_cart(request):
         return JsonResponse(status=400, data=jsondata)
     if form.cleaned_data['action'] == 'add':
         # TODO: Check for owned games
-        # TODO: Check if already in cart
+        game=form.cleaned_data['game']
+        '''
+            Check for owned games
+        '''
+        ownedGames = Purchase.objects.filter(game_details=game, player_details= user)
+        if ownedGames.count()>0:
+            return JsonResponse(status=402, data=jsondata)
+        '''
+            Check for games already added in cart
+        '''
+        cartitems = Cart.objects.filter(player_details=user,game_details=fgame)
+        if cartitems.count()>0:
+            return JsonResponse(status=403, data=jsondata)
 
-        cart = Cart(id=None,player_details=user,game_details=form.cleaned_data['game'])
+        cart = Cart(id=None,player_details=user,game_details=game)
         cart.save()
 
     return JsonResponse(status=201, data=jsondata)
@@ -104,12 +116,11 @@ def purchase(request):
     user = User.objects.get(username=request.user)
     current_user = UserProfile.objects.get(user=user)
     #amount =Cart.objects.annotate(Sum(F('game_details__cost')))
-
+    cartitems = Cart.objects.filter(player_details=user)
     order = Order(id=None)
     order.save()
     print('Order : ' + str(order.id))
-    Cart.objects.filter(player_details=user).update(order=order)
-    cartitems = Cart.objects.filter(player_details=user)
+    cartitems.update(order=order)
     amount=cartitems.aggregate(Sum('game_details__cost'))['game_details__cost__sum']
     print("amount:"+str(amount))
     # payment gateway Configuration

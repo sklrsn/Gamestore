@@ -87,10 +87,20 @@ function AddToCart(gameID)
                         $modalinfo.addClass('info');
                         $modalinfo.modal();
                     }else if (data.status == 400) {
+                        $('#modalMessage').text("There was an error adding game to the cart. Please try again later!");
+                        $modalinfo.removeClass('done error');
+                        $modalinfo.addClass('info');
+                        $modalinfo.modal();
+                    } else if (data.status == 402) {
+                        $('#modalMessage').text("Game is already owned by you.");
+                        $modalinfo.removeClass('done error');
+                        $modalinfo.addClass('info');
+                        $modalinfo.modal();
+                    }else if (data.status == 403) {
                         $('#modalMessage').text("Game is already present in the cart.");
                         $modalinfo.removeClass('done error');
                         $modalinfo.addClass('info');
-                        $modalinfo$modalinfo.modal();
+                        $modalinfo.modal();
                     } else {
                         $('#modalMessage').text("There was an error adding game to the cart. Please try again later!");
                         $modalinfo.removeClass('done error');

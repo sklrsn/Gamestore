@@ -23,7 +23,6 @@ def play_game(request, game_id):
     print('gameid = ' + game_id)
     game = get_object_or_404(Game, id=game_id)
     if request.method == 'GET':
-
         # Check if the user has purchased the game
         perm = Purchase.objects.filter(game_details=game_id, player_details=user)
         # TODO: Uncomment the below if
