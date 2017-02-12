@@ -14,7 +14,7 @@
                     <th data-field="logo">Logo</th>
                     <th data-field="name">Name</th>
                     <th data-field="description">Description</th>
-                    <th data-field="cost">cost</th>
+                    <th data-field="cost">Cost</th>
                     <th data-field="cart">Add to Cart</th>
                 </tr>
             </thead>
@@ -23,16 +23,35 @@
                 <tr>
                     <td><img src={{ game.game_details.logo }} height="75" width="75" alt="Not available"></td>
                     <td>{{ game.game_details.name }}</td>
-                    <td>{{ game.game_details.description }}</td>
+                    <td>{{ game.game_details.shortdesc }}</td>
                     <td>{{ game.game_details.cost }}</td>
                     <td><a href="#" class="remove" onclick="Remove({{game.game_details.id}},this)">Remove from Cart</a></td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
+
     </div>
+    {% if cart_list.has_other_pages %}
+    <ul class="pagination">
+        {% if users.has_previous %}
+        <li><a href="?page={{ cart_list.previous_page_number }}">&laquo;</a></li>
+        {% else %}
+        <li class="disabled"><span>&laquo;</span></li>
+        {% endif %} {% for i in cart_list.paginator.page_range %} {% if cart_list.number == i %}
+        <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span>
+        </li>
+        {% else %}
+        <li><a href="?page={{ i }}">{{ i }}</a></li>
+        {% endif %} {% endfor %} {% if cart_list.has_next %}
+        <li><a href="?page={{ cart_list.next_page_number }}">&raquo;</a></li>
+        {% else %}
+        <li class="disabled"><span>&raquo;</span></li>
+        {% endif %}
+    </ul>
+    {% endif %}
     <div class="confirm">
-      <button type="button" class="btn btn-primary btnConfirm">Confirm</button>
+        <input type="button" class="btn btn-primary btnCheckOut btnConfirm" value="Checkout"></input>
     </div>
 </div>
 <div id="modalInfo" class="modal fade" role="dialog">
@@ -82,8 +101,8 @@
                         tr.remove();
                         var rowCount = $('.table tr').length;
                         console.log(rowCount);
-                        if(rowCount==1){
-                          $(".confirm").remove();
+                        if (rowCount == 1) {
+                            $(".confirm").remove();
                         }
                     });
                 }
@@ -110,10 +129,10 @@
             }
         });
     }
-    $(document).ready(function(){
-      $('.btnPay').click(function(){
-        console.log("now I am paying");
-      });
+    $(document).ready(function() {
+        $('.btnCheckOut').click(function() {
+            window.location.replace("{% url 'purchase' %}")
+        });
     });
 </script>
 

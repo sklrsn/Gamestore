@@ -14,7 +14,7 @@ from .models import Purchase, Cart, Order
 from .forms import CartForm
 from django.db.models import Sum, F
 from hashlib import md5
-
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 
 # Create your views here.
@@ -84,12 +84,20 @@ def get_cart(request):
     user = User.objects.get(username=request.user)
     current_user = UserProfile.objects.get(user=user)
     cartitems = Cart.objects.filter(player_details=user)
+    paginator = Paginator(cartitems, 1)
+    page = request.GET.get('page', 1)
 
+    try:
+        carts = paginator.page(page)
+    except PageNotAnInteger:
+        carts = paginator.page(1)
+    except EmptyPage:
+        carts = paginator.page(paginator.num_pages)
     '''
         Write the code to return the cart details
     '''
     return render(request, 'cart.html',
-                  {'cart_list': cartitems})
+                  {'cart_list': carts})
 
 @login_required
 def purchase(request):
@@ -110,9 +118,9 @@ def purchase(request):
     pid = order.id
     print("pid"+str(pid))
     sid = "kalairajsunil"  # Fixme Todo: parametrize
-    success_url = request.build_absolute_uri(reverse("payment_result"))
-    cancel_url = request.build_absolute_uri(reverse("payment_result"))
-    error_url = request.build_absolute_uri(reverse("payment_result"))
+    success_url = request.build_absolute_uri(reverse("payment_success"))
+    cancel_url = request.build_absolute_uri(reverse("payment_cancel"))
+    error_url = request.build_absolute_uri(reverse("payment_failure"))
     secret_key = "3d5e7a6cfcaf44600e6a2650326780c2"  # Fixme Todo: parametrize
     checksumstr = "pid={}&sid={}&amount={}&token={}".format(pid, sid, amount, secret_key)  # Fixme Todo: parametrize, secret key!
     m = md5(checksumstr.encode("ascii"))
@@ -129,7 +137,7 @@ def purchase(request):
                    'checksum': checksum})
 
 @login_required
-def purchase_result(request):
+def purchase_response(request):
     pid = request.GET['pid']
     ref = request.GET['ref']
     result = request.GET['result']

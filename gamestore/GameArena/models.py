@@ -28,7 +28,10 @@ class Game(models.Model):
             'logo': self.logo
         }
         return res
-
+    def shortdesc(self):
+        if len(self.description)>100:
+            return self.description[:100]+"..."
+        return self.description
     def __str__(self):
         return self.name
 

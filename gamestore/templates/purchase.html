@@ -14,7 +14,7 @@
                     <th data-field="logo">Logo</th>
                     <th data-field="name">Name</th>
                     <th data-field="description">Description</th>
-                    <th data-field="cost">cost</th>
+                    <th data-field="cost">Cost</th>
                 </tr>
             </thead>
             <tbody>
@@ -22,11 +22,19 @@
                 <tr>
                     <td><img src={{ game.game_details.logo }} height="75" width="75" alt="Not available"></td>
                     <td>{{ game.game_details.name }}</td>
-                    <td>{{ game.game_details.description }}</td>
+                    <td>{{ game.game_details.shortdesc }}</td>
                     <td>{{ game.game_details.cost }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
+            <tfoot>
+    <tr>
+      <td></td>
+      <td></td>
+      <td class="text-right"><strong>Total:</strong></td>
+      <td>{{ amount }}</td>
+    </tr>
+  </tfoot>
         </table>
     </div>
     <div class="pay">
@@ -35,20 +43,16 @@
           <input type="hidden" name="sid" value="{{ sid }}" />
           <input type="hidden" name="success_url"
                   value="{{ success_url }}" />
-          <input type="hidden" name="cancel_url"
-                  value="{{ cancel_url }}" />
           <input type="hidden" name="error_url"
                   value="{{ error_url }}" />
+          <input type="hidden" name="cancel_url"
+                          value="{{ cancel_url }}" />
           <input type="hidden" name="checksum"
                   value="{{ checksum }}" />
                   <input type="hidden" name="amount"
                           value="{{ amount }}" />
-          <label  class="alignRight">Amount</label>
-          <!-- <input type="text" id="id_amount" name="amount" value={{ amount }} /> -->
-          <label>{{ amount }}</label>
     <input type="submit" class="btn btn-primary btnConfirm" value="Accept Payment"></input>
 </form>
-
     </div>
 </div>
 <div id="modalInfo" class="modal fade" role="dialog">
