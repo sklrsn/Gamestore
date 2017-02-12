@@ -151,7 +151,7 @@ $(document).ready(function() {
             status= status + bricks[c][r].status;
           }
         }
-      console.log(status);
+      //console.log(status);
       return status;
     }
     function drawBricks() {

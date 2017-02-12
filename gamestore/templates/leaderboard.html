@@ -1,0 +1,16 @@
+<table class="table table-hover">
+    <thead>
+    <tr>
+        <th data-field="logo">Player</th>
+        <th data-field="name">Score</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for leader in leaders %}
+        <tr>
+            <td>{{ leader.player }}</td>
+            <td>{{ leader.score }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

@@ -20,22 +20,25 @@ from GameArena.forms import GameUploadForm
 def play_game(request, game_id):
     user = User.objects.get(username=request.user)
     current_user = UserProfile.objects.get(user=user)
-    print('gameid = ' + game_id)
     game = get_object_or_404(Game, id=game_id)
+    print (request.is_ajax)
+    print (request.method)
     if request.method == 'GET':
         # Check if the user has purchased the game
-        perm = Purchase.objects.filter(game_details=game_id, player_details=user)
-        # TODO: Uncomment the below if
-        # if not Purchase.objects.filter(game_details=game_id, player_details= user):
-        #     messages.error(request, "You do not own this game. Why don't you buy it?")
-        #     return HttpResponseRedirect(reverse("listgames"))
+
+        # TODO: Uncomment the below
+        if not Purchase.objects.filter(game_details=game_id, player_details= user):
+            messages.error(request, "You do not own this game. Why don't you buy it?")
+            return HttpResponseRedirect(reverse("listgames"))
         leaders = Score.objects.filter(game_info=game).order_by("-score")[:5]
         leaderjson = {}
-
         leaderjson = [ob.as_json_leader() for ob in leaders]
-        print(game.to_json_dict())
+        #print(game.to_json_dict())
+        # if request.is_ajax():
+        #     return render(request, "leaderboard.html", {'leaders': leaderjson})
+        #     print('load request')
         return render(request, "player.html", {'game': game.to_json_dict(),
-                                               'game_server': game.resource_info, 'leaders': leaderjson,'user_type': current_user.user_type})
+                                                'game_server': game.resource_info, 'leaders': leaderjson,'user_type': current_user.user_type})
     # for all ajax calls
     elif request.method == 'POST' and request.is_ajax():
         response = {
@@ -100,3 +103,22 @@ def listgames(request):
 def fb_redirect(request):
     # Simply closes the window
     return render(request, "fb_redirect.html")
+
+'''
+    This method returns the leaderboard table. It is used only to refresh the leaderboard table
+'''
+@login_required
+def get_leaderboard(request,game_id):
+    try:
+        user = User.objects.get(username=request.user)
+        if request.is_ajax():
+            if not Purchase.objects.filter(game_details=game_id, player_details= user):
+                return HttpResponse('You do not own the game')
+            game = Game.objects.get(id=game_id)
+            leaders = Score.objects.filter(game_info=game).order_by("-score")[:5]
+            leaderjson = {}
+            leaderjson = [ob.as_json_leader() for ob in leaders]
+            return render(request, "leaderboard.html", {'leaders': leaderjson})
+    except:
+        return HttpResponse('error handling request')
+    return HttpResponse('error...')

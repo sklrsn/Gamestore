@@ -5,4 +5,5 @@ urlpatterns = [
     url(r'^player/(?P<game_id>[0-9]+)/$', views.play_game, name='play_game'),
     url(r'^listgames/$', views.listgames, name='listgames'),
     url(r'fb_redirect/$', views.fb_redirect, name='fb_redirect'),
+    url(r'leaderboard/(?P<game_id>[0-9]+)/$', views.get_leaderboard, name='leaderboard'),
 ]

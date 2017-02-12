@@ -11,11 +11,11 @@
         </thead>
         <tbody>
         {% if games_list %}
-            {% for game in games_list %}
+            {% for purgame in games_list %}
                 <tr>
-                    <td><img src={{ game.game_details.logo }} height="75" width="75" alt="Not available"></td>
-                    <td><a href="{% url 'play_game' game.id %}">{{ game.game_details.name }}</a></td>
-                    <td>{{ game.shortdesc }}</td>
+                    <td><img src={{ purgame.game_details.logo }} height="75" width="75" alt="Not available"></td>
+                    <td><a href="{% url 'play_game' purgame.game_details.id %}">{{ purgame.game_details.name }} </a></td>
+                    <td>{{ purgame.shortdesc }}</td>
                 </tr>
             {% endfor %}
         {% else %}

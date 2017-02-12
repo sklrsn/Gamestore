@@ -17,12 +17,6 @@ from hashlib import md5
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 
-# Create your views here.
-# Secret key details from payment gateway -
-#   Selled ID: kalairajsunil
-#   Secret Key: 3d5e7a6cfcaf44600e6a2650326780c2
-
-
 def home(request):
     return render(request=request, template_name='store.html')
 
@@ -43,33 +37,38 @@ def index(request):
 
 @login_required
 def add_to_cart(request):
-    user = User.objects.get(username=request.user)
-    current_user = UserProfile.objects.get(user=user)
-    form = CartForm(request.POST)
-    jsondata={}
-    if not form.is_valid():
-        jsondata['error'] = form.errors
+    try:
+        user = User.objects.get(username=request.user)
+        current_user = UserProfile.objects.get(user=user)
+        form = CartForm(request.POST)
+        jsondata={}
+        if not form.is_valid():
+            jsondata['error'] = form.errors
+            return JsonResponse(status=400, data=jsondata)
+        if form.cleaned_data['action'] == 'add':
+            # TODO: Check for owned games
+            game=form.cleaned_data['game']
+            '''
+                Check for owned games
+            '''
+            ownedGames = Purchase.objects.filter(game_details=game, player_details= user)
+            if ownedGames.count()>0:
+                return JsonResponse(status=402, data=jsondata)
+            '''
+                Check for games already added in cart
+            '''
+            cartitems = Cart.objects.filter(player_details=user,game_details=game)
+            if cartitems.count()>0:
+                return JsonResponse(status=403, data=jsondata)
+            '''
+                Add the game to cart
+            '''
+            cart = Cart(id=None,player_details=user,game_details=game)
+            cart.save()
+
+        return JsonResponse(status=201, data=jsondata)
+    except:
         return JsonResponse(status=400, data=jsondata)
-    if form.cleaned_data['action'] == 'add':
-        # TODO: Check for owned games
-        game=form.cleaned_data['game']
-        '''
-            Check for owned games
-        '''
-        ownedGames = Purchase.objects.filter(game_details=game, player_details= user)
-        if ownedGames.count()>0:
-            return JsonResponse(status=402, data=jsondata)
-        '''
-            Check for games already added in cart
-        '''
-        cartitems = Cart.objects.filter(player_details=user,game_details=fgame)
-        if cartitems.count()>0:
-            return JsonResponse(status=403, data=jsondata)
-
-        cart = Cart(id=None,player_details=user,game_details=game)
-        cart.save()
-
-    return JsonResponse(status=201, data=jsondata)
 
 @login_required
 def remove_from_cart(request):
@@ -160,5 +159,9 @@ def purchase_response(request):
     order.status = result
     order.save()
     if(result=="success"):
-        Cart.objects.filter(order=order).delete()
+        cartitems=Cart.objects.filter(order=order)
+        for item in cartitems:
+            purchase = Purchase(game_details=item.game_details  ,player_details=item.player_details,cost=item.game_details.cost,order=order)
+            purchase.save()
+            item.delete()
     return HttpResponse(response)

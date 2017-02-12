@@ -20,6 +20,7 @@ from Store.models import Purchase
 '''
 This view performs user authentication and creates a session between user and application
 
+TODO: Even after we login to the home screen after login, it shows the login screen. If logged in it should take to dashboard
 '''
 
 

@@ -20,27 +20,13 @@
             <div class="col-md-4">
                 <h3>{{ game.name }}</h3>
                 <p>{{ game.description }}</p>
-                <div class="table-responsive">
+                <hr class="divider">
 
-                    <table class="table table-hover" border="20">
-                        <thead>
-                        <tr>
-                            <th data-field="logo">Player</th>
-                            <th data-field="name">Score</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for leader in leaders %}
-                            <tr>
-                                <td>{{ leader.player }}</td>
-                                <td>{{ leader.score }}</td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
+                <div class="table-responsive" id = "leaderboard">
+                    {% include "leaderboard.html" %}
                 </div>
-                <div id="leaderboard">
-                    <div class="row">
+                <div id="leaderboarda">
+                    <!-- <div class="row">
                         <div class="col-xs-8">Player</div>
                         <div class="col-xs-4">Score</div>
                     </div>
@@ -49,7 +35,7 @@
                             <div class="col-xs-8">{{ leader.player }}</div>
                             <div class="col-xs-4">{{ leader.score }}</div>
                         </div>
-                    {% endfor %}
+                    {% endfor %} -->
                 </div>
 
                 <!-- Your share button code -->
@@ -161,11 +147,13 @@
         function sendData(data, url) {
             data.csrfmiddlewaretoken = "{{ csrf_token  }}";
             var message = {};
+            console.log('s')
             $.ajax({
                 method: 'POST',
                 url: url,
                 data: data,
                 success: function (data) {
+
                     if (data.error) {
                         message = {
                             messageType: "ERROR",
@@ -180,6 +168,13 @@
                             $('#score').text(message.score);
                         }
                     }
+                    console.log('success')
+                    console.log($('#leaderboard').length)
+                    lburl =  '{% url 'leaderboard' game.id%}'
+                    $( "#leaderboard" ).load(lburl);
+                    console.log('after load')
+
+                    //
                 },
                 error: function (data) {
                     if (data.error) {
@@ -189,6 +184,10 @@
                         };
                         sendMessageToGrame(message);
                     }
+                }
+                ,
+                complete: function(data){
+
                 }
             });
         }
