@@ -22,12 +22,60 @@
             crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/canvasjs/1.7.0/jquery.canvasjs.min.js"
             crossorigin="anonymous"></script>
-    <script type="text/javascript">
-        window.onload = function () {
+    <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="http://code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
+    <style>
+        .stats {
+            height: 100%;
+            width: 100%;
+        }
+
+        .main {
+            border: dotted;
+        }
+
+        #content {
+            float: left;
+            width: 70%;
+        }
+
+        #aside {
+            float: right;
+            width: 20%;
+            align-items: left;
+        }
+
+    </style>
+
+    <script>
+        $(document).ready(function () {
+            $(function () {
+                $("#from-date").datepicker();
+                $("#to-date").datepicker();
+                $("#update-button").click(function () {
+                    chart.options.data[0].dataPoints = [];
+                    $.ajax({
+                        data: {
+                            type: 'range',
+                            from_date: $("#from-date").val(),
+                            to_date: $("#to-date").val()
+                        },
+                        url: "/profile/statistics/", success: function (result) {
+                            $.each(result, function (k, v) {
+                                chart.options.data[0].dataPoints.push({y: v[1], label: v[0]});
+                            });
+                            chart.render();
+                        }
+                    });
+                });
+            });
+
             var chart = new CanvasJS.Chart("chartContainer",
                 {
+                    animationEnabled: true,
                     title: {
-                        text: "Game Purchases over the Year"
+                        text: "Trend"
                     },
                     data: [
                         {
@@ -37,7 +85,11 @@
                     ]
                 });
             chart.render();
+
             $.ajax({
+                data: {
+                    type: 'overall'
+                },
                 url: "/profile/statistics/", success: function (result) {
                     $.each(result, function (k, v) {
                         chart.options.data[0].dataPoints.push({y: v[1], label: v[0]});
@@ -45,22 +97,36 @@
                     chart.render();
                 }
             });
-        }
-
+        });
     </script>
-    <style type="text/css">
-        .modal-backdrop {
-            z-index: 0;
-        !important;
-        }
-    </style>
 
 {% endblock %}
 
 {% block content %}
-    <div class="container">
-        <div id="chartContainer" style="height: 300px; width: 100%;">
+    <div class="main">
+
+        <div id="aside">
+            <br><br><br>
+            <h3>Time Range</h3>
+
+            <div class="stats">
+                <div class="input-group input-append date datepicker" id="from-selector">
+                    <input type="text" id="from-date" class="form-control" name="from-date" placeholder="From Date..."/>
+                    <span class="input-group-addon add-on"><span class="glyphicon glyphicon-calendar"></span></span>
+                </div>
+                <br>
+                <div class="input-group input-append date datepicker" id="to-selector">
+                    <input type="text" id="to-date" class="form-control" name="to-date" placeholder="To Date..."/>
+                    <span class="input-group-addon add-on"><span class="glyphicon glyphicon-calendar"></span></span>
+                </div>
+                <br>
+                <button id="update-button" class="btn-lg btn-primary form-control">Update</button>
+            </div>
+
         </div>
-    </div>
+        <div id="content">
+            <div id="chartContainer" style="height: 350px; width: 100%;">
+            </div>
+        </div>
 
 {% endblock %}

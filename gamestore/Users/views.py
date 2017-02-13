@@ -330,16 +330,37 @@ def edit_game(request, game_id):
 
 def download_statistics(request):
     if request.is_ajax():
-        user = User.objects.get(username=request.user)
-        games_list = Game.objects.filter(developer_info=user)
+        print(request.GET['type'])
+        if request.GET['type'] == 'overall':
+            user = User.objects.get(username=request.user)
+            games_list = Game.objects.filter(developer_info=user)
 
-        stats = dict()
-        stats[1] = ("Game of Thrones", 10)
-        stats[2] = ("Angry Birds", 20)
+            stats = dict()
+            stats[1] = ("Game of Thrones", 100)
+            stats[2] = ("Angry Birds", 20)
 
-        for game in games_list:
-            stats[game.id] = (game.name, len(Purchase.objects.filter(game_details=game)))
-        return JsonResponse(stats)
+            stats[3] = ("Game of Thrones", 10)
+            stats[4] = ("Angry Birds", 20)
+
+            stats[5] = ("Game of Thrones", 10)
+            stats[6] = ("Angry Birds", 20)
+
+            for game in games_list:
+                stats[game.id] = (game.name, len(Purchase.objects.filter(game_details=game)))
+            return JsonResponse(stats)
+        elif request.GET['type'] == 'range':
+            print(request.GET['from_date'])
+            print(request.GET['to_date'])
+            user = User.objects.get(username=request.user)
+            games_list = Game.objects.filter(developer_info=user)
+
+            stats = dict()
+            stats[1] = ("Game of Thrones", 100)
+            stats[2] = ("Angry Birds", 20)
+
+            for game in games_list:
+                stats[game.id] = (game.name, len(Purchase.objects.filter(game_details=game)))
+            return JsonResponse(stats)
 
     user = User.objects.get(username=request.user)
     current_user = UserProfile.objects.get(user=user)
