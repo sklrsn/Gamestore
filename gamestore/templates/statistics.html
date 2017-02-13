@@ -51,25 +51,43 @@
     <script>
         $(document).ready(function () {
             $(function () {
-                $("#from-date").datepicker();
-                $("#to-date").datepicker();
+                $("#from-date").datepicker({maxDate: new Date()});
+                $("#to-date").datepicker({maxDate: new Date()});
                 $("#update-button").click(function () {
-                    chart.options.data[0].dataPoints = [];
-                    $.ajax({
-                        data: {
-                            type: 'range',
-                            from_date: $("#from-date").val(),
-                            to_date: $("#to-date").val()
-                        },
-                        url: "/profile/statistics/", success: function (result) {
-                            $.each(result, function (k, v) {
-                                chart.options.data[0].dataPoints.push({y: v[1], label: v[0]});
-                            });
-                            chart.render();
+                    if ($("#from-date").val() != "" && $("#to-date").val() != "") {
+                        $('#from-date').css('border-color', '');
+                        $('#to-date').css('border-color', '');
+                        chart.options.data[0].dataPoints = [];
+                        $.ajax({
+                            data: {
+                                type: 'range',
+                                from_date: $("#from-date").val(),
+                                to_date: $("#to-date").val()
+                            },
+                            url: "/profile/statistics/", success: function (result) {
+
+                                $.each(result, function (k, v) {
+                                    chart.options.data[0].dataPoints.push({y: v[1], label: v[0]});
+                                });
+
+                                chart.render();
+                            }
+                        });
+                    }
+                    else {
+                        if ($("#from-date").val() == "") {
+                            $('#from-date').css('border-color', 'red');
+                        } else if ($("#to-date").val() == "") {
+                            $('#to-date').css('border-color', 'red');
+                        } else {
+                            $('#from-date').css('border-color', 'red');
+                            $('#to-date').css('border-color', 'red');
                         }
-                    });
-                });
-            });
+                    }
+                })
+                ;
+            })
+            ;
 
             var chart = new CanvasJS.Chart("chartContainer",
                 {
@@ -97,7 +115,8 @@
                     chart.render();
                 }
             });
-        });
+        })
+        ;
     </script>
 
 {% endblock %}
@@ -111,12 +130,14 @@
 
             <div class="stats">
                 <div class="input-group input-append date datepicker" id="from-selector">
-                    <input type="text" id="from-date" class="form-control" name="from-date" placeholder="From Date..."/>
+                    <input type="text" id="from-date" class="form-control" name="from-date" placeholder="From Date..."
+                           required/>
                     <span class="input-group-addon add-on"><span class="glyphicon glyphicon-calendar"></span></span>
                 </div>
                 <br>
                 <div class="input-group input-append date datepicker" id="to-selector">
-                    <input type="text" id="to-date" class="form-control" name="to-date" placeholder="To Date..."/>
+                    <input type="text" id="to-date" class="form-control" name="to-date" placeholder="To Date..."
+                           required/>
                     <span class="input-group-addon add-on"><span class="glyphicon glyphicon-calendar"></span></span>
                 </div>
                 <br>
