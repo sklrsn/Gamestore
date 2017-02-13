@@ -330,21 +330,17 @@ def edit_game(request, game_id):
 
 def download_statistics(request):
     if request.is_ajax():
-        data = {
-            'jan': 10,
-            'feb': 20,
-            'mar': 30,
-            'apr': 40,
-            'may': 50,
-            'jun': 60,
-            'jul': 70,
-            'aug': 80,
-            'sep': 90,
-            'oct': 100,
-            'nov': 110,
-            'dec': 120
-        }
-        return JsonResponse(data)
+        user = User.objects.get(username=request.user)
+        games_list = Game.objects.filter(developer_info=user)
+
+        stats = dict()
+        stats[1] = ("Game of Thrones", 10)
+        stats[2] = ("Angry Birds", 20)
+
+        for game in games_list:
+            stats[game.id] = (game.name, len(Purchase.objects.filter(game_details=game)))
+        return JsonResponse(stats)
+
     user = User.objects.get(username=request.user)
     current_user = UserProfile.objects.get(user=user)
     return render(request, 'statistics.html', {'user_type': current_user.user_type})
