@@ -68,34 +68,6 @@
                 $("#from-date").datepicker({maxDate: new Date()});
                 $("#to-date").datepicker({maxDate: new Date()});
             });
-
-            var barchart = new CanvasJS.Chart("barchart",
-                {
-                    animationEnabled: true,
-                    backgroundColor: "#c1bdba",
-                    title: {
-                        text: "Trend"
-                    },
-                    data: [
-                        {
-                            type: "column",
-                            dataPoints: []
-                        }
-                    ]
-                });
-            barchart.render();
-
-            $.ajax({
-                data: {
-                    type: 'overall'
-                },
-                url: "/profile/statistics/", success: function (result) {
-                    $.each(result, function (k, v) {
-                        barchart.options.data[0].dataPoints.push({y: v[1], label: v[0]});
-                    });
-                    barchart.render();
-                }
-            });
         });
     </script>
 
@@ -143,6 +115,7 @@
                     {
                         backgroundColor: "#c1bdba",
                         animationEnabled: true,
+                        title: "",
                         legend: {
                             verticalAlign: "center",
                             horizontalAlign: "left",
@@ -163,6 +136,28 @@
                             }
                         ]
                     });
+
+                $.ajax({
+                    data: {
+                        type: 'overall'
+                    },
+                    url: "/profile/statistics/", success: function (result) {
+                        $.each(result, function (k, v) {
+                            piechart.options.data[0].dataPoints.push({
+                                y: v[1],
+                                legendText: v[0],
+                                label: v[0]
+                            });
+                        });
+                        piechart.render();
+                    },
+                    statusCode: {
+                        400: function () {
+                            alert("No Records Found");
+                        }
+                    }
+                });
+
             });
         });
     </script>
@@ -190,9 +185,8 @@
             </div>
         </div>
         <div id="content">
-            <div id="barchart" style="height: 350px; width: 100%;">
-            </div>
-            <div id="piechart" style="height: 100%; width: 100%;border: dotted">
+            <h3 align="center">Downloads</h3>
+            <div id="piechart" style="height: 100%; width: 100%">
             </div>
         </div>
 

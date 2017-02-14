@@ -16,6 +16,7 @@ from GameArena.models import Game
 from .forms import UserProfileUpdateForm, RegistrationForm
 from GameArena.forms import GameUploadForm
 from Store.models import Purchase
+import json
 
 '''
 This view performs user authentication and creates a session between user and application
@@ -330,36 +331,44 @@ def edit_game(request, game_id):
 
 def download_statistics(request):
     if request.is_ajax():
-        print(request.GET['type'])
         if request.GET['type'] == 'overall':
             user = User.objects.get(username=request.user)
             games_list = Game.objects.filter(developer_info=user)
-
             stats = dict()
-            stats[1] = ("Game of Thrones", 100)
-            stats[2] = ("Angry Birds", 20)
-
-            stats[3] = ("Game of Thrones", 10)
-            stats[4] = ("Angry Birds", 20)
-
-            stats[5] = ("Game of Thrones", 10)
-            stats[6] = ("Angry Birds", 20)
 
             for game in games_list:
                 stats[game.id] = (game.name, len(Purchase.objects.filter(game_details=game)))
             return JsonResponse(stats)
+
         elif request.GET['type'] == 'range':
-            print(request.GET['from_date'])
-            print(request.GET['to_date'])
+            from_date = request.GET['from_date']
+            to_date = request.GET['to_date']
+            start = None
+            end = None
+            try:
+                start = datetime.datetime.strptime(from_date, "%m/%d/%Y")
+            except ValueError:
+                return HttpResponse(status=400, content=json.dumps({'error', 'Invalid parameter from_date'}),
+                                    content_type="text/json")
+
+            try:
+                end = datetime.datetime.strptime(to_date, "%m/%d/%Y")
+            except ValueError:
+                return HttpResponse(status=400, content=json.dumps({'error', 'Invalid parameter to_date'}),
+                                    content_type="text/json")
+
+            if start > end:
+                return HttpResponse(status=400,
+                                    content=json.dumps({'error', 'from_date cannot be greater than to_date'}),
+                                    content_type="text/json")
+            end = datetime.datetime.date(end) + datetime.timedelta(days=1)
+            stats = dict()
             user = User.objects.get(username=request.user)
             games_list = Game.objects.filter(developer_info=user)
-
-            stats = dict()
-            stats[1] = ("Game of Thrones", 100)
-            stats[2] = ("Angry Birds", 20)
-
             for game in games_list:
-                stats[game.id] = (game.name, len(Purchase.objects.filter(game_details=game)))
+                stats[game.id] = (
+                    game.name,
+                    len(Purchase.objects.filter(game_details=game, purchase_date__lte=end, purchase_date__gte=start)))
             return JsonResponse(stats)
 
     user = User.objects.get(username=request.user)
