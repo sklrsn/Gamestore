@@ -12,7 +12,7 @@ import datetime
 import uuid
 from django.core.exceptions import ObjectDoesNotExist
 from .models import UserProfile
-from GameArena.models import Game
+from GameArena.models import Game, Category
 from .forms import UserProfileUpdateForm, RegistrationForm
 from GameArena.forms import GameUploadForm
 from Store.models import Purchase
@@ -27,7 +27,7 @@ TODO: Even after we login to the home screen after login, it shows the login scr
 
 def user_login(request):
     if request.user.is_authenticated():
-        return HttpResponseRedirect("home")
+        return redirect('/profile/home')
     else:
         try:
             if request.method == 'POST':
@@ -282,15 +282,15 @@ def upload_game(request):
             'upload_form': upload_form})
     else:
         user = User.objects.get(username=request.user)
-
         upload_game_form = GameUploadForm(data=request.POST)
         if upload_game_form.is_valid():
+            category = Category.objects.get(name=upload_game_form.cleaned_data['game_category'])
             game = Game(id=None, name=upload_game_form.cleaned_data['name'],
                         description=upload_game_form.cleaned_data['description'],
                         logo=upload_game_form.cleaned_data['logo'],
                         resource_info=upload_game_form.cleaned_data['resource_info'],
                         cost=upload_game_form.cleaned_data['cost'],
-                        modified_date=datetime.datetime.now(), developer_info=user)
+                        modified_date=datetime.datetime.now(), developer_info=user, game_category=category)
             game.save()
             return HttpResponseRedirect(redirect_to=reverse('home'))
 

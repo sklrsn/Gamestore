@@ -3,6 +3,17 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 
 
+class Category(models.Model):
+    name = models.CharField(max_length=50, unique=True)
+
+    class Meta:
+        db_table = "Category"
+        ordering = ['name']
+
+    def __str__(self):
+        return self.name
+
+
 # model to store game uploads
 class Game(models.Model):
     name = models.CharField(max_length=50)
@@ -12,6 +23,7 @@ class Game(models.Model):
     cost = models.DecimalField(default=0.0, decimal_places=2, max_digits=10)
     modified_date = models.DateTimeField(auto_now_add=True)
     developer_info = models.ForeignKey(User, related_name='uploaded_games', on_delete=models.CASCADE)
+    game_category = models.ForeignKey(Category, related_name='games_category')
 
     class Meta:
         db_table = "Game"
@@ -28,10 +40,12 @@ class Game(models.Model):
             'logo': self.logo
         }
         return res
+
     def shortdesc(self):
-        if len(self.description)>100:
-            return self.description[:100]+"..."
+        if len(self.description) > 100:
+            return self.description[:100] + "..."
         return self.description
+
     def __str__(self):
         return self.name
 
