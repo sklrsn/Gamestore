@@ -31,8 +31,13 @@
             width: 100%;
         }
 
+        .reset {
+            height: 20%;
+            width: 20%;
+        }
+
         .main {
-            border: dotted;
+
         }
 
         #content {
@@ -50,6 +55,11 @@
             display: none;
         }
 
+        #footer {
+            float: bottom;
+            text-align: right;
+        }
+
     </style>
 
     <script>
@@ -57,11 +67,50 @@
             $(function () {
                 $("#from-date").datepicker({maxDate: new Date()});
                 $("#to-date").datepicker({maxDate: new Date()});
+            });
+
+            var barchart = new CanvasJS.Chart("barchart",
+                {
+                    animationEnabled: true,
+                    backgroundColor: "#c1bdba",
+                    title: {
+                        text: "Trend"
+                    },
+                    data: [
+                        {
+                            type: "column",
+                            dataPoints: []
+                        }
+                    ]
+                });
+            barchart.render();
+
+            $.ajax({
+                data: {
+                    type: 'overall'
+                },
+                url: "/profile/statistics/", success: function (result) {
+                    $.each(result, function (k, v) {
+                        barchart.options.data[0].dataPoints.push({y: v[1], label: v[0]});
+                    });
+                    barchart.render();
+                }
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $(function () {
                 $("#update-button").click(function () {
                     if ($("#from-date").val() != "" && $("#to-date").val() != "") {
+                        piechart.options.data[0].dataPoints = []
                         $('#from-date').css('border-color', '');
                         $('#to-date').css('border-color', '');
-                        chart.options.data[0].dataPoints = [];
+                        piechart.options.data[0].dataPoints.push({y: 83.24, legendText: "Google", label: "Google"});
+                        piechart.options.data[0].dataPoints.push({y: 13.24, legendText: "Yahoo", label: "Yahoo"});
+
+                        piechart.render();
                         $.ajax({
                             data: {
                                 type: 'range',
@@ -89,46 +138,38 @@
                         }
                     }
                 })
-                ;
-            })
-            ;
 
-            var chart = new CanvasJS.Chart("chartContainer",
-                {
-                    animationEnabled: true,
-                    backgroundColor: "#c1bdba",
-                    title: {
-                        text: "Trend"
-                    },
-                    data: [
-                        {
-                            type: "column",
-                            dataPoints: []
-                        }
-                    ]
-                });
-            chart.render();
-
-            $.ajax({
-                data: {
-                    type: 'overall'
-                },
-                url: "/profile/statistics/", success: function (result) {
-                    $.each(result, function (k, v) {
-                        chart.options.data[0].dataPoints.push({y: v[1], label: v[0]});
+                var piechart = new CanvasJS.Chart("piechart",
+                    {
+                        backgroundColor: "#c1bdba",
+                        animationEnabled: true,
+                        legend: {
+                            verticalAlign: "center",
+                            horizontalAlign: "left",
+                            fontSize: 20,
+                            fontFamily: "Helvetica"
+                        },
+                        theme: "theme2",
+                        data: [
+                            {
+                                type: "pie",
+                                indexLabelFontFamily: "Garamond",
+                                indexLabelFontSize: 20,
+                                indexLabel: "{label} {y}%",
+                                startAngle: -20,
+                                showInLegend: true,
+                                toolTipContent: "{legendText} {y}%",
+                                dataPoints: []
+                            }
+                        ]
                     });
-                    chart.render();
-                }
             });
-        })
-        ;
+        });
     </script>
-
 {% endblock %}
 
 {% block content %}
     <div class="main">
-        <p align="right"><a href="/profile/statistics/"><b>Reset Graph</b></a></p>
         <div id="aside">
             <br><br><br>
             <h3>Time Range</h3>
@@ -145,14 +186,14 @@
                     <span class="input-group-addon add-on"><span class="glyphicon glyphicon-calendar"></span></span>
                 </div>
                 <br>
-                <button id="update-button" class="btn-lg btn-primary form-control">Update</button>
+                <button id="update-button" class="btn-lg btn-success form-control">Filter data</button>
             </div>
-
         </div>
         <div id="content">
-            <div id="chartContainer" style="height: 350px; width: 100%;">
+            <div id="barchart" style="height: 350px; width: 100%;">
             </div>
-
+            <div id="piechart" style="height: 100%; width: 100%;border: dotted">
+            </div>
         </div>
 
 {% endblock %}
