@@ -37,7 +37,6 @@
         }
 
         .main {
-
         }
 
         #content {
@@ -118,7 +117,7 @@
                         backgroundColor: "#c1bdba",
                         animationEnabled: true,
                         title: {
-                            text: "Site Traffic",
+                            text: "Downloads by Game",
                             fontSize: 30
                         },
                         legend: {
@@ -127,7 +126,7 @@
                             fontSize: 20,
                             fontFamily: "Helvetica"
                         },
-                        theme: "theme2",
+                        theme: "theme7",
                         data: [
                             {
                                 type: "pie",
@@ -174,7 +173,7 @@
                     {
 
                         title: {
-                            text: "Site Traffic",
+                            text: "Downloads by Time",
                             fontSize: 30
                         },
                         axisY: {
@@ -191,7 +190,7 @@
                         toolTip: {
                             shared: true
                         },
-                        theme: "theme2",
+                        theme: "theme7",
                         axisY: {
                             gridColor: "Silver",
                             tickColor: "silver"
@@ -221,7 +220,7 @@
                                 else {
                                     e.dataSeries.visible = true;
                                 }
-                                chart.render();
+                                linechart.render();
                             }
                         }
                     });
@@ -232,8 +231,6 @@
                     },
                     url: "/profile/statistics/", success: function (result) {
                         $.each(result.labels, function (index, value) {
-                            console.log(result.labels[index])
-                            console.log(result.dataset[index])
                             linechart.options.data[0].dataPoints.push({
                                 x: new Date(result.labels[index]),
                                 y: result.dataset[index]
@@ -267,7 +264,7 @@
                     <span class="input-group-addon add-on"><span class="glyphicon glyphicon-calendar"></span></span>
                 </div>
                 <br>
-                <button id="update-button" class="btn-lg btn-success form-control">Filter data</button>
+                <button id="update-button" class="btn-lg btn-primary form-control">Fetch data</button>
             </div>
         </div>
         <div id="content">
