@@ -62,6 +62,8 @@
 
     </style>
 
+
+
     <script>
         $(document).ready(function () {
             $(function () {
@@ -82,7 +84,7 @@
 
                         $.ajax({
                             data: {
-                                type: 'range',
+                                type: 'pie-range',
                                 from_date: $("#from-date").val(),
                                 to_date: $("#to-date").val()
                             },
@@ -115,7 +117,10 @@
                     {
                         backgroundColor: "#c1bdba",
                         animationEnabled: true,
-                        title: "",
+                        title: {
+                            text: "Site Traffic",
+                            fontSize: 30
+                        },
                         legend: {
                             verticalAlign: "center",
                             horizontalAlign: "left",
@@ -139,7 +144,7 @@
 
                 $.ajax({
                     data: {
-                        type: 'overall'
+                        type: 'pie-overall'
                     },
                     url: "/profile/statistics/", success: function (result) {
                         $.each(result, function (k, v) {
@@ -158,6 +163,87 @@
                     }
                 });
 
+            });
+        });
+    </script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(function () {
+                var linechart = new CanvasJS.Chart("chartContainer",
+                    {
+
+                        title: {
+                            text: "Site Traffic",
+                            fontSize: 30
+                        },
+                        axisY: {
+                            interval: 1,
+                        },
+                        backgroundColor: "#c1bdba",
+                        animationEnabled: true,
+                        axisX: {
+                            gridColor: "Silver",
+                            tickColor: "silver",
+                            valueFormatString: "DD/MMM"
+
+                        },
+                        toolTip: {
+                            shared: true
+                        },
+                        theme: "theme2",
+                        axisY: {
+                            gridColor: "Silver",
+                            tickColor: "silver"
+                        },
+                        legend: {
+                            verticalAlign: "center",
+                            horizontalAlign: "right"
+                        },
+                        data: [
+                            {
+                                type: "line",
+                                showInLegend: true,
+                                lineThickness: 2,
+                                name: "Downloads",
+                                markerType: "square",
+                                color: "#F08080",
+                                dataPoints: []
+                            }
+
+                        ],
+                        legend: {
+                            cursor: "pointer",
+                            itemclick: function (e) {
+                                if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+                                    e.dataSeries.visible = false;
+                                }
+                                else {
+                                    e.dataSeries.visible = true;
+                                }
+                                chart.render();
+                            }
+                        }
+                    });
+
+                $.ajax({
+                    data: {
+                        type: 'line-overall'
+                    },
+                    url: "/profile/statistics/", success: function (result) {
+                        $.each(result.labels, function (index, value) {
+                            console.log(result.labels[index])
+                            console.log(result.dataset[index])
+                            linechart.options.data[0].dataPoints.push({
+                                x: new Date(result.labels[index]),
+                                y: result.dataset[index]
+                            })
+                        });
+                        linechart.render();
+                    }
+                });
+
+                linechart.render();
             });
         });
     </script>
@@ -185,7 +271,8 @@
             </div>
         </div>
         <div id="content">
-            <h3 align="center">Downloads</h3>
+            <div id="chartContainer" style="height: 300px; width: 100%;"></div>
+            <br> <br>
             <div id="piechart" style="height: 100%; width: 100%">
             </div>
         </div>

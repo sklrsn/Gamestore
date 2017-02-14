@@ -17,6 +17,7 @@ from .forms import UserProfileUpdateForm, RegistrationForm
 from GameArena.forms import GameUploadForm
 from Store.models import Purchase
 import json
+import itertools
 
 '''
 This view performs user authentication and creates a session between user and application
@@ -333,7 +334,7 @@ def edit_game(request, game_id):
 
 def download_statistics(request):
     if request.is_ajax():
-        if request.GET['type'] == 'overall':
+        if request.GET['type'] == 'pie-overall':
             user = User.objects.get(username=request.user)
             games_list = Game.objects.filter(developer_info=user)
             stats = dict()
@@ -342,7 +343,7 @@ def download_statistics(request):
                 stats[game.id] = (game.name, len(Purchase.objects.filter(game_details=game)))
             return JsonResponse(stats)
 
-        elif request.GET['type'] == 'range':
+        elif request.GET['type'] == 'pie-range':
             from_date = request.GET['from_date']
             to_date = request.GET['to_date']
             start = None
@@ -371,6 +372,20 @@ def download_statistics(request):
                 stats[game.id] = (
                     game.name,
                     len(Purchase.objects.filter(game_details=game, purchase_date__lte=end, purchase_date__gte=start)))
+            return JsonResponse(stats)
+        elif request.GET['type'] == 'line-overall':
+            stats = dict()
+            stats['labels'] = []
+            stats['dataset'] = []
+
+            jobs = Purchase.objects.filter()
+            data = itertools.groupby(jobs, lambda record: record.purchase_date.strftime("%Y-%m-%d"))
+            purchase_by_day = [(day, len(list(purchase_this_day))) for day, purchase_this_day in data]
+
+            for d in purchase_by_day:
+                stats['labels'].append(d[0])
+                stats['dataset'].append(d[1])
+            print(stats)
             return JsonResponse(stats)
 
     user = User.objects.get(username=request.user)
