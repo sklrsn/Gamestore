@@ -27,7 +27,7 @@ TODO: Even after we login to the home screen after login, it shows the login scr
 
 def user_login(request):
     if request.user.is_authenticated():
-        return redirect('/profile/home')
+        return HttpResponseRedirect("home")
     else:
         try:
             if request.method == 'POST':
@@ -74,6 +74,8 @@ This view renders Game store landing page
 
 
 def index(request):
+    if request.user.is_authenticated():
+        return HttpResponseRedirect("home")
     try:
         return render(request, 'index.html')
     except Exception as e:
