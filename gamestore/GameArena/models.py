@@ -47,7 +47,8 @@ class Score(models.Model):
     def as_json_leader(self):
         return dict(
             player=self.player_info.username,
-            score=self.score)
+            score=self.score,
+            date_played = self.last_played)
 
     class Meta:
         db_table = "Score"

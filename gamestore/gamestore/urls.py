@@ -12,4 +12,5 @@ urlpatterns = [
     url(r'^store/', include('Store.urls')),
     url(r'^accounts/', views.index, name='index'),
     url(r'^', include('Users.urls')),
+    url(r'^api/', include('api.urls')),
 ]

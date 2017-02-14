@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'GameArena',
     'Store',
     'Users',
+    'api',
+    'api.v1'
 ]
 
 MIDDLEWARE = [

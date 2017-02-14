@@ -29,6 +29,17 @@ class Purchase(models.Model):
             return self.game_details.description[0:100]+"..."
         else:
             return self.game_details.description
+
+    def as_json_dict(self):
+        res = {
+            'game': self.game_details.id,
+            'buyer': self.player_details.username,
+            'cost': self.cost,
+            'purchase_date': str(self.purchase_date),
+            'orderid': self.order.id
+        }
+        return res
+
     def __str__(self):
         return self.game_details.name
 
