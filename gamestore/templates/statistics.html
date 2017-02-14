@@ -107,10 +107,7 @@
                         piechart.options.data[0].dataPoints = []
                         $('#from-date').css('border-color', '');
                         $('#to-date').css('border-color', '');
-                        piechart.options.data[0].dataPoints.push({y: 83.24, legendText: "Google", label: "Google"});
-                        piechart.options.data[0].dataPoints.push({y: 13.24, legendText: "Yahoo", label: "Yahoo"});
 
-                        piechart.render();
                         $.ajax({
                             data: {
                                 type: 'range',
@@ -120,10 +117,13 @@
                             url: "/profile/statistics/", success: function (result) {
 
                                 $.each(result, function (k, v) {
-                                    chart.options.data[0].dataPoints.push({y: v[1], label: v[0]});
+                                    piechart.options.data[0].dataPoints.push({
+                                        y: v[1],
+                                        legendText: v[0],
+                                        label: v[0]
+                                    });
                                 });
-
-                                chart.render();
+                                piechart.render();
                             }
                         });
                     }
@@ -155,10 +155,10 @@
                                 type: "pie",
                                 indexLabelFontFamily: "Garamond",
                                 indexLabelFontSize: 20,
-                                indexLabel: "{label} {y}%",
+                                indexLabel: "{label} - {y}",
                                 startAngle: -20,
                                 showInLegend: true,
-                                toolTipContent: "{legendText} {y}%",
+                                toolTipContent: "{legendText} - {y}",
                                 dataPoints: []
                             }
                         ]
