@@ -100,7 +100,8 @@ def home(request):
         games_list = Purchase.objects.filter(player_details=user)
     upload_form = GameUploadForm()
     return render(request, 'dashboard.html',
-                  {'user_type': current_user.user_type, 'games_list': games_list, 'upload_form': upload_form})
+                  {'user_type': current_user.user_type, 'games_list': games_list, 'upload_form': upload_form,
+                   'current_user': current_user})
 
 
 '''
@@ -391,3 +392,10 @@ def download_statistics(request):
     user = User.objects.get(username=request.user)
     current_user = UserProfile.objects.get(user=user)
     return render(request, 'statistics.html', {'user_type': current_user.user_type})
+
+
+def generate_developer_key(request):
+    user_profile = UserProfile.objects.get(user=request.user)
+    user_profile.apikey = uuid.uuid4()
+    user_profile.save()
+    return HttpResponseRedirect(reverse("home"))

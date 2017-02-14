@@ -1,5 +1,11 @@
 {% load bootstrap3 %}
-
+<p><b>Developer Key :<span> {{ current_user.apikey }}</span></b></p>
+<div class="developer">
+    <form method="POST" action="/profile/generate_developer_key/" class="form-signin">
+        {% csrf_token %}
+        <input type="submit" class="btn btn-danger" value="generate">
+    </form>
+</div>
 <div class="table-responsive">
     <table class="table table-hover" border="20">
         <thead>
