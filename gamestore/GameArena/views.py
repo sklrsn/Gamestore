@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 import datetime
 from Users.models import UserProfile
-from GameArena.models import Game, Score, GameState
+from GameArena.models import Game, Score, GameState, Plays
 from Store.models import Purchase
 from GameArena.forms import GameUploadForm
 
@@ -30,6 +30,9 @@ def play_game(request, game_id):
         if not Purchase.objects.filter(game_details=game_id, player_details= user):
             messages.error(request, "You do not own this game. Why don't you buy it?")
             return HttpResponseRedirect(reverse("listgames"))
+        plays = Plays(game=game, player=user)
+        plays.save()
+
         leaders = Score.objects.filter(game_info=game).order_by("-score")[:5]
         leaderjson = {}
         leaderjson = [ob.as_json_leader() for ob in leaders]

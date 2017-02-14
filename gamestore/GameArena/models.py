@@ -73,3 +73,20 @@ class GameState(models.Model):
 
     def __str__(self):
         return self.last_modified
+
+class Plays(models.Model):
+    game = models.ForeignKey(Game, related_name='game_played', on_delete=models.CASCADE)
+    player = models.ForeignKey(User, related_name='player_plays', on_delete=models.CASCADE)
+    played_on = models.DateTimeField(auto_now=True)
+    def as_json_dict(self):
+        return dict(
+            player=self.player.username,
+            game=self.game.id,
+            date_played = self.played_on)
+    class Meta:
+        db_table = "GamePlays"
+        ordering = ['played_on']
+        unique_together = ('game', 'player')
+
+    def __str__(self):
+        return self.last_modified

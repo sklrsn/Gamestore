@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from GameArena.models import Game, Score, GameState
+from GameArena.models import Game, Score, GameState, Plays
 from Users.models import UserProfile,User
 from Store.models import Purchase
 from api.cus_resp import *
@@ -112,6 +112,39 @@ def get_purchases(request,game_id):
         except Exception as ex:
             return InternalError(ex)
         return JsonResponse({'purchases': purchasejson})
+
+    else:
+        return MethodNotAllowed()
+
+
+'''
+    Gets all the purchases of a game
+    /api/v1/GetPurchases/1/?secretkey=91969cd7e1e14e449bbaa8e388c01c39&count=10
+'''
+def get_played_details(request,game_id):
+    data={}
+    if request.method == "GET":
+        try:
+            secretkey = request.GET.get('secretkey')
+            count = request.GET.get('count',10)
+            try:
+                iCount = int(count)
+            except:
+                return Error406("Invalid count value.")
+            try:
+                userprof = UserProfile.objects.filter(apikey=secretkey).first()
+            except:
+                return KeyNotFound()
+            game = Game.objects.filter(id=game_id,developer_info=userprof.user).first()
+            if game is None:
+                return Error404("Either the game does not exit or you do not own the game")
+
+            plays = Plays.objects.filter(game=game).order_by("-played_on")[:iCount]
+            playedson = {}
+            playedjson = [ob.as_json_dict() for ob in plays]
+        except Exception as ex:
+            return InternalError(ex)
+        return JsonResponse({'played': playedjson})
 
     else:
         return MethodNotAllowed()
