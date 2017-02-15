@@ -26,6 +26,14 @@ TODO: Even after we login to the home screen after login, it shows the login scr
 '''
 
 
+
+"""
+@Method_Name: user_login
+@Param_in: request
+@:returns: renders index.html
+"""
+
+
 def user_login(request):
     if request.user.is_authenticated():
         return redirect('/profile/home')
@@ -52,10 +60,12 @@ def user_login(request):
             return render(request, 'index.html')
 
 
-'''
-This view invalidates the user session
-
-'''
+"""
+@Method_Name: user_logout
+@Param_in: request
+@:returns: renders index.html
+@Description: This view invalidates the user session
+"""
 
 
 def user_logout(request):
@@ -67,11 +77,12 @@ def user_logout(request):
         print(e)
         return render(request, 'index.html')
 
-
-'''
-This view renders Game store landing page
-
-'''
+"""
+@Method_Name: index
+@Param_in: request
+@:returns: renders "Home" if user is authenticated, else "index.html"
+@Description: This view renders Game store landing page
+"""
 
 
 def index(request):
@@ -84,10 +95,12 @@ def index(request):
         return render(request, '400.html')
 
 
-'''
-This view renders the dashboard depends on the user type
-
-'''
+"""
+@Method_Name: home
+@Param_in: request
+@:returns: renders "dashboard"
+@Description: This view renders the dashboard depends on the user type
+"""
 
 
 @login_required
@@ -104,10 +117,13 @@ def home(request):
                    'current_user': current_user})
 
 
-'''
-This view allows the user change their password, upload a profile picture and share personal website/blog information
 
-'''
+"""
+@Method_Name: home
+@Param_in: request
+@:returns: renders
+@Description: This view allows the user change their password, upload a profile picture and share personal website/blog information
+"""
 
 
 @login_required
@@ -144,10 +160,12 @@ def manage_profile(request):
     return HttpResponseRedirect(redirect_to=reverse('home'))
 
 
-'''
-This method renders the information about the website and contributors
-
-'''
+"""
+@Method_Name: about_us
+@Param_in: request
+@:returns: renders  "about_us"
+@Description: This method renders the information about the website and contributors
+"""
 
 
 def about_us(request):
@@ -159,10 +177,12 @@ def about_us(request):
     return render(request, 'about_us.html')
 
 
-'''
-This method will render the contact us page information to users
-
-'''
+"""
+@Method_Name: contact_us
+@Param_in: request
+@:returns: renders  "contact_us"
+@Description: This method will render the contact us page information to users
+"""
 
 
 def contact_us(request):
@@ -173,8 +193,25 @@ def contact_us(request):
     return render(request, 'contact_us.html')
 
 
+"""
+@Method_Name: terms_conditions
+@Param_in: request
+@:returns: renders  "terms"
+@Description: This method will render the terms page information to users
+"""
+
+
 def terms_conditions(request):
     return render(request, 'terms.html', {'time': datetime.datetime.now()})
+
+
+
+"""
+@Method_Name: register
+@Param_in: request
+@:returns: HTTP response based on the success or failure of the registration
+@Description: Registration of the user
+"""
 
 
 @transaction.atomic
@@ -225,6 +262,14 @@ def register(request):
         })
 
 
+"""
+@Method_Name: activate
+@Param_in: request, activation_code (Default value "none")
+@:returns: HTTP response based on the success or failure of the activation
+@Description: Activation of the user
+"""
+
+
 def activate(request, activation_code=None):
     if request.method == 'GET':
 
@@ -247,6 +292,13 @@ def activate(request, activation_code=None):
 
         return HttpResponseRedirect(redirect_to=reverse("home"))
 
+"""
+@Method_Name: is_uuid_valid
+@Param_in: uuid String
+@:returns: Boolean value 'True' if success else  'False'
+@Description: validates the uuid string
+"""
+
 
 def is_uuid_valid(uuid_str):
     try:
@@ -254,6 +306,13 @@ def is_uuid_valid(uuid_str):
         return True
     except:
         return False
+
+"""
+@Method_Name: forgot_password
+@Param_in: request
+@:returns: HTTP response
+@Description: handles the forgot password scenario
+"""
 
 
 def forgot_password(request):
@@ -275,6 +334,13 @@ def forgot_password(request):
     else:
         return render(request, "index.html")
 
+"""
+@Method_Name: upload_game
+@Param_in: request
+@:returns: HTTP response - redirected to "home"
+@Description: handles the uploading of a game scenario
+"""
+
 
 @login_required
 def upload_game(request):
@@ -295,6 +361,13 @@ def upload_game(request):
                         modified_date=datetime.datetime.now(), developer_info=user, game_category=category)
             game.save()
             return HttpResponseRedirect(redirect_to=reverse('home'))
+
+"""
+@Method_Name: edit_game
+@Param_in: request,game_id
+@:returns: renders edit_game
+@Description: handles the editing of existing game scenario
+"""
 
 
 @login_required
@@ -331,6 +404,13 @@ def edit_game(request, game_id):
             return HttpResponseRedirect(redirect_to=reverse('home'))
     else:
         return HttpResponseRedirect(redirect_to=reverse('home'))
+
+"""
+@Method_Name: download_statistics
+@Param_in: request
+@:returns: returns JSON response
+@Description: statistics related to the games are handled
+"""
 
 
 def download_statistics(request):
@@ -392,6 +472,14 @@ def download_statistics(request):
     user = User.objects.get(username=request.user)
     current_user = UserProfile.objects.get(user=user)
     return render(request, 'statistics.html', {'user_type': current_user.user_type})
+
+
+"""
+@Method_Name: generate_developer_key
+@Param_in: request
+@:returns: returns HTTP response - redirected to home
+@Description: generates a new developer key
+"""
 
 
 def generate_developer_key(request):
