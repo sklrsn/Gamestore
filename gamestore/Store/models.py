@@ -5,6 +5,15 @@ import datetime
 
 # Purchase information
 
+
+"""
+@Class_Name:
+@Params: Payment Ref - Payment reference field
+         Order_Date - Date the order was made
+         Status - Status of the order
+         Checksum - Check sum value
+
+"""
 class Order(models.Model):
     paymentRef = models.IntegerField(null=True, blank=True)
     order_date = models.DateTimeField(default=datetime.datetime.now, blank=True)
@@ -13,6 +22,17 @@ class Order(models.Model):
     class Meta:
         db_table = "Order"
         ordering = ['order_date']
+
+
+"""
+@Class_Name: Purchase
+@Params: game_details - Details pertaining to the game (Foreign Key)
+         Player_Details - details of the player (Foreign Key)
+         Cost - Cost associated with the game(s) of purchase
+         Purchase_Date - date of  purchase (Foreign Key)
+         order - Order ID
+
+"""
 
 class Purchase(models.Model):
     game_details = models.ForeignKey(Game, related_name='purchased_games', on_delete=models.CASCADE)
@@ -42,6 +62,14 @@ class Purchase(models.Model):
 
     def __str__(self):
         return self.game_details.name
+
+"""
+@Class_Name: Cart
+@Params: game_details - Details of the game purhcased - Foreign Key
+         Player_details - Player details ( Foreign Key)
+         cart_Date - date of the cart - cart creation date
+         order - order id (Foreign key)
+"""
 
 class Cart(models.Model):
     game_details = models.ForeignKey(Game, related_name='carted_games', on_delete=models.CASCADE)

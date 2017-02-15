@@ -16,15 +16,24 @@ from django.db.models import Sum, F
 from hashlib import md5
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
+"""
+@Method_Name: home
+@Param_in: Request
+@:returns: renders the store page
+"""
+
 
 def home(request):
     return render(request=request, template_name='store.html')
 
 
 """
-TODO: Add proper comments
-View for game store
+@Method_Name: index
+@Param_in: request
+@:returns: renders the store page
 """
+
+
 @login_required
 def index(request):
     user = User.objects.get(username=request.user)
@@ -34,6 +43,13 @@ def index(request):
     onlypurchase = Game.objects.exclude(id__in=purchse_list.values('game_details'))
     return render(request, 'store.html',
                   {'games_list': games_list})
+
+"""
+@Method_Name: add_to_cart
+@Param_in: request
+@:returns: returns a JSON response
+"""
+
 
 @login_required
 def add_to_cart(request):
@@ -70,6 +86,14 @@ def add_to_cart(request):
     except:
         return JsonResponse(status=400, data=jsondata)
 
+
+"""
+@Method_Name: remove_from_cart
+@Param_in: request
+@:returns: JSON response
+"""
+
+
 @login_required
 def remove_from_cart(request):
     user = User.objects.get(username=request.user)
@@ -90,6 +114,14 @@ def remove_from_cart(request):
             return JsonResponse(status=401, data=jsondata)
 
     return JsonResponse(status=201, data=jsondata)
+
+"""
+@Method_Name: get_cart
+@Param_in: request
+@:returns: renders cart page
+"""
+
+
 @login_required
 def get_cart(request):
     user = User.objects.get(username=request.user)
@@ -109,6 +141,16 @@ def get_cart(request):
     '''
     return render(request, 'cart.html',
                   {'cart_list': carts})
+
+
+"""
+@Method_Name: purchase
+@Param_in: request
+@:returns: renders the success of the purhcase
+"""
+
+# TODO  - print statements - remove
+
 
 @login_required
 def purchase(request):
@@ -145,6 +187,14 @@ def purchase(request):
                    'cancel_url': cancel_url,
                    'error_url': error_url,
                    'checksum': checksum})
+
+
+"""
+@Method_Name: purhcase_response
+@Param_in: request
+@:returns: HTTP response
+"""
+
 
 @login_required
 def purchase_response(request):
