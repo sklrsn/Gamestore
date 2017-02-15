@@ -1,5 +1,13 @@
 from django.http import JsonResponse
 
+
+"""
+@Method_Name: InternalError
+@Param_in: Error (Default value "None")
+@:returns: JSON response with status code "500"
+"""
+
+
 def InternalError(error=None):
     if error is None:
         error="We encountered an internal error. Please try again."
@@ -7,6 +15,13 @@ def InternalError(error=None):
         "error": error
     }
     return JsonResponse(status=500, data=data)
+
+"""
+@Method_Name: MethodNotAllowed
+@Param_in: Error (Default value "None")
+@:returns: JSON response with status code "405"
+"""
+
 
 def MethodNotAllowed(error=None):
     if error is None:
@@ -16,6 +31,13 @@ def MethodNotAllowed(error=None):
     }
     return JsonResponse(status=405, data=data)
 
+"""
+@Method_Name: KeyNotFound
+@Param_in: Error (Default value "None")
+@:returns: JSON response with status code "404"
+"""
+
+
 def KeyNotFound(error=None):
     if error is None:
         error="The specified key does not exist or is invalid."
@@ -24,6 +46,13 @@ def KeyNotFound(error=None):
     }
     return JsonResponse(status=404, data=data)
 
+"""
+@Method_Name: Error404
+@Param_in: Error (Default value "None")
+@:returns: JSON response with status code "404"
+"""
+
+
 def Error404(error=None):
     if error is None:
         error="The specified resource does not exist."
@@ -31,6 +60,14 @@ def Error404(error=None):
         "error": error
     }
     return JsonResponse(status=404, data=data)
+
+
+"""
+@Method_Name: Error406
+@Param_in: Error (Default value "None")
+@:returns: JSON response with status code "406"
+"""
+
 
 def Error406(error=None):
     if error is None:

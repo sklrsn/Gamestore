@@ -1,10 +1,15 @@
 from django.core.urlresolvers import reverse, resolve
 from django.http import JsonResponse
 
-'''
-    Returns list of available versions
-    Supports only GET
-'''
+
+"""
+@Method_Name:versions
+@Param_in: request
+@:returns: JSON Response in the case of request method not being get, else the URI of available versions
+@Description:     Returns list of available versions, Supports only GET
+"""
+
+
 def versions(request):
     if request.method == "GET":
         return JsonResponse({
