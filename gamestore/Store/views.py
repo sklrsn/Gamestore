@@ -149,7 +149,7 @@ def get_cart(request):
 @:returns: renders the success of the purhcase
 """
 
-# TODO  - print statements - remove
+# TODO  - print statements - remove - commented
 
 
 @login_required
@@ -160,15 +160,15 @@ def purchase(request):
     cartitems = Cart.objects.filter(player_details=user)
     order = Order(id=None)
     order.save()
-    print('Order : ' + str(order.id))
+    #print('Order : ' + str(order.id))
     cartitems.update(order=order)
     amount=cartitems.aggregate(Sum('game_details__cost'))['game_details__cost__sum']
-    print("amount:"+str(amount))
+    #print("amount:"+str(amount))
     # payment gateway Configuration
 
     action = "http://payments.webcourse.niksula.hut.fi/pay/"
     pid = order.id
-    print("pid"+str(pid))
+    #print("pid"+str(pid))
     sid = "kalairajsunil"  # Fixme Todo: parametrize
     success_url = request.build_absolute_uri(reverse("payment_success"))
     cancel_url = request.build_absolute_uri(reverse("payment_cancel"))
