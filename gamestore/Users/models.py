@@ -6,6 +6,11 @@ import uuid
 from common.constants import USER_CHOICES
 
 
+"""
+@Class_Name: USerProfile
+@Params: user, website,picture,user_type,activation_token,apikey
+"""
+
 # Model to Store the user details
 class UserProfile(models.Model):
     user = models.OneToOneField(User)

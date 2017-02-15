@@ -5,6 +5,11 @@ from .models import UserProfile
 from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ValidationError
 
+"""
+@Class_Name: UserForm
+@Params: password
+"""
+
 
 class UserForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput())
@@ -12,6 +17,10 @@ class UserForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ('username', 'email', 'password')
+"""
+@Class_Name: UserProfileForm
+@Params: user_type - developer or player
+"""
 
 
 class UserProfileForm(forms.ModelForm):
@@ -22,6 +31,12 @@ class UserProfileForm(forms.ModelForm):
         fields = ('website', 'picture', 'user_type')
 
 
+"""
+@Class_Name: USerProfileUpdateForm
+@Params: model - user profile, website, picture (image)
+"""
+
+
 class UserProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = UserProfile
@@ -30,6 +45,16 @@ class UserProfileUpdateForm(forms.ModelForm):
             'website': ('Personal website (optional)'),
             'picture': ('Upload Profile Picture (optional)'),
         }
+
+
+"""
+@Class_Name: RegistrationForm
+@Params: Username - name of the user
+         email  - email address of the user
+         password1 - password
+         password2 - password ( matches the first password)
+         user_type - developer/Player
+"""
 
 
 class RegistrationForm(UserCreationForm):
