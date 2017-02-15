@@ -18,6 +18,8 @@ Description: This view is for the player. GET request is used for loading the ga
 
 """
 
+# TODO - Commented code can be removed
+
 @login_required
 def play_game(request, game_id):
     user = User.objects.get(username=request.user)
