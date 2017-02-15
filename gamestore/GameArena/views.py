@@ -10,11 +10,13 @@ from GameArena.models import Game, Score, GameState, Plays
 from Store.models import Purchase
 from GameArena.forms import GameUploadForm
 
-'''
-    This view is for the player.
-    GET request is used for loading the game and all other commmunication between the game and the backend is using POST ajax call
-'''
+"""
+@Method_Name: play_game
+@Param_in: Request , Game ID
+@:returns: renders player page
+Description: This view is for the player. GET request is used for loading the game and all other commmunication between the game and the backend is using POST ajax call
 
+"""
 
 @login_required
 def play_game(request, game_id):
@@ -96,20 +98,34 @@ def play_game(request, game_id):
                 return JsonResponse(status=200, data=response)
         return HttpResponse(status=405, content="Invalid method specified.")
 
+"""
+@Method_name: listgames
+@Param_in: Request
+@returns: Renders game list
+"""
 
 def listgames(request):
     games_list = Game.objects.all()
     return render(request, 'listgames.html',
                   {'games_list': games_list})
 
+"""
+@Method_Name: fb_redirect
+@Param_in: Request
+@returns: renders the FB redirect page
+"""
 
 def fb_redirect(request):
     # Simply closes the window
     return render(request, "fb_redirect.html")
 
-'''
-    This method returns the leaderboard table. It is used only to refresh the leaderboard table
-'''
+"""
+@Method_Name: get_leaderboard
+@Param_in: Request and game ID
+@returns: renders leader board, in case of error HTTP error response
+Description: This method returns the leaderboard table. It is used only to refresh the leaderboard table
+"""
+
 @login_required
 def get_leaderboard(request,game_id):
     try:
