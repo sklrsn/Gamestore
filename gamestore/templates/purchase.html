@@ -31,12 +31,11 @@
     <tr>
       <td></td>
       <td></td>
-      <td class="text-right"><strong>Total:</strong></td>
+      <td class="text-right"><h4><strong>Total: </strong></td>
       <td>{{ amount }}</td>
     </tr>
   </tfoot>
         </table>
-    </div>
     <div class="pay">
       <form action="{{ action }}" method="POST" id="purchaseForm">
           <input type="hidden" name="pid" value="{{ pid }}" />
@@ -51,7 +50,7 @@
                   value="{{ checksum }}" />
                   <input type="hidden" name="amount"
                           value="{{ amount }}" />
-    <input type="submit" class="btn btn-primary btnConfirm" value="Accept Payment"></input>
+    <input type="submit" class="btn btn-lg btn-primary btn-block" value="Accept Payment"></input>
 </form>
     </div>
 </div>

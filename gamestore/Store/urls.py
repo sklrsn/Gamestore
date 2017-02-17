@@ -7,7 +7,7 @@ urlpatterns = [
     url(r'^remvoefromcart/$', views.remove_from_cart, name='removefromcart'),
     url(r'^cart/$', views.get_cart, name='getcart'),
     url(r'^purchase/$', views.purchase, name='purchase'),
-    url(r'^paymentsuccess/$', views.purchase_response, name='payment_success'),
-    url(r'^paymentcancel/$', views.purchase_response, name='payment_cancel'),
-    url(r'^paymentfailure/$', views.purchase_response, name='payment_failure'),
+    url(r'^payment_response/$', views.purchase_response, name='payment_response'),
+    url(r'^payment_success/$', views.payment_success, name='payment_success'),
+    url(r'^payment_failure/$', views.payment_failure, name='payment_failure'),
 ]

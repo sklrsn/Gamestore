@@ -169,14 +169,19 @@ def purchase(request):
     action = "http://payments.webcourse.niksula.hut.fi/pay/"
     pid = order.id
     #print("pid"+str(pid))
-    sid = "kalairajsunil"  # Fixme Todo: parametrize
-    success_url = request.build_absolute_uri(reverse("payment_success"))
-    cancel_url = request.build_absolute_uri(reverse("payment_cancel"))
-    error_url = request.build_absolute_uri(reverse("payment_failure"))
-    secret_key = "3d5e7a6cfcaf44600e6a2650326780c2"  # Fixme Todo: parametrize
+    sid = "kalairajsunil"
+    secret_key = "3d5e7a6cfcaf44600e6a2650326780c2"
+
+    success_url = request.build_absolute_uri(reverse("payment_response"))
+    cancel_url = request.build_absolute_uri(reverse("payment_response"))
+    error_url = request.build_absolute_uri(reverse("payment_response"))
     checksumstr = "pid={}&sid={}&amount={}&token={}".format(pid, sid, amount, secret_key)  # Fixme Todo: parametrize, secret key!
+
+    # print('checksumstr1 : ',checksumstr)
+
     m = md5(checksumstr.encode("ascii"))
     checksum = m.hexdigest()
+    # print('checksum1 : ', checksum)
     return render(request, 'purchase.html',
                   {'cart_list': cartitems,
                   'action': action,
@@ -202,16 +207,37 @@ def purchase_response(request):
     ref = request.GET['ref']
     result = request.GET['result']
     checksum = request.GET['checksum']
+    sid = "kalairajsunil"
+    secret_key = "3d5e7a6cfcaf44600e6a2650326780c2"
+
     response = pid + " : " +ref  + " : " +result + " : " +checksum
     order = Order.objects.get(id=pid)
+
+    cartitems = order.order_cartitems.all()
+    # amount = cartitems.aggregate(Sum('game_details__cost'))['game_details__cost__sum']
+
+    checksumstr = "pid={}&ref={}&result={}&token={}".format(pid, ref, result, secret_key)
+    m = md5(checksumstr.encode("ascii"))
+    checksum_check = m.hexdigest()
+
+    # print('checksumstr : ',checksumstr)
+    # print('checksum_check : ',checksum_check)
+
+    if checksum_check != checksum:
+        return HttpResponseRedirect(redirect_to=reverse("payment_failure"))
     order.paymentRef = ref
     order.checksum = checksum
     order.status = result
     order.save()
     if(result=="success"):
-        cartitems=Cart.objects.filter(order=order)
         for item in cartitems:
             purchase = Purchase(game_details=item.game_details  ,player_details=item.player_details,cost=item.game_details.cost,order=order)
             purchase.save()
             item.delete()
-    return HttpResponse(response)
+    return HttpResponseRedirect(redirect_to=reverse("payment_success"))
+
+def payment_failure(request):
+    return render (request,'payment_error.html')
+
+def payment_success(request):
+    return render (request,'payment_successful.html', {'username':request.user.username})
