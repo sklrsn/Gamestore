@@ -25,8 +25,6 @@ This view performs user authentication and creates a session between user and ap
 TODO: Even after we login to the home screen after login, it shows the login screen. If logged in it should take to dashboard
 '''
 
-
-
 """
 @Method_Name: user_login
 @Param_in: request
@@ -49,9 +47,9 @@ def user_login(request):
                         return HttpResponseRedirect(redirect_to=reverse('home'))
                     else:
                         return HttpResponse("Your Game store account is disabled.")
+                        messages.error(request=request, message='Your Game store account is disabled.')
                 else:
-                    print(
-                        "Invalid login details: {0}, {1}".format(username, password))
+                    messages.error(request=request, message='Invalid username or Password.')
                     return render(request, 'index.html')
             else:
                 return render(request, 'index.html')
@@ -76,6 +74,7 @@ def user_logout(request):
     except Exception as e:
         print(e)
         return render(request, 'index.html')
+
 
 """
 @Method_Name: index
@@ -105,17 +104,15 @@ def index(request):
 
 @login_required
 def home(request):
-    user = User.objects.get(username=request.user)
-    current_user = UserProfile.objects.get(user=user)
-    if (current_user.user_type == 'D'):
-        games_list = Game.objects.filter(developer_info=user)
+    if request.user.userprofile.user_type == 'D':
+        games_list = Game.objects.filter(developer_info=request.user)
     else:
-        games_list = Purchase.objects.filter(player_details=user)
+        games_list = Purchase.objects.filter(player_details=request.user)
     upload_form = GameUploadForm()
     return render(request, 'dashboard.html',
-                  {'user_type': current_user.user_type, 'games_list': games_list, 'upload_form': upload_form,
-                   'current_user': current_user})
-
+                  {'user_type': request.user.userprofile.user_type, 'games_list': games_list,
+                   'upload_form': upload_form,
+                   'current_user': request.user.userprofile})
 
 
 """
@@ -147,11 +144,9 @@ def manage_profile(request):
         else:
             password_reset_form = PasswordChangeForm(request.user)
             update_profile_form = UserProfileUpdateForm()
-            user = User.objects.get(username=request.user)
-            current_user = UserProfile.objects.get(user=user)
         return render(request, 'manage_profile.html', {
             'password_reset_form': password_reset_form, 'update_profile_form': update_profile_form,
-            'user_type': current_user.user_type
+            'user_type': request.user.userprofile.user_type
         })
     except Exception as e:
         print(e)
@@ -170,10 +165,7 @@ def manage_profile(request):
 
 def about_us(request):
     if request.user.is_authenticated():
-        user = User.objects.get(username=request.user)
-        current_user = UserProfile.objects.get(user=user)
-        return render(request, 'about_us.html', {'user_type': current_user.user_type})
-
+        return render(request, 'about_us.html', {'user_type': request.user.userprofile.user_type})
     return render(request, 'about_us.html')
 
 
@@ -187,9 +179,7 @@ def about_us(request):
 
 def contact_us(request):
     if request.user.is_authenticated():
-        user = User.objects.get(username=request.user)
-        current_user = UserProfile.objects.get(user=user)
-        return render(request, 'contact_us.html', {'user_type': current_user.user_type})
+        return render(request, 'contact_us.html', {'user_type': request.user.userprofile.user_type})
     return render(request, 'contact_us.html')
 
 
@@ -203,7 +193,6 @@ def contact_us(request):
 
 def terms_conditions(request):
     return render(request, 'terms.html', {'time': datetime.datetime.now()})
-
 
 
 """
@@ -235,7 +224,7 @@ def register(request):
                             picture=cloudinary.CloudinaryImage("sample", format="png"), user_type=user_category,
                             activation_token=activation_token)
             p.save()
-            print(form.cleaned_data["user_type"])
+
             if form.cleaned_data["user_type"] == "D":
                 developers = Group.objects.get(name='developers')
                 developers.user_set.add(p.user)
@@ -292,6 +281,7 @@ def activate(request, activation_code=None):
 
         return HttpResponseRedirect(redirect_to=reverse("home"))
 
+
 """
 @Method_Name: is_uuid_valid
 @Param_in: uuid String
@@ -306,6 +296,7 @@ def is_uuid_valid(uuid_str):
         return True
     except:
         return False
+
 
 """
 @Method_Name: forgot_password
@@ -333,6 +324,7 @@ def forgot_password(request):
             messages.error(request=request, message='Please enter the registered  email address ')
     else:
         return render(request, "index.html")
+
 
 """
 @Method_Name: upload_game
@@ -362,6 +354,7 @@ def upload_game(request):
             game.save()
             return HttpResponseRedirect(redirect_to=reverse('home'))
 
+
 """
 @Method_Name: edit_game
 @Param_in: request,game_id
@@ -375,27 +368,27 @@ def edit_game(request, game_id):
     if request.method == 'GET':
         game = get_object_or_404(Game, id=game_id, developer_info=request.user)
         form = GameUploadForm(instance=game)
-        current_user = UserProfile.objects.get(user=request.user)
         return render(request, 'edit_game.html',
-                      {'form': form, 'user': request.user, 'user_type': current_user.user_type})
+                      {'form': form, 'user': request.user, 'user_type': request.user.userprofile.user_type})
 
     if request.method == 'POST':
         game_form = GameUploadForm(data=request.POST)
-        user = User.objects.get(username=request.user)
 
         if game_form.is_valid() and request.POST['action'].lower() == 'update':
-            game = Game(id=game_id, name=game_form.cleaned_data['name'],
+            category = Category.objects.get(name=game_form.cleaned_data['game_category'])
+            game = Game(id=game_id, game_category=category,
+                        name=game_form.cleaned_data['name'],
                         description=game_form.cleaned_data['description'],
                         logo=game_form.cleaned_data['logo'],
                         resource_info=game_form.cleaned_data['resource_info'],
                         cost=game_form.cleaned_data['cost'],
-                        modified_date=datetime.datetime.now(), developer_info=user)
+                        modified_date=datetime.datetime.now(), developer_info=request.user)
             game.save()
             messages.success(request=request, message='Game updated successfully.')
             return HttpResponseRedirect(redirect_to=reverse('home'))
 
         elif game_form.is_valid() and request.POST['action'].lower() == 'delete':
-            Game.objects.filter(id=game_id, developer_info=user).delete()
+            Game.objects.filter(id=game_id, developer_info=request.user).delete()
             messages.success(request=request, message='Game removed successfully.')
             return HttpResponseRedirect(redirect_to=reverse('home'))
 
@@ -404,6 +397,7 @@ def edit_game(request, game_id):
             return HttpResponseRedirect(redirect_to=reverse('home'))
     else:
         return HttpResponseRedirect(redirect_to=reverse('home'))
+
 
 """
 @Method_Name: download_statistics
@@ -416,8 +410,7 @@ def edit_game(request, game_id):
 def download_statistics(request):
     if request.is_ajax():
         if request.GET['type'] == 'pie-overall':
-            user = User.objects.get(username=request.user)
-            games_list = Game.objects.filter(developer_info=user)
+            games_list = Game.objects.filter(developer_info=request.user)
             stats = dict()
 
             for game in games_list:
@@ -447,8 +440,7 @@ def download_statistics(request):
                                     content_type="text/json")
             end = datetime.datetime.date(end) + datetime.timedelta(days=1)
             stats = dict()
-            user = User.objects.get(username=request.user)
-            games_list = Game.objects.filter(developer_info=user)
+            games_list = Game.objects.filter(developer_info=request.user)
             for game in games_list:
                 stats[game.id] = (
                     game.name,
@@ -469,9 +461,7 @@ def download_statistics(request):
             print(stats)
             return JsonResponse(stats)
 
-    user = User.objects.get(username=request.user)
-    current_user = UserProfile.objects.get(user=user)
-    return render(request, 'statistics.html', {'user_type': current_user.user_type})
+    return render(request, 'statistics.html', {'user_type': request.user.userprofile.user_type})
 
 
 """
@@ -483,7 +473,7 @@ def download_statistics(request):
 
 
 def generate_developer_key(request):
-    user_profile = UserProfile.objects.get(user=request.user)
+    user_profile = request.user.userprofile
     user_profile.apikey = uuid.uuid4()
     user_profile.save()
     return HttpResponseRedirect(reverse("home"))
