@@ -1,4 +1,4 @@
-{% extends "dashboard.html" %} {% load bootstrap3 %} {% load staticfiles %} {% block title %}Online Game Store{% endblock %} {% block header %} {{ block.super }}
+{% extends "users/dashboard.html" %} {% load bootstrap3 %} {% load staticfiles %} {% block title %}Online Game Store{% endblock %} {% block header %} {{ block.super }}
 <link rel="stylesheet" type="text/css" href="{% static 'gamestoreui/styles.css' %}">
 <link rel="stylesheet" type="text/css" href="{% static 'gamestoreui/bootstrap.min.css' %}">
 <link rel="stylesheet" type="text/css" href="{% static 'gamestoreui/portfolio-item.css' %}">
@@ -31,8 +31,8 @@
     <tr>
       <td></td>
       <td></td>
-      <td class="text-right"><h4><strong>Total: </strong></td>
-      <td>{{ amount }}</td>
+      <td class="text-right"><h4><strong>Total: </strong></h4></td>
+      <td><h4><strong> {{ amount }} </strong></h4></td>
     </tr>
   </tfoot>
         </table>
