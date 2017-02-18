@@ -22,7 +22,8 @@ import itertools
 '''
 This view performs user authentication and creates a session between user and application
 
-TODO: Even after we login to the home screen after login, it shows the login screen. If logged in it should take to dashboard
+TODO: Even after we login to the home screen after login, it shows the login screen. If logged in it should take to
+dashboard
 '''
 
 """
@@ -46,16 +47,16 @@ def user_login(request):
                         login(request, user)
                         return HttpResponseRedirect(redirect_to=reverse('home'))
                     else:
-                        return HttpResponse("Your Game store account is disabled.")
                         messages.error(request=request, message='Your Game store account is disabled.')
+                        return HttpResponse("Your Game store account is disabled.")
                 else:
                     messages.error(request=request, message='Invalid username or Password.')
-                    return render(request, 'index.html')
+                    return render(request, 'users/index.html')
             else:
-                return render(request, 'index.html')
+                return render(request, 'users/index.html')
         except Exception as e:
             print(e)
-            return render(request, 'index.html')
+            return render(request, 'users/index.html')
 
 
 """
@@ -70,10 +71,10 @@ def user_logout(request):
     try:
         if request.user.is_authenticated():
             logout(request)
-        return render(request, 'index.html')
+        return render(request, 'users/index.html')
     except Exception as e:
         print(e)
-        return render(request, 'index.html')
+        return render(request, 'users/index.html')
 
 
 """
@@ -88,10 +89,10 @@ def index(request):
     if request.user.is_authenticated():
         return HttpResponseRedirect("home")
     try:
-        return render(request, 'index.html')
+        return render(request, 'users/index.html')
     except Exception as e:
         print(e)
-        return render(request, '400.html')
+        return render(request, 'errors/400.html')
 
 
 """
@@ -109,7 +110,7 @@ def home(request):
     else:
         games_list = Purchase.objects.filter(player_details=request.user)
     upload_form = GameUploadForm()
-    return render(request, 'dashboard.html',
+    return render(request, 'users/dashboard.html',
                   {'user_type': request.user.userprofile.user_type, 'games_list': games_list,
                    'upload_form': upload_form,
                    'current_user': request.user.userprofile})
@@ -119,7 +120,8 @@ def home(request):
 @Method_Name: home
 @Param_in: request
 @:returns: renders
-@Description: This view allows the user change their password, upload a profile picture and share personal website/blog information
+@Description: This view allows the user change their password, upload a profile picture and share personal website/blog
+information
 """
 
 
@@ -144,15 +146,13 @@ def manage_profile(request):
         else:
             password_reset_form = PasswordChangeForm(request.user)
             update_profile_form = UserProfileUpdateForm()
-        return render(request, 'manage_profile.html', {
+        return render(request, 'users/manage_profile.html', {
             'password_reset_form': password_reset_form, 'update_profile_form': update_profile_form,
             'user_type': request.user.userprofile.user_type
         })
     except Exception as e:
         print(e)
         return HttpResponseRedirect(redirect_to=reverse('home'))
-
-    return HttpResponseRedirect(redirect_to=reverse('home'))
 
 
 """
@@ -165,8 +165,8 @@ def manage_profile(request):
 
 def about_us(request):
     if request.user.is_authenticated():
-        return render(request, 'about_us.html', {'user_type': request.user.userprofile.user_type})
-    return render(request, 'about_us.html')
+        return render(request, 'users/about_us.html', {'user_type': request.user.userprofile.user_type})
+    return render(request, 'users/about_us.html')
 
 
 """
@@ -179,8 +179,8 @@ def about_us(request):
 
 def contact_us(request):
     if request.user.is_authenticated():
-        return render(request, 'contact_us.html', {'user_type': request.user.userprofile.user_type})
-    return render(request, 'contact_us.html')
+        return render(request, 'users/contact_us.html', {'user_type': request.user.userprofile.user_type})
+    return render(request, 'users/contact_us.html')
 
 
 """
@@ -192,7 +192,7 @@ def contact_us(request):
 
 
 def terms_conditions(request):
-    return render(request, 'terms.html', {'time': datetime.datetime.now()})
+    return render(request, 'users/terms.html', {'time': datetime.datetime.now()})
 
 
 """
@@ -213,7 +213,7 @@ def register(request):
         form = RegistrationForm(request.POST)
 
         if not form.is_valid():
-            return render(request, "register.html", {'form': form})
+            return render(request, "users/register.html", {'form': form})
         else:
             form.instance.is_active = False
             new_user = form.save()
@@ -246,7 +246,7 @@ def register(request):
 
     if request.method == 'GET':
         form = RegistrationForm()
-        return render(request, "register.html", {
+        return render(request, "users/register.html", {
             'form': form,
         })
 
@@ -261,7 +261,6 @@ def register(request):
 
 def activate(request, activation_code=None):
     if request.method == 'GET':
-
         if not is_uuid_valid(activation_code):
             messages.error(request=request, message='The activation id provided is invalid.')
         else:
@@ -323,7 +322,7 @@ def forgot_password(request):
         except ObjectDoesNotExist:
             messages.error(request=request, message='Please enter the registered  email address ')
     else:
-        return render(request, "index.html")
+        return render(request, "users/index.html")
 
 
 """
@@ -338,7 +337,7 @@ def forgot_password(request):
 def upload_game(request):
     if request.method == 'GET':
         upload_form = GameUploadForm()
-        return render(request, 'game_upload_form.html', {
+        return render(request, 'users/game_upload_form.html', {
             'upload_form': upload_form})
     else:
         user = User.objects.get(username=request.user)
@@ -368,7 +367,7 @@ def edit_game(request, game_id):
     if request.method == 'GET':
         game = get_object_or_404(Game, id=game_id, developer_info=request.user)
         form = GameUploadForm(instance=game)
-        return render(request, 'edit_game.html',
+        return render(request, 'users/edit_game.html',
                       {'form': form, 'user': request.user, 'user_type': request.user.userprofile.user_type})
 
     if request.method == 'POST':
@@ -393,7 +392,6 @@ def edit_game(request, game_id):
             return HttpResponseRedirect(redirect_to=reverse('home'))
 
         else:
-            print('Invalid Request')
             return HttpResponseRedirect(redirect_to=reverse('home'))
     else:
         return HttpResponseRedirect(redirect_to=reverse('home'))
@@ -461,7 +459,7 @@ def download_statistics(request):
             print(stats)
             return JsonResponse(stats)
 
-    return render(request, 'statistics.html', {'user_type': request.user.userprofile.user_type})
+    return render(request, 'users/statistics.html', {'user_type': request.user.userprofile.user_type})
 
 
 """

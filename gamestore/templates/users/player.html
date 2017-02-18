@@ -1,4 +1,4 @@
-{% extends "dashboard.html" %}
+{% extends "Users/dashboard.html" %}
 {% load staticfiles %}
 {% block title %}Online Game Store{% endblock %}
 {% block header %}
@@ -22,7 +22,7 @@
                 <p>{{ game.description }}</p>
                 <hr class="divider">
 
-                <div class="table-responsive" id = "leaderboard">
+                <div class="table-responsive" id="leaderboard">
                     {% include "leaderboard.html" %}
                 </div>
                 <div id="leaderboarda">
@@ -89,9 +89,11 @@
                 if (original_picture.indexOf("/static") == 0) {
                     // This image is local to our webservice, compose the url manually.
 //                {% if request.is_secure %}
-                        //                    picture=encodeURIComponent("https://{{ request.get_host }}{% static 'images/no-image-available.jpg' %}");
+                        //                    picture=encodeURIComponent("https://
+                        {{ request.get_host }}{% static 'images/no-image-available.jpg' %}");
                         //                {% else %}
-                        //                    picture=encodeURIComponent("http://{{ request.get_host }}{% static 'images/no-image-available.jpg' %}");
+                        //                    picture=encodeURIComponent("http://
+                        {{ request.get_host }}{% static 'images/no-image-available.jpg' %}");
                         //                {% endif %}
                 } else {
                     // Use the original picture
@@ -170,8 +172,8 @@
                     }
                     console.log('success')
                     console.log($('#leaderboard').length)
-                    lburl =  '{% url 'leaderboard' game.id%}'
-                    $( "#leaderboard" ).load(lburl);
+                    lburl = '{% url 'leaderboard' game.id%}'
+                    $("#leaderboard").load(lburl);
                     console.log('after load')
 
                     //
@@ -186,7 +188,7 @@
                     }
                 }
                 ,
-                complete: function(data){
+                complete: function (data) {
 
                 }
             });

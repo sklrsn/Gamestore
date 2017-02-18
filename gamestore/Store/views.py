@@ -41,8 +41,9 @@ def index(request):
     games_list = Game.objects.all()
     purchse_list = Purchase.objects.filter(player_details=user)
     onlypurchase = Game.objects.exclude(id__in=purchse_list.values('game_details'))
-    return render(request, 'store.html',
+    return render(request, 'store/store.html',
                   {'games_list': games_list})
+
 
 """
 @Method_Name: add_to_cart
@@ -57,29 +58,29 @@ def add_to_cart(request):
         user = User.objects.get(username=request.user)
         current_user = UserProfile.objects.get(user=user)
         form = CartForm(request.POST)
-        jsondata={}
+        jsondata = {}
         if not form.is_valid():
             jsondata['error'] = form.errors
             return JsonResponse(status=400, data=jsondata)
         if form.cleaned_data['action'] == 'add':
             # TODO: Check for owned games
-            game=form.cleaned_data['game']
+            game = form.cleaned_data['game']
             '''
                 Check for owned games
             '''
-            ownedGames = Purchase.objects.filter(game_details=game, player_details= user)
-            if ownedGames.count()>0:
+            ownedGames = Purchase.objects.filter(game_details=game, player_details=user)
+            if ownedGames.count() > 0:
                 return JsonResponse(status=402, data=jsondata)
             '''
                 Check for games already added in cart
             '''
-            cartitems = Cart.objects.filter(player_details=user,game_details=game)
-            if cartitems.count()>0:
+            cartitems = Cart.objects.filter(player_details=user, game_details=game)
+            if cartitems.count() > 0:
                 return JsonResponse(status=403, data=jsondata)
             '''
                 Add the game to cart
             '''
-            cart = Cart(id=None,player_details=user,game_details=game)
+            cart = Cart(id=None, player_details=user, game_details=game)
             cart.save()
 
         return JsonResponse(status=201, data=jsondata)
@@ -99,14 +100,14 @@ def remove_from_cart(request):
     user = User.objects.get(username=request.user)
     current_user = UserProfile.objects.get(user=user)
     form = CartForm(request.POST)
-    jsondata={}
+    jsondata = {}
     if not form.is_valid():
         jsondata['error'] = form.errors
         return JsonResponse(status=400, data=jsondata)
     if form.cleaned_data['action'] == 'remove':
         # TODO: Check for owned games
         # TODO: Check if already in cart
-        cart = Cart.objects.filter(player_details = user, game_details = form.cleaned_data['game'])
+        cart = Cart.objects.filter(player_details=user, game_details=form.cleaned_data['game'])
         if cart:
             cart.delete()
         else:
@@ -114,6 +115,7 @@ def remove_from_cart(request):
             return JsonResponse(status=401, data=jsondata)
 
     return JsonResponse(status=201, data=jsondata)
+
 
 """
 @Method_Name: get_cart
@@ -139,15 +141,16 @@ def get_cart(request):
     '''
         Write the code to return the cart details
     '''
-    return render(request, 'cart.html',
+    return render(request, 'store/cart.html',
                   {'cart_list': carts})
 
 
 """
 @Method_Name: purchase
 @Param_in: request
-@:returns: renders the success of the purhcase
+@:returns: renders the success of the purchase
 """
+
 
 # TODO  - print statements - remove - commented
 
@@ -156,35 +159,36 @@ def get_cart(request):
 def purchase(request):
     user = User.objects.get(username=request.user)
     current_user = UserProfile.objects.get(user=user)
-    #amount =Cart.objects.annotate(Sum(F('game_details__cost')))
+    # amount =Cart.objects.annotate(Sum(F('game_details__cost')))
     cartitems = Cart.objects.filter(player_details=user)
     order = Order(id=None)
     order.save()
-    #print('Order : ' + str(order.id))
+    # print('Order : ' + str(order.id))
     cartitems.update(order=order)
-    amount=cartitems.aggregate(Sum('game_details__cost'))['game_details__cost__sum']
-    #print("amount:"+str(amount))
+    amount = cartitems.aggregate(Sum('game_details__cost'))['game_details__cost__sum']
+    # print("amount:"+str(amount))
     # payment gateway Configuration
 
     action = "http://payments.webcourse.niksula.hut.fi/pay/"
     pid = order.id
-    #print("pid"+str(pid))
+    # print("pid"+str(pid))
     sid = "kalairajsunil"
     secret_key = "3d5e7a6cfcaf44600e6a2650326780c2"
 
     success_url = request.build_absolute_uri(reverse("payment_response"))
     cancel_url = request.build_absolute_uri(reverse("payment_response"))
     error_url = request.build_absolute_uri(reverse("payment_response"))
-    checksumstr = "pid={}&sid={}&amount={}&token={}".format(pid, sid, amount, secret_key)  # Fixme Todo: parametrize, secret key!
+    checksumstr = "pid={}&sid={}&amount={}&token={}".format(pid, sid, amount,
+                                                            secret_key)  # Fixme Todo: parametrize, secret key!
 
     # print('checksumstr1 : ',checksumstr)
 
     m = md5(checksumstr.encode("ascii"))
     checksum = m.hexdigest()
     # print('checksum1 : ', checksum)
-    return render(request, 'purchase.html',
+    return render(request, 'store/purchase.html',
                   {'cart_list': cartitems,
-                  'action': action,
+                   'action': action,
                    'pid': pid,
                    'sid': sid,
                    'amount': amount,
@@ -210,7 +214,7 @@ def purchase_response(request):
     sid = "kalairajsunil"
     secret_key = "3d5e7a6cfcaf44600e6a2650326780c2"
 
-    response = pid + " : " +ref  + " : " +result + " : " +checksum
+    response = pid + " : " + ref + " : " + result + " : " + checksum
     order = Order.objects.get(id=pid)
 
     cartitems = order.order_cartitems.all()
@@ -229,15 +233,18 @@ def purchase_response(request):
     order.checksum = checksum
     order.status = result
     order.save()
-    if(result=="success"):
+    if (result == "success"):
         for item in cartitems:
-            purchase = Purchase(game_details=item.game_details  ,player_details=item.player_details,cost=item.game_details.cost,order=order)
+            purchase = Purchase(game_details=item.game_details, player_details=item.player_details,
+                                cost=item.game_details.cost, order=order)
             purchase.save()
             item.delete()
     return HttpResponseRedirect(redirect_to=reverse("payment_success"))
 
+
 def payment_failure(request):
-    return render (request,'payment_error.html')
+    return render(request, 'store/payment_error.html')
+
 
 def payment_success(request):
-    return render (request,'payment_successful.html', {'username':request.user.username})
+    return render(request, 'store/payment_successful.html', {'username': request.user.username})

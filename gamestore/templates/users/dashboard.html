@@ -77,8 +77,8 @@
 
 {% block content %}
     {% if user_type == "D" %}
-        {% include "developer.html" %}
+        {% include "users/developer.html" %}
     {% else %}
-        {% include "player_home.html" %}
+        {% include "users/player_home.html" %}
     {% endif %}
 {% endblock %}

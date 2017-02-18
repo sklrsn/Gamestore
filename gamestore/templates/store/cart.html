@@ -1,0 +1,139 @@
+{% extends "dashboard.html" %} {% load bootstrap3 %} {% load staticfiles %} {% block title %}Online Game Store{% endblock %} {% block header %} {{ block.super }}
+<link rel="stylesheet" type="text/css" href="{% static 'gamestoreui/styles.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'gamestoreui/bootstrap.min.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'gamestoreui/portfolio-item.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'gamestoreui/app-styles.css' %}">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+{% endblock %} {% block content %}
+<div class="container">
+    <div class="table-responsive">
+        <table class="table table-hover" data-toggle="table">
+            <thead>
+                <tr>
+                    <th data-field="logo">Logo</th>
+                    <th data-field="name">Name</th>
+                    <th data-field="description">Description</th>
+                    <th data-field="cost">Cost</th>
+                    <th data-field="cart">Add to Cart</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for game in cart_list %}
+                <tr>
+                    <td><img src={{ game.game_details.logo }} height="75" width="75" alt="Not available"></td>
+                    <td>{{ game.game_details.name }}</td>
+                    <td>{{ game.game_details.shortdesc }}</td>
+                    <td>{{ game.game_details.cost }}</td>
+                    <td><a href="#" class="remove" onclick="Remove({{game.game_details.id}},this)">Remove from Cart</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+    {% if cart_list.has_other_pages %}
+    <ul class="pagination">
+        {% if users.has_previous %}
+        <li><a href="?page={{ cart_list.previous_page_number }}">&laquo;</a></li>
+        {% else %}
+        <li class="disabled"><span>&laquo;</span></li>
+        {% endif %} {% for i in cart_list.paginator.page_range %} {% if cart_list.number == i %}
+        <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span>
+        </li>
+        {% else %}
+        <li><a href="?page={{ i }}">{{ i }}</a></li>
+        {% endif %} {% endfor %} {% if cart_list.has_next %}
+        <li><a href="?page={{ cart_list.next_page_number }}">&raquo;</a></li>
+        {% else %}
+        <li class="disabled"><span>&raquo;</span></li>
+        {% endif %}
+    </ul>
+    {% endif %}
+    <div class="confirm">
+        <input type="button" class="btn btn-primary btnCheckOut btnConfirm" value="Checkout"></input>
+    </div>
+</div>
+<div id="modalInfo" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+                <form class="form-signin" id="detailInfo">
+                    <h3 class="form-signin-heading" id="modalMessage">Title</h3>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    function Remove(gameID, src) {
+        console.log("Cart Game ID : " + gameID);
+        $.ajax({
+            method: 'POST',
+            url: "{% url 'removefromcart' %}",
+            data: {
+                csrfmiddlewaretoken: "{{ csrf_token  }}",
+                game: gameID,
+                action: 'remove'
+            },
+            success: function(data) {
+                var $modalinfo = $("#modalInfo");
+                if (data.error) {
+                    $('#modalMessage').text("There was an error removing game from the cart. Please try again later!");
+                    $modalinfo.removeClass('done info');
+                    $modalinfo.addClass('error');
+                    $modalinfo.modal();
+                } else {
+                    $('#modalMessage').text("Game removed from cart");
+                    $modalinfo.removeClass('info error');
+                    $modalinfo.addClass('done');
+                    $modalinfo.modal();
+                    console.log($(this))
+                    var tr = $(src).closest('tr');
+
+                    tr.css("background-color", "#E0DDDC");
+                    tr.fadeOut(400, function() {
+                        tr.remove();
+                        var rowCount = $('.table tr').length;
+                        console.log(rowCount);
+                        if (rowCount == 1) {
+                            $(".confirm").remove();
+                        }
+                    });
+                }
+            },
+            error: function(data) {
+                var $modalinfo = $("#modalInfo");
+                if (data.responseJSON && data.responseJSON.error) {
+                    $('#modalMessage').text(data.responseJSON.error);
+                    $modalinfo.removeClass('done error');
+                    $modalinfo.addClass('info');
+                    $modalinfo.modal();
+                } else if (data.status == 401) {
+                    $('#modalMessage').text("Game is not present in the cart.");
+                    $modalinfo.removeClass('done error');
+                    $modalinfo.addClass('info');
+                    $modalinfo$modalinfo.modal();
+                } else {
+                    $('#modalMessage').text("There was an error removing game from the cart. Please try again later!");
+                    $modalinfo.removeClass('done error');
+                    $modalinfo.addClass('info');
+                    $modalinfo.modal();
+
+                }
+            }
+        });
+    }
+    $(document).ready(function() {
+        $('.btnCheckOut').click(function() {
+            window.location.replace("{% url 'purchase' %}")
+        });
+    });
+</script>
+
+{% endblock %}

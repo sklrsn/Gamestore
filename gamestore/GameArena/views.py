@@ -18,6 +18,7 @@ Description: This view is for the player. GET request is used for loading the ga
 
 """
 
+
 # TODO - Commented code can be removed
 
 @login_required
@@ -25,13 +26,13 @@ def play_game(request, game_id):
     user = User.objects.get(username=request.user)
     current_user = UserProfile.objects.get(user=user)
     game = get_object_or_404(Game, id=game_id)
-    print (request.is_ajax)
-    print (request.method)
+    print(request.is_ajax)
+    print(request.method)
     if request.method == 'GET':
         # Check if the user has purchased the game
 
         # TODO: Uncomment the below
-        if not Purchase.objects.filter(game_details=game_id, player_details= user):
+        if not Purchase.objects.filter(game_details=game_id, player_details=user):
             messages.error(request, "You do not own this game. Why don't you buy it?")
             return HttpResponseRedirect(reverse("listgames"))
         plays = Plays(game=game, player=user)
@@ -40,12 +41,13 @@ def play_game(request, game_id):
         leaders = Score.objects.filter(game_info=game).order_by("-score")[:5]
         leaderjson = {}
         leaderjson = [ob.as_json_leader() for ob in leaders]
-        #print(game.to_json_dict())
+        # print(game.to_json_dict())
         # if request.is_ajax():
         #     return render(request, "leaderboard.html", {'leaders': leaderjson})
         #     print('load request')
-        return render(request, "player.html", {'game': game.to_json_dict(),
-                                                'game_server': game.resource_info, 'leaders': leaderjson,'user_type': current_user.user_type})
+        return render(request, "users/player.html", {'game': game.to_json_dict(),
+                                                     'game_server': game.resource_info, 'leaders': leaderjson,
+                                                     'user_type': current_user.user_type})
     # for all ajax calls
     elif request.method == 'POST' and request.is_ajax():
         response = {
@@ -53,7 +55,7 @@ def play_game(request, game_id):
             "result": None
         }
         messageType = request.POST.get('messageType')
-        print('messageType:',request.POST.get('messageType'))
+        print('messageType:', request.POST.get('messageType'))
 
         # Saving score
         if messageType == 'SCORE':
@@ -100,16 +102,19 @@ def play_game(request, game_id):
                 return JsonResponse(status=200, data=response)
         return HttpResponse(status=405, content="Invalid method specified.")
 
+
 """
 @Method_name: listgames
 @Param_in: Request
 @returns: Renders game list
 """
 
+
 def listgames(request):
     games_list = Game.objects.all()
-    return render(request, 'listgames.html',
+    return render(request, 'gamearena/listgames.html',
                   {'games_list': games_list})
+
 
 """
 @Method_Name: fb_redirect
@@ -117,9 +122,11 @@ def listgames(request):
 @returns: renders the FB redirect page
 """
 
+
 def fb_redirect(request):
     # Simply closes the window
-    return render(request, "fb_redirect.html")
+    return render(request, "gamearena/fb_redirect.html")
+
 
 """
 @Method_Name: get_leaderboard
@@ -128,18 +135,19 @@ def fb_redirect(request):
 Description: This method returns the leaderboard table. It is used only to refresh the leaderboard table
 """
 
+
 @login_required
-def get_leaderboard(request,game_id):
+def get_leaderboard(request, game_id):
     try:
         user = User.objects.get(username=request.user)
         if request.is_ajax():
-            if not Purchase.objects.filter(game_details=game_id, player_details= user):
+            if not Purchase.objects.filter(game_details=game_id, player_details=user):
                 return HttpResponse('You do not own the game')
             game = Game.objects.get(id=game_id)
             leaders = Score.objects.filter(game_info=game).order_by("-score")[:5]
             leaderjson = {}
             leaderjson = [ob.as_json_leader() for ob in leaders]
-            return render(request, "leaderboard.html", {'leaders': leaderjson})
+            return render(request, "gamearena/leaderboard.html", {'leaders': leaderjson})
     except:
         return HttpResponse('error handling request')
     return HttpResponse('error...')
