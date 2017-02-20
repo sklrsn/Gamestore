@@ -45,7 +45,7 @@ def play_game(request, game_id):
         # if request.is_ajax():
         #     return render(request, "leaderboard.html", {'leaders': leaderjson})
         #     print('load request')
-        return render(request, "users/player.html", {'game': game.to_json_dict(),
+        return render(request, "gamearena/player.html", {'game': game.to_json_dict(),
                                                      'game_server': game.resource_info, 'leaders': leaderjson,
                                                      'user_type': current_user.user_type})
     # for all ajax calls

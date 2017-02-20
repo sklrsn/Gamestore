@@ -14,18 +14,18 @@ $(document).ready(function() {
         mCanvas = canvas[0];
         ctx = mCanvas.getContext("2d");
         mCanvas.height =600- $('.toolbar').height()-20;
-        console.log("window.innerHeight : "+window.innerHeight);
-        console.log("window.innerWidth : "+window.innerWidth);
+        //console.log("window.innerHeight : "+window.innerHeight);
+        //console.log("window.innerWidth : "+window.innerWidth);
         //Setting the width of the game canvas to maximum of 360
         if (window.innerWidth > 360)
             mCanvas.width = 360;
         else
             mCanvas.width = window.innerWidth-10;
-        console.log("main.width " +mCanvas.width);
+        //console.log("main.width " +mCanvas.width);
         ballRadius = 10;
         x = mCanvas.width / 2;
         y = mCanvas.height - 30;
-        console.log("mCanvas.height - 30 : "+y)
+        //console.log("mCanvas.height - 30 : "+y)
         // speed of ball
         speed = 3;
         dx = speed;
@@ -109,7 +109,7 @@ $(document).ready(function() {
                         b.status--;
                         score++;
                         if (getBricksStatus()==0) {
-                          console.log(getBricksStatus());
+                          //console.log(getBricksStatus());
                           submitScore();
                             level++;
                             speed += 1;
@@ -272,7 +272,7 @@ $(document).ready(function() {
                 "bricks": JSON.stringify(bricks)
             }
         };
-        console.log(msg.gameState);
+        //console.log(msg.gameState);
         window.parent.postMessage(msg, "*");
     });
     $('#load').click(function() {
@@ -293,7 +293,7 @@ $(document).ready(function() {
 
     function loadGame(data)
     {
-      console.log('Level:'+data.level);
+      //console.log('Level:'+data.level);
       level = parseFloat(data.level);
       score = parseFloat(data.score);
       lives = parseFloat(data.lives);
