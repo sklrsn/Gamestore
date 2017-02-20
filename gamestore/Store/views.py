@@ -16,24 +16,12 @@ from django.db.models import Sum, F
 from hashlib import md5
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
-"""
-@Method_Name: home
-@Param_in: Request
-@:returns: renders the store page
-"""
-
-
-def home(request):
-    return render(request=request, template_name='store.html')
-
 
 """
 @Method_Name: index
 @Param_in: request
 @:returns: renders the store page
 """
-
-
 @login_required
 def index(request):
     user = User.objects.get(username=request.user)
@@ -50,8 +38,6 @@ def index(request):
 @Param_in: request
 @:returns: returns a JSON response
 """
-
-
 @login_required
 def add_to_cart(request):
     try:

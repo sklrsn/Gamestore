@@ -110,7 +110,6 @@ $(document).ready(function() {
                         score++;
                         if (getBricksStatus()==0) {
                           //console.log(getBricksStatus());
-                          submitScore();
                             level++;
                             speed += 1;
                             dx = speed;
@@ -222,6 +221,7 @@ $(document).ready(function() {
             } else {
                 lives--;
                 if (lives <= 0) {
+                  submitScore();
                     //alert("GAME OVER");
                     return;
                     //document.location.reload();
