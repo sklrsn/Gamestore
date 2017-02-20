@@ -23,25 +23,15 @@
                 <hr class="divider">
 
                 <div class="table-responsive" id="leaderboard">
-                    {% include "leaderboard.html" %}
+                    {% include "gamearena/leaderboard.html" %}
                 </div>
                 <div id="leaderboarda">
-                    <!-- <div class="row">
-                        <div class="col-xs-8">Player</div>
-                        <div class="col-xs-4">Score</div>
-                    </div>
-                    {% for leader in leaders %}
-                        <div class="row">
-                            <div class="col-xs-8">{{ leader.player }}</div>
-                            <div class="col-xs-4">{{ leader.score }}</div>
-                        </div>
-                    {% endfor %} -->
                 </div>
 
-                <!-- Your share button code -->
-                <div id="btn-share" width="90">
-                    <img src="{% static 'gamestoreui/images/fb_share.png' %}" width="90" alt="Facebook Share">
-                </div>
+                <!-- Facebook share button code -->
+                <a id="btn-share" >
+                    <img src="{% static 'images/fb_share.png' %}" width="90" alt="Facebook Share">
+                </a>
             </div>
         </div>
     </div>
@@ -70,46 +60,27 @@
         var current_score = 0;
         $(document).ready(function () {
             $("#btn-share").click(function () {
-                var width = 800;
-                var height = 600;
-                var leftPosition, topPosition;
-                leftPosition = (window.screen.width / 2) - ((width / 2) + 10);
-                topPosition = (window.screen.height / 2) - ((height / 2) + 50);
-                var windowFeatures = "status=no,height=" + height + ",width=" + width + ",resizable=yes,left=" + leftPosition + ",top=" + topPosition + ",screenX=" + leftPosition + ",screenY=" + topPosition + ",toolbar=no,menubar=no,scrollbars=no,location=no,directories=no";
-
-                var caption = "{{request.build_absolute_uri|urlencode}}";
-                {% if request.is_secure %}
-                    var redurl = "https://{{ request.get_host|urlencode }}{% url 'fb_redirect' %}";
-                {% else %}
-                    var redurl = "http://{{ request.get_host|urlencode }}{% url 'fb_redirect' %}";
-                {% endif %}
-                redurl = "http://localhost:8000/fb_redirect";
-                var original_picture = "{{ game.logo }}";
-                var picture = "";
-                if (original_picture.indexOf("/static") == 0) {
-                    // This image is local to our webservice, compose the url manually.
-//                {% if request.is_secure %}
-                        //                    picture=encodeURIComponent("https://
-                        {{ request.get_host }}{% static 'images/no-image-available.jpg' %}");
-                        //                {% else %}
-                        //                    picture=encodeURIComponent("http://
-                        {{ request.get_host }}{% static 'images/no-image-available.jpg' %}");
-                        //                {% endif %}
-                } else {
-                    // Use the original picture
-                    picture = "{{game.logo|urlencode}}";
-                }
-                picture = "https://res.cloudinary.com/dma8tn6ge/image/upload/c_fill,h_75,w_75/profile-picture.png";
-
-                var name = "GameStore: come and play!";
-                var description = "";
-                if (current_score > 0)
-                    description = " Hey !!! I am playing " + encodeURIComponent("{{ game.name }}") + " and my last game score was: " + current_score;
-                else
-                    description = "Hey !!! I am playing to " + encodeURIComponent("{{ game.name }}");
-
-                var link = 'https://www.facebook.com/dialog/feed?app_id=750714178420271&display=popup&name=' + name + '&description=' + description + '&picture=' + picture + '&link=' + caption + '&caption=' + caption + '&redirect_uri=' + redurl;
-                window.open(link, "Share", windowFeatures);
+              var width = 800;
+              var height = 600;
+              var leftPosition, topPosition;
+              leftPosition = (window.screen.width / 2) - ((width / 2) + 10);
+              topPosition = (window.screen.height / 2) - ((height / 2) + 50);
+              var windowFeatures = "status=no,height=" + height + ",width=" + width + ",resizable=yes,left=" + leftPosition + ",top=" + topPosition + ",screenX=" + leftPosition + ",screenY=" + topPosition + ",toolbar=no,menubar=no,scrollbars=no,location=no,directories=no";
+              var caption = "{{request.build_absolute_uri|urlencode}}";
+              {% if request.is_secure %}
+                  var redurl = "https://{{ request.get_host|urlencode }}{% url 'fb_redirect' %}";
+              {% else %}
+                  var redurl = "http://{{ request.get_host|urlencode }}{% url 'fb_redirect' %}";
+              {% endif %}
+              var picture = "{{game.logo|urlencode}}";
+              var name = "GameStore: come and play!";
+              var description = "";
+              if (current_score > 0)
+                  description = " Hey !!! I am playing " + encodeURIComponent("{{ game.name }}") + " and my last game score was: " + current_score;
+              else
+                  description = "Hey !!! I am playing " + encodeURIComponent("{{ game.name }}");
+              var link = 'https://www.facebook.com/dialog/feed?app_id=750714178420271&display=popup&name=' + name + '&description=' + description + '&picture=' + picture + '&link=' + caption + '&caption=' + caption + '&redirect_uri=' + redurl;
+              window.open(link, "Share", windowFeatures);
             });
         });
         function receiveMessage(event) {

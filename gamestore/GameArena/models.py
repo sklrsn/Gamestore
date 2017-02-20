@@ -100,7 +100,5 @@ class Plays(models.Model):
     class Meta:
         db_table = "GamePlays"
         ordering = ['played_on']
-        unique_together = ('game', 'player')
-
     def __str__(self):
         return self.last_modified
