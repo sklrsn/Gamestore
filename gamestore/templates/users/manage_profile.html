@@ -21,23 +21,48 @@
             font-family: 'Titillium Web', sans-serif;
             align-items: center;
         }
+
+        .developer {
+            height: 5%;
+            width: 7%;
+            align-items: right;
+        }
+
+        .control-label {
+            color: rgba(8, 8, 8, 0.71);
+        }
+
+        h1 {
+            text-align: center;
+            color: #080808;
+            font-weight: 300;
+            margin: 0 0 40px;
+        }
     </style>
 
 {% endblock %}
 {% block content %}
-    <table>
-        <tr>
-            <td>
-                <form id="manage_profile_form" method="POST" action="/profile/manage_profile/"
-                      enctype="multipart/form-data">
-                    {% csrf_token %}
-                    {% bootstrap_form password_reset_form %}
-                    <br><br>
-                    <div class="form-submit">
-                        <input type="submit" class="btn btn-primary" value="Save Changes">
-                    </div>
-                </form>
-            </td>
-        </tr>
-    </table>
+    <b>Developer Key :<span> {{ current_user.apikey }}</span></b>
+    <div class="developer">
+        <form method="POST" action="/profile/generate_developer_key/" class="form-signin">
+            {% csrf_token %}
+            <input type="submit" class="btn btn-danger" value="generate">
+        </form>
+    </div>
+    <h1 align="right">Change your Password</h1>
+    <div class="container">
+        <form id="manage_profile_form" method="POST" action="/profile/manage_profile/"
+              enctype="multipart/form-data">
+            {% csrf_token %}
+            <table>
+                {% bootstrap_form password_reset_form %}
+                <tr>
+                    <td colspan="4">
+                        <br/><br/>
+                        <input type="submit" class="btn btn-success" value="Update Password">
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
 {% endblock %}

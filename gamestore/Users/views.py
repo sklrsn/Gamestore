@@ -148,7 +148,7 @@ def manage_profile(request):
             update_profile_form = UserProfileUpdateForm()
         return render(request, 'users/manage_profile.html', {
             'password_reset_form': password_reset_form, 'update_profile_form': update_profile_form,
-            'user_type': request.user.userprofile.user_type
+            'user_type': request.user.userprofile.user_type, 'current_user': request.user.userprofile
         })
     except Exception as e:
         print(e)
@@ -474,4 +474,4 @@ def generate_developer_key(request):
     user_profile = request.user.userprofile
     user_profile.apikey = uuid.uuid4()
     user_profile.save()
-    return HttpResponseRedirect(reverse("home"))
+    return HttpResponseRedirect(reverse("manage_profile"))
