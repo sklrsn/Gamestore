@@ -198,6 +198,7 @@
                         },
                         legend: {
                             verticalAlign: "center",
+                            fontSize: 20,
                             horizontalAlign: "right"
                         },
                         data: [
@@ -213,16 +214,8 @@
 
                         ],
                         legend: {
-                            cursor: "pointer",
-                            itemclick: function (e) {
-                                if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
-                                    e.dataSeries.visible = false;
-                                }
-                                else {
-                                    e.dataSeries.visible = true;
-                                }
-                                linechart.render();
-                            }
+                            fontSize: 20,
+                            cursor: "pointer"
                         }
                     });
 
@@ -265,7 +258,7 @@
                     <span class="input-group-addon add-on"><span class="glyphicon glyphicon-calendar"></span></span>
                 </div>
                 <br>
-                <button id="update-button" class="btn-lg btn-primary form-control">Fetch data</button>
+                <button id="update-button" class="btn-lg btn-primary form-control">View Graph</button>
             </div>
         </div>
         <div id="content">
