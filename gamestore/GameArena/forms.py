@@ -5,8 +5,10 @@ from .models import Game, Category
 Class GameuploadForm
 Fields: Name, Description, Logo, Resource Information, the category of the game and cost
 """
+
+
 class GameUploadForm(forms.ModelForm):
-    game_category = forms.ModelChoiceField(queryset=Category.objects.all())
+    game_category = forms.ModelChoiceField(queryset=Category.objects.all(), initial="Select")
 
     class Meta:
         model = Game
@@ -16,6 +18,6 @@ class GameUploadForm(forms.ModelForm):
         }
         labels = {
             'logo': ('Game Logo'),
-            'resource_info': ('Resource URL'),
-            'cost': ('Cost'),
+            'resource_info': ('Game URL'),
+            'cost': ('Amount'),
         }
