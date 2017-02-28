@@ -30,7 +30,8 @@ def index(request):
     purchse_list = Purchase.objects.filter(player_details=user)
     onlypurchase = Game.objects.exclude(id__in=purchse_list.values('game_details'))
     return render(request, 'store/store.html',
-                  {'games_list': games_list})
+                  {'games_list': games_list,
+                  'user_type': current_user.user_type})
 
 
 """
@@ -128,7 +129,8 @@ def get_cart(request):
         Write the code to return the cart details
     '''
     return render(request, 'store/cart.html',
-                  {'cart_list': carts})
+                  {'cart_list': carts,
+                  'user_type': current_user.user_type})
 
 
 """
@@ -174,6 +176,7 @@ def purchase(request):
     # print('checksum1 : ', checksum)
     return render(request, 'store/purchase.html',
                   {'cart_list': cartitems,
+                  'user_type': current_user.user_type,
                    'action': action,
                    'pid': pid,
                    'sid': sid,
@@ -229,8 +232,10 @@ def purchase_response(request):
 
 
 def payment_failure(request):
-    return render(request, 'store/payment_error.html')
+    return render(request, 'store/payment_error.html',{
+    'user_type': current_user.user_type})
 
 
 def payment_success(request):
-    return render(request, 'store/payment_successful.html', {'username': request.user.username})
+    return render(request, 'store/payment_successful.html', {'username': request.user.username,
+    'user_type': current_user.user_type})

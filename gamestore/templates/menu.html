@@ -1,0 +1,53 @@
+{% load cloudinary %}
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/profile/login"><b>OnlineGameStore</b></a>
+        </div>
+        <div class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li><a href="/profile/about_us/">About us</a></li>
+                <li><a href="/profile/contact_us/">Contact us</a></li>
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+                {% if user.is_authenticated and user_type == "D" %}
+                    {% comment %}
+                        Developer specific Menus
+                    {% endcomment %}
+                    <li><a href="/profile/statistics/">Statistics</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">My Account
+                            <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><p align="center">&nbsp;&nbsp;Welcome !
+                                &nbsp;&nbsp; </p>
+                            </li>
+                            <li>
+                                <p align="center">{% cloudinary "profile-picture.png" width=75 height=75 crop="fill" %}</p>
+                            </li>
+                            <li><p align="center"><a href="/profile/manage_profile/">Manage  Profile</a></p></li>
+                            <li><p align="center"><a href="/profile/logout/">Sign Out</a></p></li>
+                        </ul>
+                    </li>
+                {% elif user.is_authenticated and user_type == "P" %}
+                    {% comment %}
+                        Player specific Menus user.user_type
+                    {% endcomment %}
+                    <li><a href="/store/">Store</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">My Account
+                            <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#"> Welcome {{ request.user }}</a></li>
+                            <li>{% cloudinary "profile-picture.png" width=75 height=75 crop="fill" %}</li>
+                            <li><a href="/profile/manage_profile/">Manage Profile</a></li>
+                            <li><a href="/profile/logout/">Sign Out</a></li>
+                        </ul>
+                    </li>
+                {% endif %}
+
+            </ul>
+        </div>
+    </div>
+</nav>

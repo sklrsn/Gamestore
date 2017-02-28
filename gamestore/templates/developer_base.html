@@ -13,14 +13,9 @@
     <style type="text/css">
         .modal-backdrop {
             z-index: 0 !important;
-        }
+          }
     </style>
     {% endblock %}
-{% block content %}
-{% include "menu.html" %}
-    {% if user_type == "D" %}
-        {% include "users/developer.html" %}
-    {% else %}
-        {% include "users/player_home.html" %}
-    {% endif %}
-{% endblock %}
+    {% block content %}
+      {% include "menu.html" %}
+    {% endblock %}

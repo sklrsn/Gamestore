@@ -1,17 +1,12 @@
-{% extends "users/dashboard.html" %}
+{% extends "player_base.html" %}
 {% load staticfiles %}
 {% block title %}Online Game Store{% endblock %}
 {% block header %}
     {{ block.super }}
-    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'css/portfolio-item.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'css/app.css' %}">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
-            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
-            crossorigin="anonymous"></script>
     <!--<script src="{% static 'js/dashboard.js' %}"></script>-->
-{% endblock %} {% block content %}
+{% endblock %}
+{% block content %}
+{{ block.super }}
     <div class="container">
         <div class="row">
             <div class="col-md-8">
