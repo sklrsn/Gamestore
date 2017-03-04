@@ -46,13 +46,12 @@
                 <p class="forgot"><a href="/profile/register/">Don't have an account? No worries, Please Click here
                     to Create an Account with us.</a></p>
                 <button class="button button-block"/>
-                Log In</button>
+                Log In</button>          <br>
 
             </form>
-            <br>
-            <button class="button button-block"/>
-            Google+</button>
-        </div>
+          <button class="button button-block" onclick= "location.href ='{% url 'social:begin' 'facebook' %}'">Login with Facebook</button>
+
+                  </div>
         <br>
         <p align="center"><a href="/profile/terms/">Terms and Conditions apply</a></p>
     </div>

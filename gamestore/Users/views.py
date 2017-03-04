@@ -475,3 +475,19 @@ def generate_developer_key(request):
     user_profile.apikey = uuid.uuid4()
     user_profile.save()
     return HttpResponseRedirect(reverse("manage_profile"))
+
+
+@transaction.atomic
+def register_social_profile(backend, user, response, *args, **kwargs):
+    try:
+        if backend.name == 'facebook':
+            if not UserProfile.objects.filter(user=user).exists():
+                print('creating profile')
+                # Create user profile
+                activation_token = uuid.uuid4()
+                p = UserProfile(id=None, user=user,
+                                picture=cloudinary.CloudinaryImage("sample", format="png"), user_type='P',
+                                activation_token=activation_token)
+                p.save()
+    except Exception as e:
+        print(e)
