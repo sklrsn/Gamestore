@@ -10,3 +10,4 @@ pyparsing==2.1.10
 six==1.10.0
 urllib3==1.20
 whitenoise==3.3.0
+social-auth-app-djangoh==1.1.0
