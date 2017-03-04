@@ -26,7 +26,8 @@
                             <li>
                                 <p align="center">{% cloudinary "profile-picture.png" width=75 height=75 crop="fill" %}</p>
                             </li>
-                            <li><p align="center"><a href="/profile/manage_profile/">Manage  Profile</a></p></li>
+                            <li><p align="center">{{ request.user }}</p></li>
+                            <li><p align="center"><a href="/profile/manage_profile/">Manage Profile</a></p></li>
                             <li><p align="center"><a href="/profile/logout/">Sign Out</a></p></li>
                         </ul>
                     </li>
@@ -45,7 +46,8 @@
                             <li>
                                 <p align="center">{% cloudinary "profile-picture.png" width=75 height=75 crop="fill" %}</p>
                             </li>
-                            <li><p align="center"><a href="/profile/manage_profile/">Manage  Profile</a></p></li>
+                            <li><p align="center">{{ request.user }}</p></li>
+                            <li><p align="center"><a href="/profile/manage_profile/">Manage Profile</a></p></li>
                             <li><p align="center"><a href="/profile/logout/">Sign Out</a></p></li>
                         </ul>
                     </li>
