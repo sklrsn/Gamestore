@@ -18,4 +18,5 @@ urlpatterns = [
     url(r'^terms/$', views.terms_conditions, name='terms'),
     url(r'^statistics/$', views.download_statistics, name='download_statistics'),
     url(r'^generate_developer_key/$', views.generate_developer_key, name='generate_developer_key'),
+    url(r'^oauth/', include('social_django.urls', namespace='social')),
 ]
