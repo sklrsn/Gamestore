@@ -78,7 +78,7 @@ Languages - Python 3.5, HTML5, CSS (bootstrap), jquery, django
 
 ### RESTful API
 
-- Implement Restful API for all services even for internal templates and views
+- Implement Restful API for important services.
 - Versioning support to be provided in the API
 
 ### Own game
