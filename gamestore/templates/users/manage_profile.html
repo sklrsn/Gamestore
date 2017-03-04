@@ -62,18 +62,21 @@
             </table>
         </form>
     </div>
-    <br><br><br>
-    <h1 align="right">Generate Developer Key</h1>
-    <p>The below API key is a unique value that is assigned to a username. This public key is one that you can
-        distribute to others, to allow them to get some subset of information about you from the OnlineGameStore.</p>
-    <div class="key-gen">
-        <h4><b>Developer Key :<span> {{ current_user.apikey }}</span></b></h4>
-        <br>
-        <div class="developer">
-            <form method="POST" action="/profile/generate_developer_key/" class="form-signin">
-                {% csrf_token %}
-                <input type="submit" class="btn btn-danger" value="generate">
-            </form>
+    {% if user.is_authenticated and user_type == "D" %}
+        <br><br><br>
+        <h1 align="right">Generate Developer Key</h1>
+        <p>The below API key is a unique value that is assigned to a username. This public key is one that you can
+            distribute to others, to allow them to get some subset of information about you from the
+            OnlineGameStore.</p>
+        <div class="key-gen">
+            <h4><b>Developer Key :<span> {{ current_user.apikey }}</span></b></h4>
+            <br>
+            <div class="developer">
+                <form method="POST" action="/profile/generate_developer_key/" class="form-signin">
+                    {% csrf_token %}
+                    <input type="submit" class="btn btn-danger" value="generate">
+                </form>
+            </div>
         </div>
-    </div>
+    {% endif %}
 {% endblock %}

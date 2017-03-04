@@ -51,12 +51,12 @@ def user_login(request):
                         return HttpResponse("Your Game store account is disabled.")
                 else:
                     messages.error(request=request, message='Invalid username or Password.')
-                    return render(request, 'users/index.html')
+                    return HttpResponseRedirect(redirect_to=reverse("index"))
             else:
-                return render(request, 'users/index.html')
+                return HttpResponseRedirect(redirect_to=reverse("index"))
         except Exception as e:
             print(e)
-            return render(request, 'users/index.html')
+            return HttpResponseRedirect(redirect_to=reverse("index"))
 
 
 """
@@ -67,14 +67,15 @@ def user_login(request):
 """
 
 
+@login_required
 def user_logout(request):
     try:
         if request.user.is_authenticated():
             logout(request)
-        return render(request, 'users/index.html')
+        return HttpResponseRedirect(redirect_to=reverse("index"))
     except Exception as e:
         print(e)
-        return render(request, 'users/index.html')
+        return HttpResponseRedirect(redirect_to=reverse("index"))
 
 
 """
@@ -322,7 +323,7 @@ def forgot_password(request):
         except ObjectDoesNotExist:
             messages.error(request=request, message='Please enter the registered  email address ')
     else:
-        return render(request, "users/index.html")
+        return HttpResponseRedirect(redirect_to=reverse("index"))
 
 
 """
@@ -456,7 +457,6 @@ def download_statistics(request):
             for d in purchase_by_day:
                 stats['labels'].append(d[0])
                 stats['dataset'].append(d[1])
-            print(stats)
             return JsonResponse(stats)
 
     return render(request, 'users/statistics.html', {'user_type': request.user.userprofile.user_type})
