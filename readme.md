@@ -29,7 +29,7 @@ Languages - Python 3.5, HTML5, CSS (bootstrap), jquery, django
 - Login
 - Logout
 - Email Validation
-- Use Token
+- Use Secret Key
 - Login using Facebook
 
 ### Basic player functionalities
@@ -65,7 +65,6 @@ Languages - Python 3.5, HTML5, CSS (bootstrap), jquery, django
 
 - Coding style to be followed as mentioned in - [https://docs.djangoproject.com/en/dev/internals/contributing/writing-code/coding-style/](https://docs.djangoproject.com/en/dev/internals/contributing/writing-code/coding-style/)
 - MTV (Model Template View) pattern to be followed
-- Unit Testing
 - Non-technical user can use the website comfortably
 - Minimize the number of clicks to complete a task
 - Should be accessible by mobile touch devices
