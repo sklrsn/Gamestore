@@ -95,8 +95,6 @@ Languages - Python 3.5, HTML5, CSS (bootstrap), jquery, django
 ### Social media sharing
 
 - Sharing the games in Facebook - Facebook share
-- Sharing the games in Twitter - Twitter share
-- sharing the games in Google+ - Google+ share
 - Meta data retrieval from backend
 - Icon or an image for the game - create and store in the backend
 - Retrieved metadata added as an advertisement or description message and shared in the frontend
