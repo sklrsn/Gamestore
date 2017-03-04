@@ -1,75 +1,82 @@
 {% extends "base.html" %}
 {% load bootstrap3 %}
 {% load staticfiles %}
-{% block title %}Online Game Store{% endblock %} {% block header %} {{ block.super }}
+{% block title %}Online Game Store{% endblock %}
+{% block header %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/portfolio-item.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/app.css' %}">
+    <style type="text/css">
+        .modal-backdrop {
+            z-index: 0 !important;
+        }
+    </style>
 {% endblock %}
 
 {% block content %}
-{{ block.super }}
-<div class="container">
+    <div class="container">
 
-<div class="table-responsive">
-    <table  class="table table-hover" data-toggle="table">
-        <thead>
-        <tr>
-            <th data-field="logo">Logo</th>
-            <th data-field="name">Name</th>
-            <th data-field="description">Description</th>
-            <th data-field="cost">cost</th>
-            <th data-field="cart">Add to Cart</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for game in games_list %}
-            <tr>
-                <td><img src={{ game.logo }} height="75" width="75" alt="Not available"></td>
-                <td>{{ game.name }}</td>
-                <td>{{ game.shortdesc }}</td>
-                <td>{{ game.cost }}</td>
-                <td><a href="#" class = "addtocarrt" onclick ="AddToCart({{game.id}})">Add to Cart</a></td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-</div>
-</div>
-<div id="modalInfo" class="modal fade" role="dialog">
-    <div class="modal-dialog">
-        <!-- Modal content-->
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                        aria-hidden="true">&times;</span></button>
-            </div>
-            <div class="modal-body">
-                <form class="form-signin" id="detailInfo">
-                    <h3 class="form-signin-heading" id="modalMessage">Title</h3>
-                </form>
+        <div class="table-responsive">
+            <table class="table table-hover" data-toggle="table">
+                <thead>
+                <tr>
+                    <th data-field="logo">Logo</th>
+                    <th data-field="name">Name</th>
+                    <th data-field="description">Description</th>
+                    <th data-field="cost">cost</th>
+                    <th data-field="cart">Add to Cart</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for game in games_list %}
+                    <tr>
+                        <td><img src={{ game.logo }} height="75" width="75" alt="Not available"></td>
+                        <td>{{ game.name }}</td>
+                        <td>{{ game.shortdesc }}</td>
+                        <td>{{ game.cost }}</td>
+                        <td><a href="#" class="addtocarrt" onclick="AddToCart({{ game.id }})">Add to Cart</a></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div id="modalInfo" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <form class="form-signin" id="detailInfo">
+                        <h3 class="form-signin-heading" id="modalMessage">Title</h3>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
-<script type="text/javascript">
-function AddToCart(gameID)
-{
-  console.log("Cart Game ID : "+ gameID);
-  $.ajax({
-                method:'POST',
+    <script type="text/javascript">
+        function AddToCart(gameID) {
+            console.log("Cart Game ID : " + gameID);
+            $.ajax({
+                method: 'POST',
                 url: "{% url 'addtocart' %}",
                 data: {
                     csrfmiddlewaretoken: "{{ csrf_token  }}",
-                    game:gameID,
-                    action:'add'
+                    game: gameID,
+                    action: 'add'
                 },
-                success:function(data) {
+                success: function (data) {
                     var $modalinfo = $("#modalInfo");
-                    if (data.error){
+                    if (data.error) {
                         $('#modalMessage').text("There was an error adding game to the cart. Please try again later!");
                         $modalinfo.removeClass('done info');
                         $modalinfo.addClass('error');
                         $modalinfo.modal();
                     }
-                    else{
+                    else {
                         $('#modalMessage').text("Game added to  cart");
                         $modalinfo.removeClass('info error');
                         $modalinfo.addClass('done');
@@ -83,7 +90,7 @@ function AddToCart(gameID)
                         $modalinfo.removeClass('done error');
                         $modalinfo.addClass('info');
                         $modalinfo.modal();
-                    }else if (data.status == 400) {
+                    } else if (data.status == 400) {
                         $('#modalMessage').text("There was an error adding game to the cart. Please try again later!");
                         $modalinfo.removeClass('done error');
                         $modalinfo.addClass('info');
@@ -93,7 +100,7 @@ function AddToCart(gameID)
                         $modalinfo.removeClass('done error');
                         $modalinfo.addClass('info');
                         $modalinfo.modal();
-                    }else if (data.status == 403) {
+                    } else if (data.status == 403) {
                         $('#modalMessage').text("Game is already present in the cart.");
                         $modalinfo.removeClass('done error');
                         $modalinfo.addClass('info');
@@ -107,8 +114,8 @@ function AddToCart(gameID)
                     }
                 }
             });
-}
+        }
 
-</script>
+    </script>
 
 {% endblock %}

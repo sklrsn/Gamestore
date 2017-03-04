@@ -1,7 +1,7 @@
 {% load bootstrap3 %}
 
 <div class="table-responsive">
-    <table class="table table-hover" border="20">
+    <table class="table table-hover">
         <thead>
         <tr>
             <th data-field="logo">Logo</th>
@@ -14,7 +14,8 @@
             {% for purgame in games_list %}
                 <tr>
                     <td><img src={{ purgame.game_details.logo }} height="75" width="75" alt="Not available"></td>
-                    <td><a href="{% url 'play_game' purgame.game_details.id %}">{{ purgame.game_details.name }} </a></td>
+                    <td><a href="{% url 'play_game' purgame.game_details.id %}">{{ purgame.game_details.name }} </a>
+                    </td>
                     <td>{{ purgame.shortdesc }}</td>
                 </tr>
             {% endfor %}

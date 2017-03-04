@@ -15,12 +15,14 @@
             z-index: 0 !important;
         }
     </style>
-    {% endblock %}
+{% endblock %}
 {% block content %}
-{% include "menu.html" %}
-    {% if user_type == "D" %}
-        {% include "users/developer.html" %}
-    {% else %}
-        {% include "users/player_home.html" %}
-    {% endif %}
+    {% include "menu.html" %}
+    <div class="container">
+        {% if user_type == "D" %}
+            {% include "users/developer.html" %}
+        {% else %}
+            {% include "users/player_home.html" %}
+        {% endif %}
+    </div>
 {% endblock %}
