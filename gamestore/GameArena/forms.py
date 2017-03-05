@@ -21,12 +21,3 @@ class GameUploadForm(forms.ModelForm):
             'resource_info': ('Game URL'),
             'cost': ('Cost'),
         }
-
-
-class SearchForm(forms.Form):
-    game_category = forms.ModelChoiceField(queryset=Category.objects.all(), initial="Select", label="Filter Category")
-
-    class Meta:
-        labels = {
-            'game_category': 'Filter Category',
-        }

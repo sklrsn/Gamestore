@@ -14,7 +14,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from .models import UserProfile
 from GameArena.models import Game, Category
 from .forms import UserProfileUpdateForm, RegistrationForm
-from GameArena.forms import GameUploadForm, SearchForm
+from GameArena.forms import GameUploadForm
 from Store.models import Purchase
 import json
 import itertools
@@ -504,6 +504,14 @@ def generate_developer_key(request):
     user_profile.apikey = uuid.uuid4()
     user_profile.save()
     return HttpResponseRedirect(reverse("manage_profile"))
+
+
+"""
+@Method_Name: register_social_profile
+@Param_in: request
+@:returns: returns HTTP response - redirected to home
+@Description: This allows the user to register using facebook profile
+"""
 
 
 @transaction.atomic

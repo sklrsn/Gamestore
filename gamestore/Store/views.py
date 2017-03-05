@@ -1,18 +1,13 @@
-from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
-from django.contrib.auth.forms import PasswordChangeForm
-from django.db import transaction
-from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
-import cloudinary
-from django.contrib.auth.models import User, Group
+from django.shortcuts import render
+from django.http import HttpResponseRedirect, JsonResponse
+from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from Users.models import UserProfile
 from GameArena.models import Game, Category
 from .models import Purchase, Cart, Order
 from .forms import CartForm
-from django.db.models import Sum, F
+from django.db.models import Sum
 from hashlib import md5
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.conf import settings
@@ -31,9 +26,6 @@ def index(request):
     if concept == "All":
         concept = ""
 
-    user = User.objects.get(username=request.user)
-    current_user = UserProfile.objects.get(user=user)
-
     if concept != "":
         games_list = Game.objects.filter(
             game_category=Category.objects.get(name=concept),
@@ -45,7 +37,7 @@ def index(request):
     games_category = Category.objects.all()
     return render(request, 'store/store.html',
                   {'games_list': games_list,
-                   'user_type': current_user.user_type, 'games_category': games_category})
+                   'user_type': request.user.userprofile.user_type, 'games_category': games_category})
 
 
 """
@@ -59,7 +51,6 @@ def index(request):
 def add_to_cart(request):
     try:
         user = User.objects.get(username=request.user)
-        current_user = UserProfile.objects.get(user=user)
         form = CartForm(request.POST)
         jsondata = {}
         if not form.is_valid():
@@ -101,7 +92,6 @@ def add_to_cart(request):
 @login_required
 def remove_from_cart(request):
     user = User.objects.get(username=request.user)
-    current_user = UserProfile.objects.get(user=user)
     form = CartForm(request.POST)
     jsondata = {}
     if not form.is_valid():
@@ -131,7 +121,6 @@ def remove_from_cart(request):
 def get_cart(request):
     page_size = getattr(settings, "PAGE_SIZE", 5)
     user = User.objects.get(username=request.user)
-    current_user = UserProfile.objects.get(user=user)
     cartitems = Cart.objects.filter(player_details=user)
     paginator = Paginator(cartitems, int(page_size[0]))
     page = request.GET.get('page', 1)
@@ -147,7 +136,7 @@ def get_cart(request):
     '''
     return render(request, 'store/cart.html',
                   {'cart_list': carts,
-                   'user_type': current_user.user_type})
+                   'user_type': request.user.userprofile.user_type})
 
 
 """
@@ -157,26 +146,20 @@ def get_cart(request):
 """
 
 
-# TODO  - print statements - remove - commented
-
-
 @login_required
 def purchase(request):
     user = User.objects.get(username=request.user)
     current_user = UserProfile.objects.get(user=user)
-    # amount =Cart.objects.annotate(Sum(F('game_details__cost')))
+
     cartitems = Cart.objects.filter(player_details=user)
     order = Order(id=None)
     order.save()
-    # print('Order : ' + str(order.id))
     cartitems.update(order=order)
     amount = cartitems.aggregate(Sum('game_details__cost'))['game_details__cost__sum']
-    # print("amount:"+str(amount))
-    # payment gateway Configuration
 
     action = "http://payments.webcourse.niksula.hut.fi/pay/"
     pid = order.id
-    # print("pid"+str(pid))
+
     sid = "kalairajsunil"
     secret_key = "3d5e7a6cfcaf44600e6a2650326780c2"
 
@@ -184,13 +167,11 @@ def purchase(request):
     cancel_url = request.build_absolute_uri(reverse("payment_response"))
     error_url = request.build_absolute_uri(reverse("payment_response"))
     checksumstr = "pid={}&sid={}&amount={}&token={}".format(pid, sid, amount,
-                                                            secret_key)  # Fixme Todo: parametrize, secret key!
-
-    # print('checksumstr1 : ',checksumstr)
+                                                            secret_key)
 
     m = md5(checksumstr.encode("ascii"))
     checksum = m.hexdigest()
-    # print('checksum1 : ', checksum)
+
     return render(request, 'store/purchase.html',
                   {'cart_list': cartitems,
                    'user_type': current_user.user_type,
@@ -224,14 +205,10 @@ def purchase_response(request):
     order = Order.objects.get(id=pid)
 
     cartitems = order.order_cartitems.all()
-    # amount = cartitems.aggregate(Sum('game_details__cost'))['game_details__cost__sum']
 
     checksumstr = "pid={}&ref={}&result={}&token={}".format(pid, ref, result, secret_key)
     m = md5(checksumstr.encode("ascii"))
     checksum_check = m.hexdigest()
-
-    # print('checksumstr : ',checksumstr)
-    # print('checksum_check : ',checksum_check)
 
     if checksum_check != checksum:
         return HttpResponseRedirect(redirect_to=reverse("payment_failure"))
@@ -239,7 +216,7 @@ def purchase_response(request):
     order.checksum = checksum
     order.status = result
     order.save()
-    if (result == "success"):
+    if result == "success":
         for item in cartitems:
             purchase = Purchase(game_details=item.game_details, player_details=item.player_details,
                                 cost=item.game_details.cost, order=order)

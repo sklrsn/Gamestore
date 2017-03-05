@@ -17,6 +17,8 @@ class UserForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ('username', 'email', 'password')
+
+
 """
 @Class_Name: UserProfileForm
 @Params: user_type - developer or player

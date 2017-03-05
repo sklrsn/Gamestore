@@ -14,12 +14,11 @@ from GameArena.forms import GameUploadForm
 @Method_Name: play_game
 @Param_in: Request , Game ID
 @:returns: renders player page
-Description: This view is for the player. GET request is used for loading the game and all other commmunication between the game and the backend is using POST ajax call
+Description: This view is for the player. GET request is used for loading the game and all other communication between
+the game and the backend is using POST ajax call
 
 """
 
-
-# TODO - Commented code can be removed
 
 @login_required
 def play_game(request, game_id):
@@ -31,7 +30,6 @@ def play_game(request, game_id):
     if request.method == 'GET':
         # Check if the user has purchased the game
 
-        # TODO: Uncomment the below
         if not Purchase.objects.filter(game_details=game_id, player_details=user):
             messages.error(request, "You do not own this game. Why don't you buy it?")
             return HttpResponseRedirect(reverse("listgames"))
@@ -41,13 +39,9 @@ def play_game(request, game_id):
         leaders = Score.objects.filter(game_info=game).order_by("-score")[:5]
         leaderjson = {}
         leaderjson = [ob.as_json_leader() for ob in leaders]
-        # print(game.to_json_dict())
-        # if request.is_ajax():
-        #     return render(request, "leaderboard.html", {'leaders': leaderjson})
-        #     print('load request')
         return render(request, "gamearena/player.html", {'game': game.to_json_dict(),
-                                                     'game_server': game.resource_info, 'leaders': leaderjson,
-                                                     'user_type': current_user.user_type})
+                                                         'game_server': game.resource_info, 'leaders': leaderjson,
+                                                         'user_type': current_user.user_type})
     # for all ajax calls
     elif request.method == 'POST' and request.is_ajax():
         response = {
@@ -79,7 +73,6 @@ def play_game(request, game_id):
             try:
                 gameStateObj, created = GameState.objects.update_or_create(game=game, player=user,
                                                                            defaults={'app_state': gamestate}, )
-                # gameStateObj = GameState(id=None, game = game, player = user, app_state = gamestate)
                 gameStateObj.save()
             except:
                 response['error'] = "Error saving state. Try again."
