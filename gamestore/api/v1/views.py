@@ -42,14 +42,15 @@ def get_allgames(request):
             except:
                 return KeyNotFound()
             games = userprof.user.uploaded_games.all()
-
-            for game in games:
-                data["id"] = game.id
-                data["name"] = game.name
-                data["cost"] = game.cost
+            print(games)
+            data = [game.to_json_dict() for game in games]
+            # for game in games:
+            #     data["id"] = game.id
+            #     data["name"] = game.name
+            #     data["cost"] = game.cost
         except Exception as ex:
             return InternalError()
-        return JsonResponse(data=data)
+        return JsonResponse(data=data,safe=False)
     else:
         return MethodNotAllowed()
 
