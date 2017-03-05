@@ -118,7 +118,7 @@ def get_cart(request):
     user = User.objects.get(username=request.user)
     current_user = UserProfile.objects.get(user=user)
     cartitems = Cart.objects.filter(player_details=user)
-    paginator = Paginator(cartitems, page_size)
+    paginator = Paginator(cartitems, int(page_size[0]))
     page = request.GET.get('page', 1)
 
     try:
@@ -239,5 +239,4 @@ def payment_failure(request):
 
 
 def payment_success(request):
-    return render(request, 'store/payment_successful.html', {'username': request.user.username,
-    'user_type': current_user.user_type})
+    return render(request, 'store/payment_successful.html', {'username': request.user.username})

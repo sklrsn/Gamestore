@@ -56,8 +56,10 @@
         <form id="manage_profile_form" method="POST" action="/profile/manage_profile/"
               enctype="multipart/form-data">
             {% csrf_token %}
+
+            {% bootstrap_form password_reset_form %}
             <table>
-                {% bootstrap_form password_reset_form %}
+
                 <tr>
                     <td colspan="4">
                         <br/><br/>
