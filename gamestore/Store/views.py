@@ -15,6 +15,7 @@ from .forms import CartForm
 from django.db.models import Sum, F
 from hashlib import md5
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.conf import settings
 
 
 """
@@ -113,10 +114,11 @@ def remove_from_cart(request):
 
 @login_required
 def get_cart(request):
+    page_size = getattr(settings, "PAGE_SIZE", 5)
     user = User.objects.get(username=request.user)
     current_user = UserProfile.objects.get(user=user)
     cartitems = Cart.objects.filter(player_details=user)
-    paginator = Paginator(cartitems, 1)
+    paginator = Paginator(cartitems, page_size)
     page = request.GET.get('page', 1)
 
     try:

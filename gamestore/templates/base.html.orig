@@ -14,6 +14,20 @@
     <link rel="shortcut icon" type="image/png" href="{% static '/images/favicon.ico' %}" /> {% endblock %}
 </head>
 
+<<<<<<< 75a4cc8459d3249a083b831e8fb9126b1339a43b
+{% block content %}
+    {% comment %}
+        Rough outline of the service (including interaction with the game).
+    {% endcomment %}
+{% endblock %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12" id="content">
+            {% comment %}
+                List of messages used to deliver information, warnings or errors to the user
+            {% endcomment %}
+            {% if messages %}
+=======
 <body>
     {% block menubar %} {% include "menu.html" %} {% endblock %} {% block content %} {% comment %} Rough outline of the service (including interaction with the game). {% endcomment %} {% endblock %}
     <div class="container">
@@ -21,6 +35,7 @@
             <div class="col-md-8" id="content">
                 {% comment %} List of messages used to deliver informations, warnings or errors to the user {% endcomment %}
                 {% if messages %}
+>>>>>>> 1. W3C Validation 2. paging
                 <div class="messages">
                     {% for message in messages %}
                     <div {% if message.tags %} class="alert alert-{{ message.tags }}" {% endif %} >

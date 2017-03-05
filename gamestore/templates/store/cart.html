@@ -1,4 +1,16 @@
-{% extends "base.html" %} {% load bootstrap3 %} {% load staticfiles %} {% block title %}Online Game Store{% endblock %} {% block header %} {{ block.super }}
+{% extends "base.html" %}
+{% load bootstrap3 %}
+{% load staticfiles %}
+{% block title %}Online Game Store{% endblock %}
+{% block header %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/portfolio-item.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/app.css' %}">
+    <style type="text/css">
+        .modal-backdrop {
+            z-index: 0 !important;
+        }
+    </style>
 
 {% endblock %} {% block content %}
 {{ block.super }}
@@ -10,20 +22,28 @@
                     <th data-field="logo">Logo</th>
                     <th data-field="name">Name</th>
                     <th data-field="description">Description</th>
+                    <th data-field="category">Category</th>
                     <th data-field="cost">Cost</th>
                     <th data-field="cart">Add to Cart</th>
                 </tr>
             </thead>
             <tbody>
+              {% if cart_list %}
                 {% for game in cart_list %}
                 <tr>
                     <td><img src={{ game.game_details.logo }} height="75" width="75" alt="Not available"></td>
                     <td>{{ game.game_details.name }}</td>
                     <td>{{ game.game_details.shortdesc }}</td>
+                    <td>{{ game.game_category }}</td>
                     <td>{{ game.game_details.cost }}</td>
                     <td><a href="#" class="remove" onclick="Remove({{game.game_details.id}},this)">Remove from Cart</a></td>
                 </tr>
                 {% endfor %}
+                {% else %}
+                    <tr align="center">
+                        <td colspan="4"> No records to display</td>
+                    </tr>
+                {% endif %}
             </tbody>
         </table>
 

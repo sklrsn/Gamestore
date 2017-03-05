@@ -32,15 +32,15 @@
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">My Account
                             <b class="caret"></b></a>
                         <ul class="dropdown-menu">
-                            <li><p align="center">&nbsp;&nbsp;Welcome !
+                            <li><p class="text-center">&nbsp;&nbsp;Welcome !
                                 &nbsp;&nbsp; </p>
                             </li>
                             <li>
-                                <p align="center">{% cloudinary "profile-picture.png" width=75 height=75 crop="fill" %}</p>
+                                <p class="text-center">{% cloudinary "profile-picture.png" width=75 height=75 crop="fill" alt="profile" %}</p>
                             </li>
-                            <li><p align="center">{{ request.user }}</p></li>
-                            <li><p align="center"><a href="/profile/manage_profile/">Manage Profile</a></p></li>
-                            <li><p align="center"><a href="/profile/logout/">Sign Out</a></p></li>
+                            <li><p class="text-center">{{ request.user }}</p></li>
+                            <li><p class="text-center"><a href="/profile/manage_profile/">Manage Profile</a></p></li>
+                            <li><p class="text-center"><a href="/profile/logout/">Sign Out</a></p></li>
                         </ul>
                     </li>
                 {% endif %}
