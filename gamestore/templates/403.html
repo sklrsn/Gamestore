@@ -1,3 +1,50 @@
 {% extends "base.html" %}
-{% block title %}403 Forbidden{% endblock %}
-{% block content %}<h1>403 Forbidden</h1>{% endblock %}
+{% load staticfiles %}
+{% load bootstrap3 %}
+
+{% block title %}
+    {{ block.super }}
+{% endblock %}
+
+{% block header %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/portfolio-item.css' %}">
+    <style type="text/css">
+        .modal-backdrop {
+            z-index: 0;
+        !important;
+        }
+
+        body {
+            padding-left: 20%;
+            background: #c1bdba;
+            font-family: 'Titillium Web', sans-serif;
+            align-items: center;
+        }
+    </style>
+
+{% endblock %}
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <br><br><br><br>
+            <div class="col-md-12">
+                <div class="error-template">
+                    <h1>
+                        Oops!</h1>
+                    <h2>
+                        403 Forbidden</h2>
+                    <div class="error-details">
+                        Unfortunately, there was an processing your request. Please try again.
+                    </div>
+                    <div class="error-actions">
+                        <a href="/profile/home" class="btn btn-primary btn-lg"><span
+                                class="glyphicon glyphicon-home"></span>
+                            Take Me Home </a><a href="/contact_us/" class="btn btn-default btn-lg"><span
+                            class="glyphicon glyphicon-envelope"></span> Contact Support </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -238,8 +238,7 @@ def purchase_response(request):
 
 
 def payment_failure(request):
-    return render(request, 'store/payment_error.html', {
-        'user_type': current_user.user_type})
+    return render(request, 'store/payment_error.html')
 
 
 def payment_success(request):

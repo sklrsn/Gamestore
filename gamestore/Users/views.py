@@ -57,8 +57,7 @@ def user_login(request):
             else:
                 return HttpResponseRedirect(redirect_to=reverse("index"))
         except Exception as e:
-            print(e)
-            return HttpResponseRedirect(redirect_to=reverse("index"))
+            return HttpResponseRedirect(redirect_to=reverse("failure"))
 
 
 """
@@ -76,8 +75,7 @@ def user_logout(request):
             logout(request)
         return HttpResponseRedirect(redirect_to=reverse("index"))
     except Exception as e:
-        print(e)
-        return HttpResponseRedirect(redirect_to=reverse("index"))
+        return HttpResponseRedirect(redirect_to=reverse("failure"))
 
 
 """
@@ -94,8 +92,7 @@ def index(request):
     try:
         return render(request, 'users/index.html')
     except Exception as e:
-        print(e)
-        return render(request, 'errors/400.html')
+        return HttpResponseRedirect(redirect_to=reverse("failure"))
 
 
 """
@@ -185,8 +182,7 @@ def manage_profile(request):
             'user_type': request.user.userprofile.user_type, 'current_user': request.user.userprofile
         })
     except Exception as e:
-        print(e)
-        return HttpResponseRedirect(redirect_to=reverse('home'))
+        return HttpResponseRedirect(redirect_to=reverse("failure"))
 
 
 """
@@ -531,3 +527,7 @@ def register_social_profile(backend, user, response, *args, **kwargs):
                 p.save()
     except Exception as e:
         print(e)
+
+
+def failure(request):
+    return render(request, 'failure.html')

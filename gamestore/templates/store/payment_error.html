@@ -5,26 +5,37 @@
 {% block header %}
     {{ block.super }}
     <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/portfolio-item.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/app.css' %}">
+    <style type="text/css">
+        .modal-backdrop {
+            z-index: 0 !important;
+        }
+    </style>
 {% endblock %}
 {% block content %}
-{{ block.super }}
-<div class="container">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="error-template">
-                <h1>
-                    Oops!</h1>
-                <h2>
-                    Payment error</h2>
-                <div class="error-details">
-                    Sorry, there seems to be some error with the payment. Our team is looking into the matter. If money has been deducted from your account and the purchase has not gone through, the amount shall be refunded in next 48 hrs!
-                </div>
-                <div class="error-actions">
-                    <a href="/profile/home" class="btn btn-primary btn-lg"><span class="glyphicon glyphicon-home"></span>
-                        Take Me Home </a><a href="/contact_us" class="btn btn-default btn-lg"><span class="glyphicon glyphicon-envelope"></span> Contact Support </a>
+    {{ block.super }}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="error-template">
+                    <h1>
+                        Oops!</h1>
+                    <h2>
+                        Payment error</h2>
+                    <div class="error-details">
+                        Sorry, there seems to be some error with the payment. Our team is looking into the matter. If
+                        money has been deducted from your account and the purchase has not gone through, the amount
+                        shall be refunded in next 48 hrs!
+                    </div>
+                    <div class="error-actions">
+                        <a href="/profile/home" class="btn btn-primary btn-lg"><span
+                                class="glyphicon glyphicon-home"></span>
+                            Take Me Home </a><a href="/contact_us" class="btn btn-default btn-lg"><span
+                            class="glyphicon glyphicon-envelope"></span> Contact Support </a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 {% endblock %}
