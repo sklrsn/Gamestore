@@ -22,8 +22,13 @@
                 var param = $('#search_box').val();
                 var concept = $('.search-panel span#search_concept').text();
                 location.href = "/store/?concept=" + concept + "&param=" + param;
+            })
+
+            $('.btnCart').click(function () {
+                window.location.replace("{% url 'getcart' %}")
             });
         });
+
     </script>
 {% endblock %}
 {% block content %}
@@ -102,6 +107,9 @@
                 {% endif %}
                 </ul>
             {% endif %}
+        </div>
+        <div class="confirm">
+            <input type="button" class="btn btn-primary btnCart btnConfirm" value="Go to Cart"></input>
         </div>
     </div>
     <div id="modalInfo" class="modal fade" role="dialog">
