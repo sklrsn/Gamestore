@@ -176,8 +176,8 @@ def purchase(request):
     secret_key = "3d5e7a6cfcaf44600e6a2650326780c2"
 
     success_url = request.build_absolute_uri(reverse("payment_response"))
-    cancel_url = request.build_absolute_uri(reverse("payment_response"))
-    error_url = request.build_absolute_uri(reverse("payment_response"))
+    cancel_url = request.build_absolute_uri(reverse("purchase"))
+    error_url = request.build_absolute_uri(reverse("payment_failure"))
     checksumstr = "pid={}&sid={}&amount={}&token={}".format(pid, sid, amount,
                                                             secret_key)
 
