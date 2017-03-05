@@ -19,11 +19,59 @@
         .modal-backdrop {
             z-index: 0 !important;
         }
+
+        .search {
+            align-items: center;
+        }
     </style>
+    <script>
+        $(document).ready(function (e) {
+            $('.search-panel .dropdown-menu').find('a').click(function (e) {
+                e.preventDefault();
+                var param = $(this).attr("href").replace("#", "");
+                var concept = $(this).text();
+                console.log(concept)
+                $('.search-panel span#search_concept').text(concept);
+                $('.input-group #search_param').val(param);
+
+            });
+            $('#search_store').click(function (e) {
+                var param = $('#search_box').val();
+                var concept = $('.search-panel span#search_concept').text();
+                console.log(param);
+                console.log(concept);
+                location.href = "/profile/home/?concept=" + concept + "&param=" + param;
+            });
+        });
+    </script>
 {% endblock %}
 {% block content %}
     {% include "menu.html" %}
     <div class="container">
+        <div class="row">
+            <div class="col-xs-8 col-xs-offset-2">
+                <div class="input-group">
+                    <div class="input-group-btn search-panel">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                            <span id="search_concept">Filter by</span> <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu" id="search_term">
+                            <li><a href="#contains">All</a></li>
+                            {% for category in games_category %}
+                                <li><a href="#contains">{{ category.name }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <input type="hidden" name="search_param" value="all" id="search_param">
+                    <input type="text" class="form-control" name="x" placeholder="Search term..." id="search_box">
+                    <span class="input-group-btn">
+                    <button class="btn btn-default" type="button" id="search_store"><span
+                            class="glyphicon glyphicon-search"></span></button>
+                </span>
+                </div>
+            </div>
+        </div>
+        <br>
         {% if user_type == "D" %}
             {% include "users/developer.html" %}
         {% else %}

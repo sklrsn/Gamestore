@@ -14,7 +14,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from .models import UserProfile
 from GameArena.models import Game, Category
 from .forms import UserProfileUpdateForm, RegistrationForm
-from GameArena.forms import GameUploadForm
+from GameArena.forms import GameUploadForm, SearchForm
 from Store.models import Purchase
 import json
 import itertools
@@ -109,12 +109,29 @@ def index(request):
 
 @login_required
 def home(request):
+    concept = request.GET.get('concept', "")
+    param = request.GET.get('param', "")
+    if concept == "All":
+        concept = ""
     if request.user.userprofile.user_type == 'D':
-        games_list = Game.objects.filter(developer_info=request.user)
+        if concept != "":
+            games_list = Game.objects.filter(developer_info=request.user,
+                                             game_category=Category.objects.get(name=concept),
+                                             description__contains=param)
+        else:
+            games_list = Game.objects.filter(developer_info=request.user,
+                                             description__contains=param)
     else:
-        games_list = Purchase.objects.filter(player_details=request.user)
+        if concept != "":
+            games_list = Purchase.objects.filter(developer_info=request.user,
+                                                 game_category=Category.objects.get(name=concept))
+        else:
+            games_list = Purchase.objects.filter(developer_info=request.user,
+                                                 description__contains=param)
+    games_category = Category.objects.all()
+
     upload_form = GameUploadForm()
-    page_size = getattr(settings, "PAGE_SIZE", None)
+    page_size = getattr(settings, "PAGE_SIZE", 3)
     paginator = Paginator(games_list, int(page_size[0]))
     page = request.GET.get('page', int(page_size[0]))
     try:
@@ -127,7 +144,7 @@ def home(request):
     return render(request, 'users/dashboard.html',
                   {'user_type': request.user.userprofile.user_type, 'games_list': games,
                    'upload_form': upload_form,
-                   'current_user': request.user.userprofile})
+                   'current_user': request.user.userprofile, 'games_category': games_category})
 
 
 """
