@@ -1,11 +1,12 @@
-{% extends "base.html" %} {% load bootstrap3 %} {% load staticfiles %} {% block title %}Online Game Store{% endblock %} {% block header %} {{ block.super }}
-<link rel="stylesheet" type="text/css" href="{% static 'css/portfolio-item.css' %}">
-<link rel="stylesheet" type="text/css" href="{% static 'css/app.css' %}">
-<style type="text/css">
-    .modal-backdrop {
-        z-index: 0 !important;
-    }
-</style>
+{% extends "base.html" %} {% load bootstrap3 %} {% load staticfiles %} {% block title %}Online Game Store{% endblock %}
+{% block header %} {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/portfolio-item.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/app.css' %}">
+    <style type="text/css">
+        .modal-backdrop {
+            z-index: 0 !important;
+        }
+    </style>
 {% endblock %}
 {% block content %}
     <div class="container">
@@ -25,8 +26,9 @@
                 </div>
 
                 <!-- Facebook share button code -->
-                <a id="btn-share" >
-                    <img src="{% static 'images/fb_share.png' %}" width="90" alt="Facebook Share">
+                <a id="btn-share">
+                    <img src="https://res.cloudinary.com/dma8tn6ge/image/upload/v1488737168/fb_share.png" width="90"
+                         alt="Facebook Share">
                 </a>
             </div>
         </div>
@@ -56,27 +58,27 @@
         var current_score = 0;
         $(document).ready(function () {
             $("#btn-share").click(function () {
-              var width = 800;
-              var height = 600;
-              var leftPosition, topPosition;
-              leftPosition = (window.screen.width / 2) - ((width / 2) + 10);
-              topPosition = (window.screen.height / 2) - ((height / 2) + 50);
-              var windowFeatures = "status=no,height=" + height + ",width=" + width + ",resizable=yes,left=" + leftPosition + ",top=" + topPosition + ",screenX=" + leftPosition + ",screenY=" + topPosition + ",toolbar=no,menubar=no,scrollbars=no,location=no,directories=no";
-              var caption = "{{request.build_absolute_uri|urlencode}}";
-              {% if request.is_secure %}
-                  var redurl = "https://{{ request.get_host|urlencode }}{% url 'fb_redirect' %}";
-              {% else %}
-                  var redurl = "http://{{ request.get_host|urlencode }}{% url 'fb_redirect' %}";
-              {% endif %}
-              var picture = "{{game.logo|urlencode}}";
-              var name = "GameStore: come and play!";
-              var description = "";
-              if (current_score > 0)
-                  description = " Hey !!! I am playing " + encodeURIComponent("{{ game.name }}") + " and my last game score was: " + current_score;
-              else
-                  description = "Hey !!! I am playing " + encodeURIComponent("{{ game.name }}");
-              var link = 'https://www.facebook.com/dialog/feed?app_id=750714178420271&display=popup&name=' + name + '&description=' + description + '&picture=' + picture + '&link=' + caption + '&caption=' + caption + '&redirect_uri=' + redurl;
-              window.open(link, "Share", windowFeatures);
+                var width = 800;
+                var height = 600;
+                var leftPosition, topPosition;
+                leftPosition = (window.screen.width / 2) - ((width / 2) + 10);
+                topPosition = (window.screen.height / 2) - ((height / 2) + 50);
+                var windowFeatures = "status=no,height=" + height + ",width=" + width + ",resizable=yes,left=" + leftPosition + ",top=" + topPosition + ",screenX=" + leftPosition + ",screenY=" + topPosition + ",toolbar=no,menubar=no,scrollbars=no,location=no,directories=no";
+                var caption = "{{request.build_absolute_uri|urlencode}}";
+                {% if request.is_secure %}
+                    var redurl = "https://{{ request.get_host|urlencode }}{% url 'fb_redirect' %}";
+                {% else %}
+                    var redurl = "http://{{ request.get_host|urlencode }}{% url 'fb_redirect' %}";
+                {% endif %}
+                var picture = "{{game.logo|urlencode}}";
+                var name = "GameStore: come and play!";
+                var description = "";
+                if (current_score > 0)
+                    description = " Hey !!! I am playing " + encodeURIComponent("{{ game.name }}") + " and my last game score was: " + current_score;
+                else
+                    description = "Hey !!! I am playing " + encodeURIComponent("{{ game.name }}");
+                var link = 'https://www.facebook.com/dialog/feed?app_id=750714178420271&display=popup&name=' + name + '&description=' + description + '&picture=' + picture + '&link=' + caption + '&caption=' + caption + '&redirect_uri=' + redurl;
+                window.open(link, "Share", windowFeatures);
             });
         });
         function receiveMessage(event) {
@@ -100,7 +102,7 @@
                     } else if (width < 20) {
                         width = 20;
                     }
-                    $('#gameIframe').css('width', width+5);
+                    $('#gameIframe').css('width', width + 5);
                 }
                 if (!isNaN(height)) {
                     if (height > 1000) {
