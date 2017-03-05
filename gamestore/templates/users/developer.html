@@ -31,6 +31,24 @@
         {% endif %}
         </tbody>
     </table>
+    {% if games_list.has_other_pages %}
+        <ul class="pagination">
+            {% if users.has_previous %}
+                <li><a href="?page={{ games_list.previous_page_number }}">&laquo;</a></li>
+            {% else %}
+                <li class="disabled"><span>&laquo;</span></li>
+            {% endif %} {% for i in games_list.paginator.page_range %} {% if games_list.number == i %}
+            <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span>
+            </li>
+        {% else %}
+            <li><a href="?page={{ i }}">{{ i }}</a></li>
+        {% endif %} {% endfor %} {% if games_list.has_next %}
+            <li><a href="?page={{ games_list.next_page_number }}">&raquo;</a></li>
+        {% else %}
+            <li class="disabled"><span>&raquo;</span></li>
+        {% endif %}
+        </ul>
+    {% endif %}
     <button class="btn btn-lg btn-success btn-block" data-toggle="modal" data-target="#modalGame">Add a Game to
         Inventory
     </button>

@@ -18,6 +18,8 @@ from GameArena.forms import GameUploadForm
 from Store.models import Purchase
 import json
 import itertools
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.conf import settings
 
 '''
 This view performs user authentication and creates a session between user and application
@@ -111,8 +113,18 @@ def home(request):
     else:
         games_list = Purchase.objects.filter(player_details=request.user)
     upload_form = GameUploadForm()
+    page_size = getattr(settings, "PAGE_SIZE", None)
+    paginator = Paginator(games_list, int(page_size[0]))
+    page = request.GET.get('page', int(page_size[0]))
+    try:
+        games = paginator.page(page)
+    except PageNotAnInteger:
+        games = paginator.page(int(page_size[0]))
+    except EmptyPage:
+        games = paginator.page(paginator.num_pages)
+
     return render(request, 'users/dashboard.html',
-                  {'user_type': request.user.userprofile.user_type, 'games_list': games_list,
+                  {'user_type': request.user.userprofile.user_type, 'games_list': games,
                    'upload_form': upload_form,
                    'current_user': request.user.userprofile})
 

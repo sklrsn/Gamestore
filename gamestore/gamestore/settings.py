@@ -145,7 +145,6 @@ EMAIL_HOST_PASSWORD = 'Qwerty@1989'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
-
 db_from_env = dj_database_url.config(conn_max_age=500)
 DATABASES['default'].update(db_from_env)
 
@@ -182,3 +181,5 @@ SOCIAL_AUTH_PIPELINE = (
     'social_core.pipeline.social_auth.load_extra_data',
     'social_core.pipeline.user.user_details',
 )
+
+PAGE_SIZE = 5,
