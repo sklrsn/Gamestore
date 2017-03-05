@@ -6,6 +6,7 @@
         <tr>
             <th data-field="logo">Logo</th>
             <th data-field="name">Name</th>
+            <th data-field="category">Category</th>
             <th data-field="description">Description</th>
         </tr>
         </thead>
@@ -16,6 +17,7 @@
                     <td><img src={{ purgame.game_details.logo }} height="75" width="75" alt="Not available"></td>
                     <td><a href="{% url 'play_game' purgame.game_details.id %}">{{ purgame.game_details.name }} </a>
                     </td>
+                    <td>{{ purgame.game_details.game_category }}</td>
                     <td>{{ purgame.shortdesc }}</td>
                 </tr>
             {% endfor %}

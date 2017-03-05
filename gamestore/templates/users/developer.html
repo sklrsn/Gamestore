@@ -10,6 +10,7 @@
         <tr>
             <th data-field="logo">Logo</th>
             <th data-field="name">Name</th>
+            <th data-field="category">Category</th>
             <th data-field="description">Description</th>
             <th data-field="cost">Cost</th>
         </tr>
@@ -20,6 +21,7 @@
                 <tr>
                     <td><img src={{ game.logo }} height="75" width="75" alt="Not available"></td>
                     <td><a href="{% url 'edit_game' game.id %}">{{ game.name }}</a></td>
+                    <td>{{ game.game_category }}</td>
                     <td>{{ game.description }}</td>
                     <td>{{ game.cost }}</td>
                 </tr>

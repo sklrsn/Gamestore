@@ -126,7 +126,7 @@ def home(request):
                                                  game_category=Category.objects.get(name=concept))
         else:
             games_list = Purchase.objects.filter(player_details=request.user,
-                                                 description__contains=param)
+                                                 game_details__description__contains=param)
     games_category = Category.objects.all()
 
     upload_form = GameUploadForm()
