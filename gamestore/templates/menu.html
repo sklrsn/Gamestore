@@ -11,31 +11,22 @@
             </ul>
 
             <ul class="nav navbar-nav navbar-right">
-                {% if user.is_authenticated and user_type == "D" %}
+                {% if user.is_authenticated %}
+                    {% if user_type == "D" %}
+                        {% comment %}
+                            Developer specific Menus
+                        {% endcomment %}
+                        <li><a href="/profile/statistics/">Statistics</a></li>
+                    {% elif user_type == "P" %}
+                        {% comment %}
+                            Player specific Menus user.user_type
+                        {% endcomment %}
+                        <li><a href="/store/">Store</a></li>
+                    {% endif %}
+
                     {% comment %}
-                        Developer specific Menus
+                        Common Myprofile menu.
                     {% endcomment %}
-                    <li><a href="/profile/statistics/">Statistics</a></li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">My Account
-                            <b class="caret"></b></a>
-                        <ul class="dropdown-menu">
-                            <li><p align="center">&nbsp;&nbsp;Welcome !
-                                &nbsp;&nbsp; </p>
-                            </li>
-                            <li>
-                                <p align="center">{% cloudinary "profile-picture.png" width=75 height=75 crop="fill" %}</p>
-                            </li>
-                            <li><p align="center">{{ request.user }}</p></li>
-                            <li><p align="center"><a href="/profile/manage_profile/">Manage Profile</a></p></li>
-                            <li><p align="center"><a href="/profile/logout/">Sign Out</a></p></li>
-                        </ul>
-                    </li>
-                {% elif user.is_authenticated and user_type == "P" %}
-                    {% comment %}
-                        Player specific Menus user.user_type
-                    {% endcomment %}
-                    <li><a href="/store/">Store</a></li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">My Account
                             <b class="caret"></b></a>
@@ -52,7 +43,6 @@
                         </ul>
                     </li>
                 {% endif %}
-
             </ul>
         </div>
     </div>
