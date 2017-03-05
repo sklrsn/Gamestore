@@ -110,6 +110,8 @@ def index(request):
 def home(request):
     concept = request.GET.get('concept', "")
     param = request.GET.get('param', "")
+    print(concept)
+    print(param)
     if concept == "All":
         concept = ""
     if request.user.userprofile.user_type == 'D':
