@@ -43,7 +43,6 @@ def user_login(request):
             if request.method == 'POST':
                 username = request.POST['username']
                 password = request.POST['password']
-                print(username,"#",password)
                 user = authenticate(username=username, password=password)
                 if user:
                     if user.is_active:
@@ -123,10 +122,10 @@ def home(request):
                                              description__contains=param)
     else:
         if concept != "":
-            games_list = Purchase.objects.filter(developer_info=request.user,
+            games_list = Purchase.objects.filter(player_details=request.user,
                                                  game_category=Category.objects.get(name=concept))
         else:
-            games_list = Purchase.objects.filter(developer_info=request.user,
+            games_list = Purchase.objects.filter(player_details=request.user,
                                                  description__contains=param)
     games_category = Category.objects.all()
 
@@ -512,7 +511,6 @@ def register_social_profile(backend, user, response, *args, **kwargs):
     try:
         if backend.name == 'facebook':
             if not UserProfile.objects.filter(user=user).exists():
-                print('creating profile')
                 # Create user profile
                 activation_token = uuid.uuid4()
                 p = UserProfile(id=None, user=user,
