@@ -1,6 +1,11 @@
 {% extends "base.html" %}
 {% load staticfiles %}
 
+{% comment %}
+    This is the landing page for the Onlinegamestore web. This page displays an interactive form to the user to login
+    and In addition to that, it provides forgot password and Social media login functionalities.
+{% endcomment %}
+
 {% block title %}
     {{ block.super }}
 {% endblock %}
@@ -49,9 +54,11 @@
                 Log In</button>          <br>
 
             </form>
-          <button class="button button-block" onclick= "location.href ='{% url 'social:begin' 'facebook' %}'">Login with Facebook</button>
+            <button class="button button-block" onclick="location.href ='{% url 'social:begin' 'facebook' %}'">Login
+                with Facebook
+            </button>
 
-                  </div>
+        </div>
         <br>
         <p align="center"><a href="/profile/terms/">Terms and Conditions apply</a></p>
     </div>
