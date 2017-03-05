@@ -382,7 +382,7 @@ def upload_game(request):
                         modified_date=datetime.datetime.now(), developer_info=user, game_category=category)
             game.save()
             return HttpResponseRedirect(redirect_to=reverse('home'))
-
+        return HttpResponseRedirect(redirect_to=reverse('home'))
 
 """
 @Method_Name: edit_game
@@ -479,7 +479,7 @@ def download_statistics(request):
             stats['labels'] = []
             stats['dataset'] = []
 
-            jobs = Purchase.objects.filter()
+            jobs = Purchase.objects.filter(game_details__developer_info=request.user)
             data = itertools.groupby(jobs, lambda record: record.purchase_date.strftime("%Y-%m-%d"))
             purchase_by_day = [(day, len(list(purchase_this_day))) for day, purchase_this_day in data]
 
