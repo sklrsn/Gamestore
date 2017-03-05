@@ -23,8 +23,12 @@
                 {% if messages %}
                 <div class="messages">
                     {% for message in messages %}
-                    <div {% if message.tags %} class="alert alert-{{ message.tags }}" {% endif %} >
-                        {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %} {{ message }}
+                      {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+                        <div class="text-center alert alert-danger">
+                      {% else %}
+                        <div {% if message.tags %} class="alert text-center alert-{{ message.tags }}" {% endif %} >
+                      {% endif %}
+                        {{ message }}
                       </div>
                     {% endfor %}
                 </div>
@@ -32,19 +36,20 @@
 
             </div>
             {% comment %} List errors generated from the form {% endcomment %} {% if form.errors %}
+              <div class="col-md-12"  >
               {% for field in form %}
-
                 {% for error in field.errors %}
-                  <div class="alert alert-error">
+                  <div class="alert text-center alert-danger">
                       <strong>{{ error|escape }}</strong>
                   </div>
                   {% endfor %}
               {% endfor %}
               {% for error in form.non_field_errors %}
-                  <div class="alert alert-error">
+                  <div class="alert text-center alert-danger">
                       <strong>{{ error|escape }}</strong>
                   </div>
                 {% endfor %}
+                </div>
           {% endif %}
         </div>
     </div>
