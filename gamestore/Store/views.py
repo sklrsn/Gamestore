@@ -9,7 +9,7 @@ import cloudinary
 from django.contrib.auth.models import User, Group
 from django.core.urlresolvers import reverse
 from Users.models import UserProfile
-from GameArena.models import Game
+from GameArena.models import Game, Category
 from .models import Purchase, Cart, Order
 from .forms import CartForm
 from django.db.models import Sum, F
@@ -17,22 +17,35 @@ from hashlib import md5
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.conf import settings
 
-
 """
 @Method_Name: index
 @Param_in: request
 @:returns: renders the store page
 """
+
+
 @login_required
 def index(request):
+    concept = request.GET.get('concept', "")
+    param = request.GET.get('param', "")
+    if concept == "All":
+        concept = ""
+
     user = User.objects.get(username=request.user)
     current_user = UserProfile.objects.get(user=user)
-    games_list = Game.objects.all()
-    purchse_list = Purchase.objects.filter(player_details=user)
-    onlypurchase = Game.objects.exclude(id__in=purchse_list.values('game_details'))
+
+    if concept != "":
+        games_list = Game.objects.filter(
+            game_category=Category.objects.get(name=concept),
+            description__contains=param)
+    else:
+        games_list = Game.objects.filter(
+            description__contains=param)
+
+    games_category = Category.objects.all()
     return render(request, 'store/store.html',
                   {'games_list': games_list,
-                  'user_type': current_user.user_type})
+                   'user_type': current_user.user_type, 'games_category': games_category})
 
 
 """
@@ -40,6 +53,8 @@ def index(request):
 @Param_in: request
 @:returns: returns a JSON response
 """
+
+
 @login_required
 def add_to_cart(request):
     try:
@@ -132,7 +147,7 @@ def get_cart(request):
     '''
     return render(request, 'store/cart.html',
                   {'cart_list': carts,
-                  'user_type': current_user.user_type})
+                   'user_type': current_user.user_type})
 
 
 """
@@ -178,7 +193,7 @@ def purchase(request):
     # print('checksum1 : ', checksum)
     return render(request, 'store/purchase.html',
                   {'cart_list': cartitems,
-                  'user_type': current_user.user_type,
+                   'user_type': current_user.user_type,
                    'action': action,
                    'pid': pid,
                    'sid': sid,
@@ -234,8 +249,8 @@ def purchase_response(request):
 
 
 def payment_failure(request):
-    return render(request, 'store/payment_error.html',{
-    'user_type': current_user.user_type})
+    return render(request, 'store/payment_error.html', {
+        'user_type': current_user.user_type})
 
 
 def payment_success(request):
