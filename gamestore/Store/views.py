@@ -23,6 +23,8 @@ from django.conf import settings
 def index(request):
     concept = request.GET.get('concept', "")
     param = request.GET.get('param', "")
+    print(concept)
+    print(param)
     if concept == "All":
         concept = ""
 
@@ -33,10 +35,20 @@ def index(request):
     else:
         games_list = Game.objects.filter(
             description__contains=param)
+    page_size = getattr(settings, "PAGE_SIZE", 1)
+    print(page_size[0])
+    paginator = Paginator(games_list, int(page_size[0]))
+    page = request.GET.get('page', int(page_size[0]))
+    try:
+        games = paginator.page(page)
+    except PageNotAnInteger:
+        games = paginator.page(int(page_size[0]))
+    except EmptyPage:
+        games = paginator.page(paginator.num_pages)
 
     games_category = Category.objects.all()
     return render(request, 'store/store.html',
-                  {'games_list': games_list,
+                  {'games_list': games,
                    'user_type': request.user.userprofile.user_type, 'games_category': games_category})
 
 

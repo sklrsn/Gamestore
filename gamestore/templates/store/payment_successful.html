@@ -13,18 +13,21 @@
     </style>
 
 {% endblock %} {% block content %}
-{{ block.super }}
-<div class="container">
-	<div class="row text-center">
-        <div class="col-sm-6 col-sm-offset-3">
-        <br><br> <h2 style="color:#0fad00">Success</h2>
-        <img src={% static 'images/success-icon-10.png' %} height="100px">
-        <h3>Dear, {{ username }}</h3>
-        <p style="font-size:20px;color:#5C5C5C;">Thank you for the payment. The payment has been sucessful. The game should now be available on your dashbard</p>
-        <a href="/profile/home" class="btn btn-success">Go to dashboard</a>
-    <br><br>
-        </div>
+    {{ block.super }}
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-sm-6 col-sm-offset-3">
+                <br><br>
+                <h2 style="color:#0fad00">Success</h2>
+                <img src="https://res.cloudinary.com/dma8tn6ge/image/upload/v1488738013/success-icon-10.png"
+                     height="100px">
+                <h3>Dear, {{ username }}</h3>
+                <p style="font-size:20px;color:#5C5C5C;">Thank you for the payment. The payment has been sucessful. The
+                    game should now be available on your dashbard</p>
+                <a href="/profile/home" class="btn btn-success">Go to dashboard</a>
+                <br><br>
+            </div>
 
-	</div>
-</div>
+        </div>
+    </div>
 {% endblock %}
