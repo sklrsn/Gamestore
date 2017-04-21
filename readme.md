@@ -99,3 +99,6 @@ Languages - Python 3.5, HTML5, CSS (bootstrap), jquery, django
 - Icon or an image for the game - create and store in the backend
 - Retrieved metadata added as an advertisement or description message and shared in the frontend
 - verify that the shared game has meaningful and attractive messages
+
+### Heroku Application
+http://fierce-brook-72805.herokuapp.com/
